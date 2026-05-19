@@ -1,7 +1,7 @@
 {
   "profile": "HpReverbG2Omnicept",
   "displayName": "HP Reverb G2 Omnicept",
-  "displayOrder": 13,
+  "id": 13,
   "sources": [
     {
       "title": "VRCFaceTracking VIVE SRanipal",

@@ -1,7 +1,7 @@
 {
   "profile": "ViveFocusVisionFaceTrackingAddon",
   "displayName": "HTC VIVE Focus Vision + Face Tracking Add-on",
-  "displayOrder": 7,
+  "id": 7,
   "sources": [
     {
       "title": "VRCFaceTracking VIVE SRanipal",

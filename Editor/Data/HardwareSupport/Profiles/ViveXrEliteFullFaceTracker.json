@@ -1,7 +1,7 @@
 {
   "profile": "ViveXrEliteFullFaceTracker",
   "displayName": "HTC VIVE XR Elite Full Face Tracker",
-  "displayOrder": 6,
+  "id": 6,
   "sources": [
     {
       "title": "VRCFaceTracking VIVE SRanipal",

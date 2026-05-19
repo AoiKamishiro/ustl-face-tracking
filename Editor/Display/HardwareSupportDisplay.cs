@@ -4,16 +4,16 @@ namespace USTL.FaceTracking.Editor
 {
     internal static class HardwareSupportDisplay
     {
-        internal static IReadOnlyList<FaceTrackingHardwareProfile> Profiles => HardwareSupportData.Profiles;
+        internal static IReadOnlyList<HardwareSupportProfile> Profiles => HardwareSupportData.Profiles;
 
         internal static List<string> GetProfileChoices()
         {
             List<string> choices = new()
             {
-                FormatProfile(FaceTrackingHardwareProfile.None),
+                FormatNoProfile(),
             };
 
-            foreach (FaceTrackingHardwareProfile profile in Profiles)
+            foreach (HardwareSupportProfile profile in Profiles)
             {
                 choices.Add(FormatProfile(profile));
             }
@@ -21,35 +21,40 @@ namespace USTL.FaceTracking.Editor
             return choices;
         }
 
-        internal static FaceTrackingHardwareProfile FindProfile(string displayName)
+        internal static int FindProfile(string displayName)
         {
-            foreach (FaceTrackingHardwareProfile profile in Profiles)
+            foreach (HardwareSupportProfile profile in Profiles)
             {
                 if (FormatProfile(profile) == displayName)
                 {
-                    return profile;
+                    return profile.Flag;
                 }
             }
 
-            return FaceTrackingHardwareProfile.None;
+            return 0;
         }
 
-        internal static string FormatProfile(FaceTrackingHardwareProfile profile)
+        internal static string FormatNoProfile()
         {
-            return profile == FaceTrackingHardwareProfile.None ? T("hardware.None", "No Tracking Hardware") : HardwareSupportData.GetProfileDisplayName(profile);
+            return T("hardware.None", "No Tracking Hardware");
         }
 
-        internal static bool HasProfile(FaceTrackingHardwareProfile profiles, FaceTrackingHardwareProfile profile)
+        internal static string FormatProfile(HardwareSupportProfile profile)
         {
-            return profile != FaceTrackingHardwareProfile.None && (profiles & profile) == profile;
+            return HardwareSupportData.GetProfileDisplayName(profile);
         }
 
-        internal static string FormatSelectedProfiles(FaceTrackingHardwareProfile profiles)
+        internal static bool HasProfile(int profiles, HardwareSupportProfile profile)
+        {
+            return profile.Flag != 0 && (profiles & profile.Flag) == profile.Flag;
+        }
+
+        internal static string FormatSelectedProfiles(int profiles)
         {
             List<string> selectedProfiles = GetSelectedProfileNames(profiles);
             if (selectedProfiles.Count == 0)
             {
-                return FormatProfile(FaceTrackingHardwareProfile.None);
+                return FormatNoProfile();
             }
 
             if (selectedProfiles.Count <= 2)
@@ -60,10 +65,10 @@ namespace USTL.FaceTracking.Editor
             return string.Format(T("hardware.selected_count", "{0} tracking hardware devices selected"), selectedProfiles.Count);
         }
 
-        private static List<string> GetSelectedProfileNames(FaceTrackingHardwareProfile profiles)
+        private static List<string> GetSelectedProfileNames(int profiles)
         {
             List<string> selectedProfiles = new();
-            foreach (FaceTrackingHardwareProfile profile in Profiles)
+            foreach (HardwareSupportProfile profile in Profiles)
             {
                 if (HasProfile(profiles, profile))
                 {
@@ -97,10 +102,10 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        internal static ExpressionAvailabilityResult GetExpressionAvailability(FaceTrackingHardwareProfile profiles, UnifiedExpression expression)
+        internal static ExpressionAvailabilityResult GetExpressionAvailability(int profiles, UnifiedExpression expression)
         {
             IReadOnlyList<VRCFTParameter> parameters = GetExpressionParameters(expression);
-            if (profiles == FaceTrackingHardwareProfile.None)
+            if (profiles == 0)
             {
                 return new ExpressionAvailabilityResult(HardwareKeyAvailabilityStatus.Unknown, parameters);
             }
@@ -119,15 +124,15 @@ namespace USTL.FaceTracking.Editor
             return HardwareSupportData.GetExpressionParameters(expression);
         }
 
-        internal static HardwareSupportStatus GetExpressionStatus(FaceTrackingHardwareProfile profiles, UnifiedExpression expression)
+        internal static HardwareSupportStatus GetExpressionStatus(int profiles, UnifiedExpression expression)
         {
-            if (profiles == FaceTrackingHardwareProfile.None)
+            if (profiles == 0)
             {
                 return HardwareSupportStatus.Unknown;
             }
 
             HardwareSupportStatus status = HardwareSupportStatus.Unsupported;
-            foreach (FaceTrackingHardwareProfile profile in Profiles)
+            foreach (HardwareSupportProfile profile in Profiles)
             {
                 if (!HasProfile(profiles, profile))
                 {
@@ -144,7 +149,7 @@ namespace USTL.FaceTracking.Editor
             return status;
         }
 
-        internal static string FormatStatusTooltip(FaceTrackingHardwareProfile profiles, string featureName, string outputFormatName, VRCFTParameterOutputFormat outputFormat, HardwareSupportStatus status)
+        internal static string FormatStatusTooltip(int profiles, string featureName, string outputFormatName, VRCFTParameterOutputFormat outputFormat, HardwareSupportStatus status)
         {
             string profileName = FormatSelectedProfiles(profiles);
             string explanation = FormatStatusExplanation(status);
@@ -153,7 +158,7 @@ namespace USTL.FaceTracking.Editor
             return string.IsNullOrEmpty(parameterBreakdown) ? $"{profileName} / {featureName} / {outputFormatName}\n{FormatStatus(status)}\n\n{explanation}" : $"{profileName} / {featureName} / {outputFormatName}\n{FormatStatus(status)}\n\n{explanation}\n\n{parameterBreakdown}";
         }
 
-        internal static string FormatExpressionAvailabilityTooltip(FaceTrackingHardwareProfile profiles, UnifiedExpression expression, ExpressionAvailabilityResult result)
+        internal static string FormatExpressionAvailabilityTooltip(int profiles, UnifiedExpression expression, ExpressionAvailabilityResult result)
         {
             string profileName = FormatSelectedProfiles(profiles);
             string explanation = FormatKeyAvailabilityExplanation(result.Status);
@@ -162,9 +167,9 @@ namespace USTL.FaceTracking.Editor
             return string.IsNullOrEmpty(parameterBreakdown) ? $"{profileName} / {expression}\n{FormatKeyAvailabilityStatus(result.Status)}\n\n{explanation}" : $"{profileName} / {expression}\n{FormatKeyAvailabilityStatus(result.Status)}\n\n{explanation}\n\n{parameterBreakdown}";
         }
 
-        internal static HardwareSupportStatus GetOutputFormatStatus(FaceTrackingHardwareProfile profiles, VRCFTParameterOutputFormat outputFormat)
+        internal static HardwareSupportStatus GetOutputFormatStatus(int profiles, VRCFTParameterOutputFormat outputFormat)
         {
-            if (profiles == FaceTrackingHardwareProfile.None || outputFormat == null || outputFormat.Parameters.Length == 0)
+            if (profiles == 0 || outputFormat == null || outputFormat.Parameters.Length == 0)
             {
                 return HardwareSupportStatus.Unknown;
             }
@@ -206,7 +211,7 @@ namespace USTL.FaceTracking.Editor
             return hasUnknown ? HardwareSupportStatus.Unknown : HardwareSupportStatus.Unsupported;
         }
 
-        internal static string FormatStatusTooltip(FaceTrackingHardwareProfile profile, string featureName, HardwareSupportStatus status)
+        internal static string FormatStatusTooltip(HardwareSupportProfile profile, string featureName, HardwareSupportStatus status)
         {
             string profileName = FormatProfile(profile);
             string explanation = FormatStatusExplanation(status);
@@ -248,7 +253,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private static string FormatParameterBreakdown(FaceTrackingHardwareProfile profiles, VRCFTParameterOutputFormat outputFormat)
+        private static string FormatParameterBreakdown(int profiles, VRCFTParameterOutputFormat outputFormat)
         {
             if (outputFormat == null || outputFormat.Parameters.Length == 0)
             {
@@ -275,7 +280,7 @@ namespace USTL.FaceTracking.Editor
             return $"{T("tooltip.parameter_breakdown", "Not fully supported parameters")}:\n{string.Join(", ", entries)}";
         }
 
-        private static string FormatExpressionParameterBreakdown(FaceTrackingHardwareProfile profiles, IReadOnlyList<VRCFTParameter> parameters)
+        private static string FormatExpressionParameterBreakdown(int profiles, IReadOnlyList<VRCFTParameter> parameters)
         {
             if (parameters == null || parameters.Count == 0)
             {
@@ -291,15 +296,15 @@ namespace USTL.FaceTracking.Editor
             return $"{T("tooltip.expression_parameters", "VRCFT parameters that can emit this expression")}:\n{string.Join(", ", entries)}";
         }
 
-        internal static HardwareSupportStatus GetParameterStatus(FaceTrackingHardwareProfile profiles, VRCFTParameter parameter)
+        internal static HardwareSupportStatus GetParameterStatus(int profiles, VRCFTParameter parameter)
         {
-            if (profiles == FaceTrackingHardwareProfile.None)
+            if (profiles == 0)
             {
                 return HardwareSupportStatus.Unknown;
             }
 
             HardwareSupportStatus status = HardwareSupportStatus.Unsupported;
-            foreach (FaceTrackingHardwareProfile profile in Profiles)
+            foreach (HardwareSupportProfile profile in Profiles)
             {
                 if (!HasProfile(profiles, profile))
                 {
@@ -332,7 +337,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private static HardwareSupportStatus GetSingleProfileParameterStatus(FaceTrackingHardwareProfile profile, VRCFTParameter parameter)
+        private static HardwareSupportStatus GetSingleProfileParameterStatus(HardwareSupportProfile profile, VRCFTParameter parameter)
         {
             return HardwareSupportData.GetParameterStatus(profile, parameter);
         }

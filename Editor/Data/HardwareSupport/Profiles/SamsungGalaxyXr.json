@@ -1,7 +1,7 @@
 {
   "profile": "SamsungGalaxyXr",
   "displayName": "Samsung Galaxy XR",
-  "displayOrder": 12,
+  "id": 12,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",

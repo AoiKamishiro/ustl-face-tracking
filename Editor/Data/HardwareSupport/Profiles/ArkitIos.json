@@ -1,7 +1,7 @@
 {
   "profile": "ArkitIos",
   "displayName": "ARKit (iOS)",
-  "displayOrder": 14,
+  "id": 14,
   "sources": [
     {
       "title": "VRCFaceTracking Apple ARKit",

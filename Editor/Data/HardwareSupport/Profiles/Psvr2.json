@@ -1,7 +1,7 @@
 {
   "profile": "Psvr2",
   "displayName": "Sony PlayStation VR2",
-  "displayOrder": 11,
+  "id": 11,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",
