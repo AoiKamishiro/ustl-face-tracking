@@ -4,38 +4,26 @@ title: Adding Hardware Profiles
 ---
 
 This page is for contributors who want to add a new face-tracking device to the support table.
-When adding hardware, always keep a source URL that explains the support status or the reason for the judgment.
+When adding hardware, add a hardware profile JSON and always keep a source URL that explains the support status or the reason for the judgment.
 
 ## Files to update
 
 | Purpose | Path |
 | --- | --- |
-| Hardware ID | `Runtime/Data/FaceTrackingHardwareProfile.cs` |
 | Support profile JSON | `Editor/Data/HardwareSupport/Profiles/*.json` |
-| Expression list | `Runtime/Data/Expressions/UnifiedExpression.cs` |
-| Tests | `Tests/Editor/HardwareSupportDataTests.cs` |
+| Expression list, only when adding a new expression key | `Runtime/Data/Expressions/UnifiedExpression.cs` |
 
-## 1. Add the hardware ID
-
-Add a new value to `FaceTrackingHardwareProfile`.
-The values are bit flags, so use the next `1 << N` after the current largest value.
-
-```csharp
-NewHardware = 1 << 18,
-```
-
-`None` is reserved for the unselected state. Do not use it for a hardware definition.
-
-## 2. Add the support profile JSON
+## 1. Add the support profile JSON
 
 Add a JSON file under `Editor/Data/HardwareSupport/Profiles/`.
-The `profile` value must exactly match the enum name in `FaceTrackingHardwareProfile`.
+The `profile` value is a stable unique key for the hardware profile.
+The `id` value is used as both the Inspector order and the bit index for saved selections (`1 << id`), so do not reuse an existing value.
 
 ```json
 {
   "profile": "NewHardware",
   "displayName": "New Hardware",
-  "displayOrder": 18,
+  "id": 18,
   "sources": [
     {
       "title": "New Hardware tracking specification",
@@ -60,9 +48,9 @@ The `profile` value must exactly match the enum name in `FaceTrackingHardwarePro
 
 | Field | Required | Description |
 | --- | --- | --- |
-| `profile` | Required | The enum name in `FaceTrackingHardwareProfile`. |
+| `profile` | Required | Stable unique key for this hardware profile. |
 | `displayName` | Required | The hardware name shown in the Inspector. |
-| `displayOrder` | Required | Sort order in the Inspector. Use a value that does not conflict with existing profiles. |
+| `id` | Required | Bit index and Inspector order. Use 0 through 30 and do not conflict with existing profiles. |
 | `sources` | Required | Source material for the support status. Add at least one source. |
 | `full` | Optional | `UnifiedExpression` values that the hardware can output directly. |
 | `converted` | Optional | `UnifiedExpression` values supported through conversion, emulation, merged left/right values, or module-side processing. |
@@ -70,7 +58,9 @@ The `profile` value must exactly match the enum name in `FaceTrackingHardwarePro
 
 Expressions that are not listed in `full`, `converted`, or `unknown` are treated as unsupported.
 
-## 3. Check expression names
+Changing an existing `id` changes the saved bit flag for that hardware profile. Treat existing IDs as persistent.
+
+## 2. Check expression names
 
 Only values from `UnifiedExpression` can be used in the JSON file.
 Invalid names or `None` cause a load error.
@@ -78,16 +68,13 @@ Invalid names or `None` cause a load error.
 If the device documentation uses its own expression names, map them to VRCFaceTracking Unified Expressions before adding them.
 You do not need to list the same expression more than once in a single hardware profile.
 
-## 4. Update tests
+## 3. Run tests
 
-After adding hardware, update the expected list in `HardwareSupportDataTests.Profiles_LoadsJsonInDisplayOrder`.
-Place the new profile according to `displayOrder`.
-
-Then run Unity EditMode tests and confirm that:
+Run Unity EditMode tests and confirm that:
 
 - The JSON profile loads correctly.
-- `profile` matches the enum value.
-- `displayOrder` values do not conflict.
+- `profile` values do not conflict.
+- `id` values do not conflict.
 - All `UnifiedExpression` names in JSON exist.
 
 ## Support status criteria
