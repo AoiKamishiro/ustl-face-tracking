@@ -1,7 +1,7 @@
 {
   "profile": "MetaQuestPro",
   "displayName": "Meta Quest Pro",
-  "displayOrder": 0,
+  "id": 0,
   "sources": [
     {
       "title": "VRCFaceTracking Meta Movement (Quest Pro)",

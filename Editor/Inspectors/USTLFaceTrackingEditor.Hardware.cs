@@ -53,10 +53,10 @@ namespace USTL.FaceTracking.Editor
             FaceTrackingInspectorStyles.ApplyFieldSpacing(FaceMeshRendererField);
         }
 
-        private FaceTrackingHardwareProfile GetHardwareProfiles()
+        private int GetHardwareProfiles()
         {
             SerializedProperty property = serializedObject.FindProperty(nameof(USTLFaceTracking.trackingHardwareProfiles));
-            return property == null ? FaceTrackingHardwareProfile.None : (FaceTrackingHardwareProfile)property.intValue;
+            return property?.intValue ?? 0;
         }
 
         private void RefreshHardwareProfileField()
@@ -66,7 +66,7 @@ namespace USTL.FaceTracking.Editor
                 return;
             }
 
-            FaceTrackingHardwareProfile trackingHardwareProfiles = GetHardwareProfiles();
+            int trackingHardwareProfiles = GetHardwareProfiles();
             if (_hardwareProfileField[0] is Label label)
             {
                 label.text = T("field.tracking_hardware", "Tracking Hardware");
@@ -78,12 +78,12 @@ namespace USTL.FaceTracking.Editor
 
         private void ShowHardwareProfileMenu()
         {
-            FaceTrackingHardwareProfile trackingHardwareProfiles = GetHardwareProfiles();
+            int trackingHardwareProfiles = GetHardwareProfiles();
             GenericMenu menu = new();
-            menu.AddItem(new GUIContent(HardwareSupportDisplay.FormatProfile(FaceTrackingHardwareProfile.None)), trackingHardwareProfiles == FaceTrackingHardwareProfile.None, () => SetHardwareProfiles(FaceTrackingHardwareProfile.None));
+            menu.AddItem(new GUIContent(HardwareSupportDisplay.FormatNoProfile()), trackingHardwareProfiles == 0, () => SetHardwareProfiles(0));
             menu.AddSeparator(string.Empty);
 
-            foreach (FaceTrackingHardwareProfile profile in HardwareSupportDisplay.Profiles)
+            foreach (HardwareSupportProfile profile in HardwareSupportDisplay.Profiles)
             {
                 menu.AddItem(new GUIContent(HardwareSupportDisplay.FormatProfile(profile)), HardwareSupportDisplay.HasProfile(trackingHardwareProfiles, profile), () => ToggleHardwareProfile(profile));
             }
@@ -91,23 +91,23 @@ namespace USTL.FaceTracking.Editor
             menu.ShowAsContext();
         }
 
-        private void ToggleHardwareProfile(FaceTrackingHardwareProfile profile)
+        private void ToggleHardwareProfile(HardwareSupportProfile profile)
         {
-            FaceTrackingHardwareProfile trackingHardwareProfiles = GetHardwareProfiles();
-            FaceTrackingHardwareProfile newHardwareProfiles = HardwareSupportDisplay.HasProfile(trackingHardwareProfiles, profile) ? trackingHardwareProfiles & ~profile : trackingHardwareProfiles | profile;
+            int trackingHardwareProfiles = GetHardwareProfiles();
+            int newHardwareProfiles = HardwareSupportDisplay.HasProfile(trackingHardwareProfiles, profile) ? trackingHardwareProfiles & ~profile.Flag : trackingHardwareProfiles | profile.Flag;
             SetHardwareProfiles(newHardwareProfiles);
         }
 
-        private void SetHardwareProfiles(FaceTrackingHardwareProfile trackingHardwareProfiles)
+        private void SetHardwareProfiles(int trackingHardwareProfiles)
         {
             serializedObject.Update();
             SerializedProperty property = serializedObject.FindProperty(nameof(USTLFaceTracking.trackingHardwareProfiles));
-            if (property == null || property.intValue == (int)trackingHardwareProfiles)
+            if (property == null || property.intValue == trackingHardwareProfiles)
             {
                 return;
             }
 
-            property.intValue = (int)trackingHardwareProfiles;
+            property.intValue = trackingHardwareProfiles;
             serializedObject.ApplyModifiedProperties();
             RefreshHardwareProfileField();
             _featureSettingView?.Rebuild();

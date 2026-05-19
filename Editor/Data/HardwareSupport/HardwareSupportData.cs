@@ -15,27 +15,27 @@ namespace USTL.FaceTracking.Editor
 
         private static readonly Lazy<IReadOnlyList<HardwareSupportProfileRecord>> ProfileRecords = new(BuildProfileRecords);
 
-        private static readonly Lazy<IReadOnlyDictionary<FaceTrackingHardwareProfile, HardwareSupportProfileRecord>> ProfileRecordsByProfile = new(BuildProfileRecordLookup);
+        private static readonly Lazy<IReadOnlyDictionary<int, HardwareSupportProfileRecord>> ProfileRecordsByFlag = new(BuildProfileRecordLookup);
 
-        private static readonly Lazy<IReadOnlyList<FaceTrackingHardwareProfile>> ProfileOrder = new(BuildProfileOrder);
+        private static readonly Lazy<IReadOnlyList<HardwareSupportProfile>> ProfileOrder = new(BuildProfileOrder);
 
-        private static readonly Lazy<IReadOnlyDictionary<FaceTrackingHardwareProfile, HardwareSupportProfileDefinition>> Definitions = new(BuildDefinitions);
+        private static readonly Lazy<IReadOnlyDictionary<int, HardwareSupportProfileDefinition>> Definitions = new(BuildDefinitions);
 
         private static readonly IReadOnlyDictionary<UnifiedExpression, VRCFTParameter[]> ExpressionParameters = BuildExpressionParameters();
 
-        internal static IReadOnlyList<FaceTrackingHardwareProfile> Profiles => ProfileOrder.Value;
+        internal static IReadOnlyList<HardwareSupportProfile> Profiles => ProfileOrder.Value;
 
-        internal static string GetProfileDisplayName(FaceTrackingHardwareProfile profile)
+        internal static string GetProfileDisplayName(HardwareSupportProfile profile)
         {
-            return ProfileRecordsByProfile.Value.TryGetValue(profile, out HardwareSupportProfileRecord record) ? record.DisplayName : $"{profile}";
+            return ProfileRecordsByFlag.Value.TryGetValue(profile.Flag, out HardwareSupportProfileRecord record) ? record.Profile.DisplayName : !string.IsNullOrEmpty(profile.DisplayName) ? profile.DisplayName : profile.Name;
         }
 
-        internal static HardwareSupportStatus GetExpressionStatus(FaceTrackingHardwareProfile profile, UnifiedExpression expression)
+        internal static HardwareSupportStatus GetExpressionStatus(HardwareSupportProfile profile, UnifiedExpression expression)
         {
-            return Definitions.Value.TryGetValue(profile, out HardwareSupportProfileDefinition definition) ? definition.GetStatus(expression) : HardwareSupportStatus.Unsupported;
+            return Definitions.Value.TryGetValue(profile.Flag, out HardwareSupportProfileDefinition definition) ? definition.GetStatus(expression) : HardwareSupportStatus.Unsupported;
         }
 
-        internal static HardwareSupportStatus GetParameterStatus(FaceTrackingHardwareProfile profile, VRCFTParameter parameter)
+        internal static HardwareSupportStatus GetParameterStatus(HardwareSupportProfile profile, VRCFTParameter parameter)
         {
             if (!VRCFTParameterDefinition.All.TryGetValue(parameter, out VRCFTParameterDefinition definition) || definition.ExpressionTargets.Length == 0)
             {
@@ -96,13 +96,13 @@ namespace USTL.FaceTracking.Editor
             return ExpressionParameters.GetValueOrDefault(expression, EmptyParameters);
         }
 
-        private static IReadOnlyDictionary<FaceTrackingHardwareProfile, HardwareSupportProfileDefinition> BuildDefinitions()
+        private static IReadOnlyDictionary<int, HardwareSupportProfileDefinition> BuildDefinitions()
         {
-            Dictionary<FaceTrackingHardwareProfile, HardwareSupportProfileDefinition> definitions = new();
+            Dictionary<int, HardwareSupportProfileDefinition> definitions = new();
 
             foreach (HardwareSupportProfileRecord record in ProfileRecords.Value)
             {
-                definitions[record.Profile] = record.Definition;
+                definitions[record.Profile.Flag] = record.Definition;
             }
 
             return definitions;
@@ -175,8 +175,8 @@ namespace USTL.FaceTracking.Editor
         private static IReadOnlyList<HardwareSupportProfileRecord> BuildProfileRecords()
         {
             List<HardwareSupportProfileRecord> records = new();
-            HashSet<FaceTrackingHardwareProfile> profiles = new();
-            HashSet<int> displayOrders = new();
+            HashSet<string> profileNames = new(StringComparer.Ordinal);
+            HashSet<int> profileIds = new();
 
             foreach (HardwareSupportProfileJson profileJson in ProfileJsons.Value)
             {
@@ -185,36 +185,33 @@ namespace USTL.FaceTracking.Editor
                     continue;
                 }
 
-                FaceTrackingHardwareProfile profile = ParseProfile(profileJson.profile);
-
-                if (profile == FaceTrackingHardwareProfile.None)
-                {
-                    throw new InvalidOperationException("Hardware support definition cannot use the None profile.");
-                }
+                string profileName = ValidateProfileName(profileJson.profile);
+                int profileId = ValidateProfileId(profileJson.id, profileName);
 
                 if (string.IsNullOrWhiteSpace(profileJson.displayName))
                 {
-                    throw new InvalidOperationException($"Hardware support definition has no display name: {profile}");
+                    throw new InvalidOperationException($"Hardware support definition has no display name: {profileName}");
                 }
 
                 if (profileJson.sources == null || profileJson.sources.Length == 0)
                 {
-                    throw new InvalidOperationException($"Hardware support definition has no source: {profile}");
+                    throw new InvalidOperationException($"Hardware support definition has no source: {profileName}");
                 }
 
-                if (!profiles.Add(profile))
+                if (!profileNames.Add(profileName))
                 {
-                    throw new InvalidOperationException($"Duplicate hardware support definition: {profile}");
+                    throw new InvalidOperationException($"Duplicate hardware support definition: {profileName}");
                 }
 
-                if (!displayOrders.Add(profileJson.displayOrder))
+                if (!profileIds.Add(profileId))
                 {
-                    throw new InvalidOperationException($"Duplicate hardware support display order: {profileJson.displayOrder}");
+                    throw new InvalidOperationException($"Duplicate hardware support profile id: {profileId}");
                 }
 
+                HardwareSupportProfile profile = new(profileName, profileJson.displayName.Trim(), profileId);
                 HardwareSupportProfileDefinition definition = new(ResolveProfileExpressions(profileJson, "full", profileJson.full), ResolveProfileExpressions(profileJson, "converted", profileJson.converted), ResolveProfileExpressions(profileJson, "unknown", profileJson.unknown));
 
-                records.Add(new HardwareSupportProfileRecord(profile, profileJson.displayName, profileJson.displayOrder, definition));
+                records.Add(new HardwareSupportProfileRecord(profile, definition));
             }
 
             if (records.Count == 0)
@@ -224,34 +221,60 @@ namespace USTL.FaceTracking.Editor
 
             records.Sort((left, right) =>
             {
-                int order = left.DisplayOrder.CompareTo(right.DisplayOrder);
-                return order != 0 ? order : string.CompareOrdinal(left.DisplayName, right.DisplayName);
+                int order = left.Profile.Id.CompareTo(right.Profile.Id);
+                return order != 0 ? order : string.CompareOrdinal(left.Profile.DisplayName, right.Profile.DisplayName);
             });
 
             return records;
         }
 
-        private static IReadOnlyDictionary<FaceTrackingHardwareProfile, HardwareSupportProfileRecord> BuildProfileRecordLookup()
+        private static IReadOnlyDictionary<int, HardwareSupportProfileRecord> BuildProfileRecordLookup()
         {
-            Dictionary<FaceTrackingHardwareProfile, HardwareSupportProfileRecord> records = new();
+            Dictionary<int, HardwareSupportProfileRecord> records = new();
 
             foreach (HardwareSupportProfileRecord record in ProfileRecords.Value)
             {
-                records[record.Profile] = record;
+                records[record.Profile.Flag] = record;
             }
 
             return records;
         }
 
-        private static IReadOnlyList<FaceTrackingHardwareProfile> BuildProfileOrder()
+        private static IReadOnlyList<HardwareSupportProfile> BuildProfileOrder()
         {
-            List<FaceTrackingHardwareProfile> profiles = new();
+            List<HardwareSupportProfile> profiles = new();
             foreach (HardwareSupportProfileRecord record in ProfileRecords.Value)
             {
                 profiles.Add(record.Profile);
             }
 
             return profiles;
+        }
+
+        private static string ValidateProfileName(string profileName)
+        {
+            if (string.IsNullOrWhiteSpace(profileName))
+            {
+                throw new InvalidOperationException("Hardware support definition has no profile.");
+            }
+
+            string trimmed = profileName.Trim();
+            if (trimmed == "None")
+            {
+                throw new InvalidOperationException("Hardware support definition cannot use the None profile.");
+            }
+
+            return trimmed;
+        }
+
+        private static int ValidateProfileId(int id, string profileName)
+        {
+            if (id < 0 || id > HardwareSupportProfile.MaxId)
+            {
+                throw new InvalidOperationException($"Hardware support profile '{profileName}' has an invalid id: {id}. Use 0 through {HardwareSupportProfile.MaxId}.");
+            }
+
+            return id;
         }
 
         private static UnifiedExpression[] ResolveProfileExpressions(HardwareSupportProfileJson profile, string statusName, string[] expressionNames)
@@ -288,21 +311,6 @@ namespace USTL.FaceTracking.Editor
             {
                 expressions.Add(expression);
             }
-        }
-
-        private static FaceTrackingHardwareProfile ParseProfile(string profileName)
-        {
-            if (string.IsNullOrWhiteSpace(profileName))
-            {
-                throw new InvalidOperationException("Hardware support definition has no profile.");
-            }
-
-            if (!Enum.TryParse(profileName.Trim(), out FaceTrackingHardwareProfile profile))
-            {
-                throw new InvalidOperationException($"Unknown hardware support profile: {profileName}");
-            }
-
-            return profile;
         }
 
         private static UnifiedExpression ParseExpression(string expressionName, string context)
@@ -364,7 +372,7 @@ namespace USTL.FaceTracking.Editor
         {
             public string profile;
             public string displayName;
-            public int displayOrder;
+            public int id = -1;
             public HardwareSupportSourceJson[] sources;
             public string[] full;
             public string[] converted;
@@ -381,21 +389,59 @@ namespace USTL.FaceTracking.Editor
 
         private sealed class HardwareSupportProfileRecord
         {
-            internal HardwareSupportProfileRecord(FaceTrackingHardwareProfile profile, string displayName, int displayOrder, HardwareSupportProfileDefinition definition)
+            internal HardwareSupportProfileRecord(HardwareSupportProfile profile, HardwareSupportProfileDefinition definition)
             {
                 Profile = profile;
-                DisplayName = displayName;
-                DisplayOrder = displayOrder;
                 Definition = definition;
             }
 
-            internal FaceTrackingHardwareProfile Profile { get; }
-
-            internal string DisplayName { get; }
-
-            internal int DisplayOrder { get; }
+            internal HardwareSupportProfile Profile { get; }
 
             internal HardwareSupportProfileDefinition Definition { get; }
+        }
+    }
+
+    internal readonly struct HardwareSupportProfile : IEquatable<HardwareSupportProfile>
+    {
+        internal const int MaxId = 30;
+
+        internal HardwareSupportProfile(string name, string displayName, int id)
+        {
+            Name = name;
+            DisplayName = displayName;
+            Id = id;
+            Flag = 1 << id;
+        }
+
+        internal string Name { get; }
+
+        internal string DisplayName { get; }
+
+        internal int Id { get; }
+
+        internal int Flag { get; }
+
+        public bool Equals(HardwareSupportProfile other)
+        {
+            return Id == other.Id && string.Equals(Name, other.Name, StringComparison.Ordinal);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is HardwareSupportProfile other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Name != null ? StringComparer.Ordinal.GetHashCode(Name) : 0) * 397) ^ Id;
+            }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 

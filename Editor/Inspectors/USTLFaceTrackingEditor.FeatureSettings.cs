@@ -159,7 +159,7 @@ namespace USTL.FaceTracking.Editor
 
             SerializedProperty featureSetting = GetFeatureSettingElementAt(index);
             FaceTrackingFeatureDefinition featureDefinition = GetFeatureDefinition(featureSetting);
-            FaceTrackingHardwareProfile trackingHardwareProfiles = GetHardwareProfiles();
+            int trackingHardwareProfiles = GetHardwareProfiles();
             int outputFormatIndex = GetOutputFormatIndex(featureSetting, featureDefinition);
             VRCFTParameterOutputFormat outputFormat = GetOutputFormat(featureDefinition, outputFormatIndex);
             HardwareSupportStatus status = HardwareSupportDisplay.GetOutputFormatStatus(trackingHardwareProfiles, outputFormat);

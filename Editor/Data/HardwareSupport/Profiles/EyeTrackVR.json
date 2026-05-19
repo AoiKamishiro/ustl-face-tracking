@@ -1,7 +1,7 @@
 {
   "profile": "EyeTrackVR",
   "displayName": "EyeTrackVR",
-  "displayOrder": 16,
+  "id": 16,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",

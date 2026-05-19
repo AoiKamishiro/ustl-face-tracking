@@ -1,7 +1,7 @@
 {
   "profile": "PimaxDroolonPi1",
   "displayName": "Pimax Droolon Pi 1",
-  "displayOrder": 9,
+  "id": 9,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",

@@ -1,7 +1,7 @@
 {
   "profile": "ViveFocus3FacialTrackerAddon",
   "displayName": "HTC VIVE Focus 3 Facial Tracker Add-on",
-  "displayOrder": 5,
+  "id": 5,
   "sources": [
     {
       "title": "VRCFaceTracking VIVE SRanipal",

@@ -1,7 +1,7 @@
 {
   "profile": "Pico4ProEnterprise",
   "displayName": "Pico 4 Pro, Pico 4 Enterprise",
-  "displayOrder": 1,
+  "id": 1,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",

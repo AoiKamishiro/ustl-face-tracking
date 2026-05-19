@@ -1,7 +1,7 @@
 {
   "profile": "VarjoAeroXr3Vr3",
   "displayName": "Varjo Aero, XR-3, VR-3",
-  "displayOrder": 8,
+  "id": 8,
   "sources": [
     {
       "title": "VRCFaceTracking Tracking Compatibility",

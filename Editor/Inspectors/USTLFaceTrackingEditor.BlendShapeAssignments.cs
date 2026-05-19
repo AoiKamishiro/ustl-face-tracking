@@ -166,7 +166,7 @@ namespace USTL.FaceTracking.Editor
 
             SerializedProperty blendShapeAssignment = GetBlendShapeAssignmentElementAt(index);
             UnifiedExpression expression = GetAssignmentExpression(blendShapeAssignment);
-            FaceTrackingHardwareProfile trackingHardwareProfiles = GetHardwareProfiles();
+            int trackingHardwareProfiles = GetHardwareProfiles();
             ExpressionAvailabilityResult result = HardwareSupportDisplay.GetExpressionAvailability(trackingHardwareProfiles, expression);
 
             label.text = StatusIndicatorText;

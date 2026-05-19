@@ -1,7 +1,7 @@
 {
   "profile": "ViveFacialTracker",
   "displayName": "HTC VIVE Facial Tracker",
-  "displayOrder": 3,
+  "id": 3,
   "sources": [
     {
       "title": "VRCFaceTracking VIVE SRanipal",
