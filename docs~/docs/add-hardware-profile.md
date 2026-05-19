@@ -1,37 +1,35 @@
 ---
 id: add-hardware-profile
-title: 機器情報の追加方法
+title: Adding Hardware Profiles
 ---
 
-新しいフェイシャルトラッキング機器を対応表に追加する場合は、機器を識別するenumと、対応表JSONを追加します。
-対応可否は公開資料や実機検証に基づき、根拠URLを必ず残します。
+This page is for contributors who want to add a new face-tracking device to the support table.
+When adding hardware, always keep a source URL that explains the support status or the reason for the judgment.
 
-## 追加するファイル
+## Files to update
 
-主に編集する場所は以下です。
-
-| 種類 | パス |
+| Purpose | Path |
 | --- | --- |
-| 機器ID | `Runtime/Data/FaceTrackingHardwareProfile.cs` |
-| 対応表JSON | `Editor/Data/HardwareSupport/Profiles/*.json` |
-| 表情名一覧 | `Runtime/Data/Expressions/UnifiedExpression.cs` |
-| テスト | `Tests/Editor/HardwareSupportDataTests.cs` |
+| Hardware ID | `Runtime/Data/FaceTrackingHardwareProfile.cs` |
+| Support profile JSON | `Editor/Data/HardwareSupport/Profiles/*.json` |
+| Expression list | `Runtime/Data/Expressions/UnifiedExpression.cs` |
+| Tests | `Tests/Editor/HardwareSupportDataTests.cs` |
 
-## 1. 機器IDを追加する
+## 1. Add the hardware ID
 
-`FaceTrackingHardwareProfile` に新しい値を追加します。
-値はビットフラグなので、既存の最大値の次の `1 << N` を使います。
+Add a new value to `FaceTrackingHardwareProfile`.
+The values are bit flags, so use the next `1 << N` after the current largest value.
 
 ```csharp
 NewHardware = 1 << 18,
 ```
 
-`None` は未選択を表す予約値です。機器定義には使わないでください。
+`None` is reserved for the unselected state. Do not use it for a hardware definition.
 
-## 2. 対応表JSONを追加する
+## 2. Add the support profile JSON
 
-`Editor/Data/HardwareSupport/Profiles/` に、enum名と対応するJSONを追加します。
-`profile` は `FaceTrackingHardwareProfile` の値と完全一致させます。
+Add a JSON file under `Editor/Data/HardwareSupport/Profiles/`.
+The `profile` value must exactly match the enum name in `FaceTrackingHardwareProfile`.
 
 ```json
 {
@@ -42,7 +40,7 @@ NewHardware = 1 << 18,
     {
       "title": "New Hardware tracking specification",
       "url": "https://example.com/spec",
-      "note": "UnifiedExpressionへの対応を確認した資料。"
+      "note": "Source used to map device output to UnifiedExpression."
     }
   ],
   "full": [
@@ -60,49 +58,45 @@ NewHardware = 1 << 18,
 }
 ```
 
-各フィールドの意味は以下です。
-
-| フィールド | 必須 | 説明 |
+| Field | Required | Description |
 | --- | --- | --- |
-| `profile` | 必須 | `FaceTrackingHardwareProfile` のenum名です。 |
-| `displayName` | 必須 | Inspectorに表示する機器名です。 |
-| `displayOrder` | 必須 | Inspectorの機器一覧で使う並び順です。既存値と重複しない値にします。 |
-| `sources` | 必須 | 対応状況の根拠資料です。少なくとも1件入れます。 |
-| `full` | 任意 | 機器がそのまま出力できる `UnifiedExpression` です。 |
-| `converted` | 任意 | 変換、合成、左右統合、エミュレーションなどで出力できる `UnifiedExpression` です。 |
-| `unknown` | 任意 | 公開資料だけでは判断できない `UnifiedExpression` です。 |
+| `profile` | Required | The enum name in `FaceTrackingHardwareProfile`. |
+| `displayName` | Required | The hardware name shown in the Inspector. |
+| `displayOrder` | Required | Sort order in the Inspector. Use a value that does not conflict with existing profiles. |
+| `sources` | Required | Source material for the support status. Add at least one source. |
+| `full` | Optional | `UnifiedExpression` values that the hardware can output directly. |
+| `converted` | Optional | `UnifiedExpression` values supported through conversion, emulation, merged left/right values, or module-side processing. |
+| `unknown` | Optional | `UnifiedExpression` values that cannot be confirmed from public information. |
 
-`full`、`converted`、`unknown` のいずれにも含めない表情は `非対応` として扱われます。
+Expressions that are not listed in `full`, `converted`, or `unknown` are treated as unsupported.
 
-## 3. 表情名を確認する
+## 3. Check expression names
 
-JSONに書ける表情名は `UnifiedExpression` の値だけです。
-存在しない名前や `None` を指定すると読み込みエラーになります。
+Only values from `UnifiedExpression` can be used in the JSON file.
+Invalid names or `None` cause a load error.
 
-機器側のドキュメントが独自名を使っている場合は、VRCFaceTrackingのUnified Expressionsに対応づけてから記載します。
-1つの機器内で同じ表情名を重複して書く必要はありません。
+If the device documentation uses its own expression names, map them to VRCFaceTracking Unified Expressions before adding them.
+You do not need to list the same expression more than once in a single hardware profile.
 
-## 4. テストの期待値を更新する
+## 4. Update tests
 
-新しい機器を追加したら、`HardwareSupportDataTests.Profiles_LoadsJsonInDisplayOrder` の期待リストに追加します。
-`displayOrder` に合わせた位置へ入れてください。
+After adding hardware, update the expected list in `HardwareSupportDataTests.Profiles_LoadsJsonInDisplayOrder`.
+Place the new profile according to `displayOrder`.
 
-その後、UnityのEditModeテストで以下を確認します。
+Then run Unity EditMode tests and confirm that:
 
-- JSONが読み込めること
-- `profile` とenumが一致していること
-- `displayOrder` が重複していないこと
-- JSON内の `UnifiedExpression` 名がすべて存在すること
+- The JSON profile loads correctly.
+- `profile` matches the enum value.
+- `displayOrder` values do not conflict.
+- All `UnifiedExpression` names in JSON exist.
 
-## 判定基準
+## Support status criteria
 
-対応状態を選ぶときは、以下の基準にそろえます。
-
-| 状態 | 判断基準 |
+| Status | Criteria |
 | --- | --- |
-| `full` | 機器またはVRCFTモジュールが対象の表情値を直接出力します。 |
-| `converted` | 別信号からの推定、左右共有、合成値、モジュール内変換などを含みます。 |
-| `unknown` | 資料上の記載が不足しており、対応可否を確定できません。 |
-| 非対応 | 対応なし、または対応が確認できないため出力対象にしません。 |
+| `full` | The hardware or VRCFT module outputs the expression value directly. |
+| `converted` | The value is produced through estimation, shared left/right values, synthesized values, or module-side conversion. |
+| `unknown` | The available information is not enough to determine support. |
+| Unsupported | The expression is not supported, or support cannot be confirmed. |
 
-判断に迷う場合は `unknown` に置き、`sources.note` に未確定理由を残します。
+When unsure, use `unknown` and explain the reason in `sources.note`.

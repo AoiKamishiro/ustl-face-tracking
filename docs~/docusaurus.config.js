@@ -2,15 +2,16 @@
 
 const {themes} = require('prism-react-renderer');
 
-const siteUrl = process.env.DOCS_URL || 'https://example.com';
+const siteUrl = process.env.DOCS_URL || 'https://ustl-face-tracking.kamishiro.online';
 const baseUrl = process.env.DOCS_BASE_URL || '/';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'U-Stella FaceTracking',
-  tagline: 'VRChatアバター向けフェイシャルトラッキング設定ツール',
+  tagline: 'Face tracking setup tool for VRChat avatars',
   url: siteUrl,
   baseUrl,
+  favicon: 'img/favicon.ico',
   trailingSlash: true,
   onBrokenLinks: 'throw',
   markdown: {
@@ -19,8 +20,18 @@ const config = {
     },
   },
   i18n: {
-    defaultLocale: 'ja',
-    locales: ['ja'],
+    defaultLocale: 'en',
+    locales: ['en', 'ja'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+        htmlLang: 'en-US',
+      },
+      ja: {
+        label: '日本語',
+        htmlLang: 'ja-JP',
+      },
+    },
   },
   presets: [
     [
@@ -48,7 +59,11 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'docs',
             position: 'left',
-            label: 'ドキュメント',
+            label: 'Docs',
+          },
+          {
+            type: 'localeDropdown',
+            position: 'right',
           },
           {
             href: 'https://github.com/AoiKamishiro/ustl-face-tracking',
@@ -64,11 +79,11 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: '利用方法',
+                label: 'Usage Guide',
                 to: '/usage/',
               },
               {
-                label: '機器情報の追加方法',
+                label: 'Adding Hardware Profiles',
                 to: '/add-hardware-profile/',
               },
             ],

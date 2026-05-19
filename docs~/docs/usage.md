@@ -1,81 +1,63 @@
 ---
 id: usage
-title: 利用方法
+title: Usage Guide
 ---
 
-## インストール
+## Install the package
 
-VPMパッケージとして追加できる状態になったら、VCCまたはALCOMから `U-Stella FaceTracking` をUnityプロジェクトへ追加します。
-依存パッケージとして NDMF、Modular Avatar、VRChat SDK が必要です。
+Add the U-Stella VPM repository to VCC or ALCOM.
 
-開発中のパッケージを直接確認する場合は、Unityプロジェクトの `Packages/jp.co.u-stella.facetracking` として配置してください。
+```text
+https://ustl-vpm.kamishiro.online/index.json
+```
 
-## コンポーネントを追加する
+Then add `U-Stella FaceTracking` to your Unity project from the package list.
 
-1. Unityで対象アバターのPrefabまたはシーン上のアバターを開きます。
-2. アバター直下、または設定を管理しやすい子オブジェクトを選択します。
-3. Inspectorから `U-Stella/U-Stella FaceTracking` コンポーネントを追加します。
-4. `顔メッシュレンダラー` にフェイシャルトラッキング用ブレンドシェイプを持つ `SkinnedMeshRenderer` を指定します。
+Required packages are resolved through VPM.
 
-このコンポーネントは `IEditorOnly` です。アップロードされるアバター本体には残らず、ビルド時に必要なAnimatorとModular Avatar設定へ変換されます。
+## Add the component
 
-## 使用機材を選択する
+1. Open the target avatar prefab or scene avatar in Unity.
+2. Select the avatar root, or a child object where you want to keep the settings.
+3. Add the `U-Stella/U-Stella FaceTracking` component from the Inspector.
+4. Assign a `SkinnedMeshRenderer` with face-tracking blend shapes to `Face Mesh Renderer`.
 
-`使用機材` からアバターで想定するフェイシャルトラッキング機器を選択します。
-複数機器を選択できます。
+## Select tracking devices
 
-対応状態は以下の意味で表示されます。
+Use `Tracking Devices` to select the face-tracking devices you want the avatar to support.
+You can select more than one device.
 
-| 表示 | 意味 |
+The support status shows how each facial expression is handled by the selected devices.
+
+| Status | Meaning |
 | --- | --- |
-| 完全対応 | 機器がその表情信号をそのまま出力できます。 |
-| 変換対応 | 合成、エミュレーション、左右統合、モジュール内変換などを含んで出力できます。 |
-| 未確認 | 公開資料だけでは対応可否を確定できていません。 |
-| 非対応 | 対応が確認されていません。 |
+| Fully Supported | The device can output that expression directly. |
+| Converted | The expression can be produced through conversion, emulation, merged left/right values, or module-side processing. |
+| Unknown | Public information is not enough to confirm support. |
+| Unsupported | Support has not been confirmed. |
 
-## 機能設定を調整する
+## Configure features
 
-`機能設定` では、視線、まぶた、眉、口、舌などの機能ごとに出力形式と同期方式を設定します。
+In `Feature Settings`, choose how each facial feature should be used.
+This includes eyes, eyelids, brows, mouth, tongue, and related face-tracking features.
 
-| 項目 | 説明 |
+| Item | Description |
 | --- | --- |
-| 機能 | 設定対象のフェイストラッキング機能です。 |
-| 機材 | 選択中の機器で、その出力形式が使えるかを示します。 |
-| 出力形式 | 左右別、統合、VRChat標準など、生成するパラメーターの形を選びます。 |
-| 同期方式 | ローカルのみ、Float、Binary、無効を選びます。 |
+| Feature | The facial feature being configured. |
+| Device | Shows whether the selected devices support the chosen output format. |
+| Output Format | Selects how the feature should be represented, such as separate left/right values or a shared value. |
+| Sync Mode | Selects how the feature should be synchronized. |
 
-同期方式の目安は以下です。
+Use the sync cost display at the bottom of the Inspector to check the current parameter usage.
 
-| 同期方式 | 用途 |
-| --- | --- |
-| ローカルのみ | 自分の画面だけで動けばよい表情に使います。同期アバターパラメーターを消費しません。 |
-| Float (8-bit) | 精度を優先する表情に使います。1つのfloat同期パラメーターを使います。 |
-| Binary (1-bitから4-bit) | 同期コストを抑えたい表情に使います。値は指定ビット数で量子化されます。 |
-| 無効 | その機能を生成対象から外します。 |
-| VRChat標準 | 対応する出力形式では、VRChat標準のOSC Eye Trackingなどに委ねます。 |
+## Assign blend shapes
 
-Inspector下部の `同期パラメーター消費` で、現在の設定が消費する同期ビット数とパラメーター数を確認できます。
+Use `Blend Shape Assignments` to map each face-tracking expression to a blend shape on your face mesh.
 
-## ブレンドシェイプを割り当てる
+1. Set `Face Mesh Renderer`.
+2. Select the matching blend shape for each expression.
+3. Adjust `Maximum Value` when needed. Values are in the `0` to `100` range.
+4. Expressions that are not used by the current feature settings are disabled.
 
-`ブレンドシェイプ割り当て` では、`UnifiedExpression` ごとに顔メッシュのブレンドシェイプ名を指定します。
-
-1. `顔メッシュレンダラー` を設定します。
-2. 各行の `ブレンドシェイプ` から対応する名前を選択します。
-3. 必要に応じて `最大値` を調整します。値は `0` から `100` の範囲です。
-4. 機能設定で未使用の表情は入力欄が無効になります。
-
-ブレンドシェイプ名が `UnifiedExpression` と同名の場合、顔メッシュ設定時に未設定の行へ自動入力されます。
-存在しないブレンドシェイプ名が残っている場合は、Inspector上で無効な値として表示されます。
-
-## ビルド時に生成されるもの
-
-NDMFの `Generating` フェーズで、コンポーネントの設定から以下が生成されます。
-
-- Modular Avatar Parameters
-- Modular Avatar Merge Animator
-- FXレイヤー用Animator Controller
-- ブレンドシェイプを操作するAnimationClip
-
-生成されたオブジェクトとアセットはビルド処理用です。
-通常は手動で編集せず、`U-Stella FaceTracking` コンポーネントの設定を変更して再ビルドします。
+If a blend shape has the same name as an expression, it may be filled automatically when the face mesh is assigned.
+If a missing blend shape name remains in the settings, it is shown as an invalid value in the Inspector.

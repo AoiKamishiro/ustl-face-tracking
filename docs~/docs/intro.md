@@ -4,18 +4,17 @@ slug: /
 title: U-Stella FaceTracking
 ---
 
-U-Stella FaceTracking は、VRChatアバター向けのフェイシャルトラッキング設定を補助するUnityエディター拡張です。
-アバターに `U-Stella FaceTracking` コンポーネントを追加すると、選択したトラッキング機器、出力形式、同期方式、ブレンドシェイプ割り当てをもとに、NDMFのビルド時に Modular Avatar 用のFXレイヤーとパラメーターを生成します。
+U-Stella FaceTracking is a Unity editor extension that helps set up face tracking for VRChat avatars.
+It provides an Inspector workflow for choosing tracking devices, selecting the facial features you want to use, and assigning blend shapes on your avatar's face mesh.
 
-## 前提
+## Requirements
 
 - Unity 2022.3
-- VRChat SDK Avatars / Base
-- NDMF
+- A VRChat avatar project
 - Modular Avatar
-- フェイシャルトラッキング用のブレンドシェイプを持つ顔メッシュ
+- A face mesh with blend shapes for face tracking
 
-## ドキュメント
+## Documentation
 
-- [利用方法](./usage.md)
-- [機器情報の追加方法](./add-hardware-profile.md)
+- [Usage Guide](./usage.md)
+- [Adding Hardware Profiles](./add-hardware-profile.md)

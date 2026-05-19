@@ -14,7 +14,7 @@ Optional repository variables:
 
 - `FTP_REMOTE_DIR`: FTP upload destination. Defaults to `/`.
 - `FTP_PROTOCOL`: `ftp`, `ftps`, or `ftps-legacy`. Defaults to `ftp`.
-- `DOCS_URL`: Site origin used by Docusaurus. Defaults to `https://example.com`.
+- `DOCS_URL`: Site origin used by Docusaurus. Defaults to `https://ustl-face-tracking.kamishiro.online`.
 - `DOCS_BASE_URL`: Site base path. Defaults to `/`.
 
 ## Dependabot
