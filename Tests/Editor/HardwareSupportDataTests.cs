@@ -11,44 +11,33 @@ namespace USTL.FaceTracking.Editor.Tests
         private const string ProfileAssetsDirectoryGuid = "acb8333e55094b2caa2065288be3ac3e";
 
         [Test]
-        public void Profiles_LoadsJsonInDisplayOrder()
+        public void Profiles_LoadsJsonInIdOrder()
         {
-            Assert.That(HardwareSupportData.Profiles, Is.EqualTo(new[]
+            int previousId = -1;
+            foreach (HardwareSupportProfile profile in HardwareSupportData.Profiles)
             {
-                FaceTrackingHardwareProfile.MetaQuestPro,
-                FaceTrackingHardwareProfile.Pico4ProEnterprise,
-                FaceTrackingHardwareProfile.ViveProEye,
-                FaceTrackingHardwareProfile.ViveFacialTracker,
-                FaceTrackingHardwareProfile.ViveFocus3EyeTrackingAddon,
-                FaceTrackingHardwareProfile.ViveFocus3FacialTrackerAddon,
-                FaceTrackingHardwareProfile.ViveXrEliteFullFaceTracker,
-                FaceTrackingHardwareProfile.ViveFocusVisionFaceTrackingAddon,
-                FaceTrackingHardwareProfile.VarjoAeroXr3Vr3,
-                FaceTrackingHardwareProfile.PimaxDroolonPi1,
-                FaceTrackingHardwareProfile.PimaxSuperCrystal,
-                FaceTrackingHardwareProfile.Psvr2,
-                FaceTrackingHardwareProfile.SamsungGalaxyXr,
-                FaceTrackingHardwareProfile.HpReverbG2Omnicept,
-                FaceTrackingHardwareProfile.ArkitIos,
-                FaceTrackingHardwareProfile.AndroidMeowFace,
-                FaceTrackingHardwareProfile.EyeTrackVR,
-                FaceTrackingHardwareProfile.ProjectBabble,
-            }));
+                Assert.That(profile.Id, Is.GreaterThan(previousId));
+                Assert.That(profile.Flag, Is.EqualTo(1 << profile.Id));
+                previousId = profile.Id;
+            }
         }
 
         [Test]
         public void GetProfileDisplayName_UsesJsonDisplayName()
         {
-            Assert.That(HardwareSupportData.GetProfileDisplayName(FaceTrackingHardwareProfile.SamsungGalaxyXr), Is.EqualTo("Samsung Galaxy XR"));
+            Assert.That(HardwareSupportData.GetProfileDisplayName(GetProfile("SamsungGalaxyXr")), Is.EqualTo("Samsung Galaxy XR"));
         }
 
         [Test]
         public void GetExpressionStatus_UsesExplicitJsonExpressions()
         {
-            Assert.That(HardwareSupportData.GetExpressionStatus(FaceTrackingHardwareProfile.PimaxDroolonPi1, UnifiedExpression.EyeLookOutRight), Is.EqualTo(HardwareSupportStatus.Full));
-            Assert.That(HardwareSupportData.GetExpressionStatus(FaceTrackingHardwareProfile.PimaxDroolonPi1, UnifiedExpression.EyeClosedRight), Is.EqualTo(HardwareSupportStatus.Converted));
-            Assert.That(HardwareSupportData.GetExpressionStatus(FaceTrackingHardwareProfile.PimaxDroolonPi1, UnifiedExpression.BrowPinchRight), Is.EqualTo(HardwareSupportStatus.Unsupported));
-            Assert.That(HardwareSupportData.GetExpressionStatus(FaceTrackingHardwareProfile.ProjectBabble, UnifiedExpression.TongueTwistLeft), Is.EqualTo(HardwareSupportStatus.Full));
+            HardwareSupportProfile pimaxDroolonPi1 = GetProfile("PimaxDroolonPi1");
+            HardwareSupportProfile projectBabble = GetProfile("ProjectBabble");
+
+            Assert.That(HardwareSupportData.GetExpressionStatus(pimaxDroolonPi1, UnifiedExpression.EyeLookOutRight), Is.EqualTo(HardwareSupportStatus.Full));
+            Assert.That(HardwareSupportData.GetExpressionStatus(pimaxDroolonPi1, UnifiedExpression.EyeClosedRight), Is.EqualTo(HardwareSupportStatus.Converted));
+            Assert.That(HardwareSupportData.GetExpressionStatus(pimaxDroolonPi1, UnifiedExpression.BrowPinchRight), Is.EqualTo(HardwareSupportStatus.Unsupported));
+            Assert.That(HardwareSupportData.GetExpressionStatus(projectBabble, UnifiedExpression.TongueTwistLeft), Is.EqualTo(HardwareSupportStatus.Full));
         }
 
         [Test]
@@ -110,6 +99,20 @@ namespace USTL.FaceTracking.Editor.Tests
                     errors.Add($"{path}: {fieldName} contains unknown UnifiedExpression '{expression}'.");
                 }
             }
+        }
+
+        private static HardwareSupportProfile GetProfile(string profileName)
+        {
+            foreach (HardwareSupportProfile profile in HardwareSupportData.Profiles)
+            {
+                if (profile.Name == profileName)
+                {
+                    return profile;
+                }
+            }
+
+            Assert.Fail($"Profile was not found: {profileName}");
+            return default;
         }
 
         [Serializable]
