@@ -1,0 +1,73 @@
+{
+  "profile": "ViveFacialTracker",
+  "displayName": "HTC VIVE Facial Tracker",
+  "displayOrder": 3,
+  "sources": [
+    {
+      "title": "VRCFaceTracking VIVE SRanipal",
+      "url": "https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/compatibility/vive-sranipal",
+      "note": "SRanipal-to-UnifiedExpression comparison table."
+    },
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table for the selected hardware."
+    }
+  ],
+  "full": [
+    "CheekPuffLeft",
+    "CheekPuffRight",
+    "JawOpen",
+    "MouthClosed",
+    "JawLeft",
+    "JawRight",
+    "JawForward",
+    "MouthUpperUpRight",
+    "MouthUpperUpLeft",
+    "MouthLowerDownRight",
+    "MouthLowerDownLeft",
+    "MouthUpperRight",
+    "MouthUpperLeft",
+    "MouthLowerRight",
+    "MouthLowerLeft",
+    "TongueOut",
+    "TongueRight",
+    "TongueLeft",
+    "TongueUp",
+    "TongueDown",
+    "TongueRoll",
+    "MouthCornerPullRight",
+    "MouthCornerPullLeft",
+    "MouthCornerSlantRight",
+    "MouthCornerSlantLeft",
+    "MouthFrownRight",
+    "MouthFrownLeft",
+    "MouthRaiserLower"
+  ],
+  "converted": [
+    "CheekSuckLeft",
+    "CheekSuckRight",
+    "CheekSquintLeft",
+    "CheekSquintRight",
+    "MouthDimpleLeft",
+    "MouthDimpleRight",
+    "MouthStretchRight",
+    "MouthStretchLeft",
+    "LipSuckUpperRight",
+    "LipSuckUpperLeft",
+    "LipSuckLowerRight",
+    "LipSuckLowerLeft",
+    "LipFunnelUpperRight",
+    "LipFunnelUpperLeft",
+    "LipFunnelLowerRight",
+    "LipFunnelLowerLeft",
+    "LipPuckerUpperRight",
+    "LipPuckerUpperLeft",
+    "LipPuckerLowerRight",
+    "LipPuckerLowerLeft",
+    "MouthUpperDeepenRight",
+    "MouthUpperDeepenLeft",
+    "MouthRaiserUpper",
+    "MouthRaiserLower"
+  ]
+}

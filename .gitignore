@@ -1,0 +1,4 @@
+# Ignore FileSystem metadata files
+
+.DS_Store
+Thumbs.db

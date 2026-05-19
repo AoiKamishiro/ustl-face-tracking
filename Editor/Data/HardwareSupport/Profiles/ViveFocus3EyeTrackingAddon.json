@@ -1,0 +1,43 @@
+{
+  "profile": "ViveFocus3EyeTrackingAddon",
+  "displayName": "HTC VIVE Focus 3 Eye Tracking Add-on",
+  "displayOrder": 4,
+  "sources": [
+    {
+      "title": "VRCFaceTracking VIVE SRanipal",
+      "url": "https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/compatibility/vive-sranipal",
+      "note": "SRanipal-to-UnifiedExpression comparison table."
+    },
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table for the selected hardware."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft",
+    "EyeClosedRight",
+    "EyeClosedLeft"
+  ],
+  "converted": [
+    "EyeWideRight",
+    "EyeWideLeft",
+    "EyeSquintRight",
+    "EyeSquintLeft",
+    "BrowPinchRight",
+    "BrowPinchLeft",
+    "BrowLowererRight",
+    "BrowLowererLeft",
+    "BrowInnerUpRight",
+    "BrowInnerUpLeft",
+    "BrowOuterUpRight",
+    "BrowOuterUpLeft"
+  ]
+}

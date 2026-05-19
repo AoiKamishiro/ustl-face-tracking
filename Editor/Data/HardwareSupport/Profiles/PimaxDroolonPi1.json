@@ -1,0 +1,26 @@
+{
+  "profile": "PimaxDroolonPi1",
+  "displayName": "Pimax Droolon Pi 1",
+  "displayOrder": 9,
+  "sources": [
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table; this package records the resulting UnifiedExpression keys explicitly."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft"
+  ],
+  "converted": [
+    "EyeClosedRight",
+    "EyeClosedLeft"
+  ]
+}

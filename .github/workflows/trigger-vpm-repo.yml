@@ -1,0 +1,41 @@
+name: Trigger VPM repository rebuild
+
+on:
+  release:
+    types:
+      - published
+      - unpublished
+      - created
+      - edited
+      - deleted
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    name: Dispatch VPM repository workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch workflow
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.VPM_REPO_TOKEN }}
+          script: |
+            const owner = process.env.VPM_REPO_OWNER || context.repo.owner;
+            const repo = process.env.VPM_REPO_NAME || 'ustl-package-listing';
+            const workflow_id = process.env.VPM_REPO_WORKFLOW || 'build-listing.yml';
+            const ref = process.env.VPM_REPO_REF || 'main';
+
+            await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              workflow_id,
+              ref,
+            });
+        env:
+          VPM_REPO_OWNER: ${{ vars.VPM_REPO_OWNER }}
+          VPM_REPO_NAME: ${{ vars.VPM_REPO_NAME }}
+          VPM_REPO_WORKFLOW: ${{ vars.VPM_REPO_WORKFLOW }}
+          VPM_REPO_REF: ${{ vars.VPM_REPO_REF }}

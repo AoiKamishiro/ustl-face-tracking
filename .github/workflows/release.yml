@@ -1,0 +1,142 @@
+name: Perform Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release
+        required: true
+        type: string
+      release_kind:
+        description: Release kind
+        required: true
+        default: prerelease
+        type: choice
+        options:
+          - prerelease
+          - stable
+          - adhoc
+      publish:
+        description: Publish git tag, GitHub Release, and VPM repository rebuild
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  PKG_NAME: jp.co.u-stella.facetracking
+  VERSION: ${{ inputs.version }}
+
+jobs:
+  build-docs:
+    name: Run CI
+    uses: ./.github/workflows/ci.yml
+
+  create-release:
+    name: Create release assets
+    needs:
+      - build-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate release inputs
+        run: |
+          if ! printf '%s' "${VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$'; then
+            echo "::error::Version must be a semantic version."
+            exit 1
+          fi
+
+          case "${RELEASE_KIND}" in
+            prerelease)
+              if ! printf '%s' "${VERSION}" | grep -q -- '-'; then
+                echo "::error::Prerelease version must contain a hyphen."
+                exit 1
+              fi
+              ;;
+            stable)
+              if printf '%s' "${VERSION}" | grep -q -- '-'; then
+                echo "::error::Stable version must not contain a hyphen."
+                exit 1
+              fi
+              ;;
+            adhoc)
+              if [ "${PUBLISH}" = "true" ]; then
+                echo "::error::Adhoc release cannot be published."
+                exit 1
+              fi
+              ;;
+          esac
+        env:
+          RELEASE_KIND: ${{ inputs.release_kind }}
+          PUBLISH: ${{ inputs.publish }}
+
+      - name: Configure git user
+        if: ${{ inputs.publish }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update package version
+        run: |
+          jq '.version = env.VERSION' package.json > package.json.tmp
+          mv package.json.tmp package.json
+
+      - name: Commit and tag version
+        if: ${{ inputs.publish }}
+        run: |
+          git add package.json
+          git commit -m "Release ${VERSION}"
+          git tag -a "${VERSION}" -m "Release ${VERSION}"
+          git push origin HEAD
+          git push origin "${VERSION}"
+
+      - name: Create VPM package zip
+        run: |
+          zip_file="${PKG_NAME}-${VERSION}.zip"
+          mkdir -p dist
+          zip -r "dist/${zip_file}" . \
+            -x "dist/*" \
+            -x ".git" \
+            -x ".git/*" \
+            -x ".github" \
+            -x ".github/*" \
+            -x "docs~" \
+            -x "docs~/*" \
+            -x "node_modules/*" \
+            -x ".DS_Store" \
+            -x "*/.DS_Store"
+          sha256sum "dist/${zip_file}" > "dist/${zip_file}.sha256"
+          echo "ZIP_FILE=dist/${zip_file}" >> "${GITHUB_ENV}"
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: package-zip
+          path: |
+            ${{ env.ZIP_FILE }}
+            ${{ env.ZIP_FILE }}.sha256
+            package.json
+
+      - name: Create GitHub Release
+        if: ${{ inputs.publish }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ${{ env.VERSION }}
+          draft: true
+          prerelease: ${{ inputs.release_kind != 'stable' }}
+          make_latest: ${{ inputs.release_kind == 'stable' }}
+          files: |
+            ${{ env.ZIP_FILE }}
+            ${{ env.ZIP_FILE }}.sha256
+            package.json

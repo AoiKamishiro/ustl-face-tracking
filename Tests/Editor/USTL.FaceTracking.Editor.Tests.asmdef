@@ -1,0 +1,28 @@
+{
+  "name": "USTL.FaceTracking.Editor.Tests",
+  "rootNamespace": "USTL.FaceTracking.Editor.Tests",
+  "references": [
+    "nadena.dev.ndmf",
+    "nadena.dev.modular-avatar.core",
+    "UnityEditor.TestRunner",
+    "UnityEngine.TestRunner",
+    "USTL.FaceTracking",
+    "USTL.FaceTracking.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "Newtonsoft.Json.dll",
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

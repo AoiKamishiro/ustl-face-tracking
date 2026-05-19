@@ -1,0 +1,85 @@
+name: Deploy documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs~/**
+      - .github/workflows/deploy-docs.yml
+  workflow_dispatch:
+
+concurrency:
+  group: docs-ftp
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-docs:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs~
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs~/package-lock.json
+
+      - name: Use supported npm
+        run: npm install --global npm@11.11.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Docusaurus
+        run: npm run build
+        env:
+          DOCS_URL: ${{ vars.DOCS_URL || 'https://example.com' }}
+          DOCS_BASE_URL: ${{ vars.DOCS_BASE_URL || '/' }}
+
+      - name: Upload documentation build
+        uses: actions/upload-artifact@v7
+        with:
+          name: docs-build
+          path: docs~/build
+
+  deploy-docs:
+    name: Upload documentation by FTP
+    needs:
+      - build-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download documentation build
+        uses: actions/download-artifact@v8
+        with:
+          name: docs-build
+          path: docs-build
+
+      - name: Validate FTP settings
+        run: |
+          test -n "${FTP_SERVER}"
+          test -n "${FTP_USERNAME}"
+          test -n "${FTP_PASSWORD}"
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+
+      - name: Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: docs-build/
+          server-dir: ${{ vars.FTP_REMOTE_DIR || '/' }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}

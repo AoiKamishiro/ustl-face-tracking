@@ -1,0 +1,34 @@
+{
+  "profile": "VarjoAeroXr3Vr3",
+  "displayName": "Varjo Aero, XR-3, VR-3",
+  "displayOrder": 8,
+  "sources": [
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table; this package records the resulting UnifiedExpression keys explicitly."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft",
+    "EyeClosedRight",
+    "EyeClosedLeft",
+    "EyeDilationRight",
+    "EyeDilationLeft",
+    "EyeConstrictRight",
+    "EyeConstrictLeft"
+  ],
+  "converted": [
+    "EyeWideRight",
+    "EyeWideLeft",
+    "EyeSquintRight",
+    "EyeSquintLeft"
+  ]
+}

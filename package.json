@@ -1,0 +1,12 @@
+{
+  "name": "jp.co.u-stella.facetracking",
+  "displayName": "U-Stella FaceTracking",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "vpmDependencies": {
+    "nadena.dev.ndmf": ">=1.11.0",
+    "nadena.dev.modular-avatar": ">=1.16.2",
+    "com.vrchat.avatars": ">=3.10.3",
+    "com.vrchat.base": ">=3.10.3"
+  }
+}

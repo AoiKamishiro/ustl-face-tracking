@@ -1,0 +1,47 @@
+{
+  "profile": "ViveProEye",
+  "displayName": "HTC VIVE Pro Eye",
+  "displayOrder": 2,
+  "sources": [
+    {
+      "title": "VRCFaceTracking VIVE SRanipal",
+      "url": "https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/compatibility/vive-sranipal",
+      "note": "SRanipal-to-UnifiedExpression comparison table."
+    },
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table for the selected hardware."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft",
+    "EyeClosedRight",
+    "EyeClosedLeft",
+    "EyeWideRight",
+    "EyeWideLeft",
+    "EyeSquintRight",
+    "EyeSquintLeft",
+    "EyeDilationRight",
+    "EyeDilationLeft",
+    "EyeConstrictRight",
+    "EyeConstrictLeft"
+  ],
+  "converted": [
+    "BrowPinchRight",
+    "BrowPinchLeft",
+    "BrowLowererRight",
+    "BrowLowererLeft",
+    "BrowInnerUpRight",
+    "BrowInnerUpLeft",
+    "BrowOuterUpRight",
+    "BrowOuterUpLeft"
+  ]
+}

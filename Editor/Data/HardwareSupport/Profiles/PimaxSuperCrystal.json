@@ -1,0 +1,42 @@
+{
+  "profile": "PimaxSuperCrystal",
+  "displayName": "Pimax Super, Crystal",
+  "displayOrder": 10,
+  "sources": [
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table; this package records the resulting UnifiedExpression keys explicitly."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft",
+    "EyeClosedRight",
+    "EyeClosedLeft"
+  ],
+  "converted": [
+    "EyeWideRight",
+    "EyeWideLeft",
+    "EyeSquintRight",
+    "EyeSquintLeft",
+    "BrowPinchRight",
+    "BrowPinchLeft",
+    "BrowLowererRight",
+    "BrowLowererLeft",
+    "BrowInnerUpRight",
+    "BrowInnerUpLeft",
+    "BrowOuterUpRight",
+    "BrowOuterUpLeft",
+    "EyeDilationRight",
+    "EyeDilationLeft",
+    "EyeConstrictRight",
+    "EyeConstrictLeft"
+  ]
+}

@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    name: Validate package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate package.json
+        run: |
+          jq -e '
+            .name == "jp.co.u-stella.facetracking"
+            and (.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$"))
+            and (.unity == "2022.3")
+            and (.vpmDependencies["nadena.dev.ndmf"] != null)
+            and (.vpmDependencies["nadena.dev.modular-avatar"] != null)
+            and (.vpmDependencies["com.vrchat.avatars"] != null)
+            and (.vpmDependencies["com.vrchat.base"] != null)
+          ' package.json
+
+      - name: Check required package files
+        run: |
+          test -f package.json
+          test -f LICENSE
+          test -d Runtime
+          test -d Editor
+
+  build-docs:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs~
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs~/package-lock.json
+
+      - name: Use supported npm
+        run: npm install --global npm@11.11.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
+      - name: Build Docusaurus
+        run: npm run build
+
+      - name: Package documentation artifact
+        run: tar -cf docs.tar -C build .
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: docs
+          path: docs~/docs.tar

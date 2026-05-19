@@ -1,0 +1,35 @@
+{
+  "profile": "HpReverbG2Omnicept",
+  "displayName": "HP Reverb G2 Omnicept",
+  "displayOrder": 13,
+  "sources": [
+    {
+      "title": "VRCFaceTracking VIVE SRanipal",
+      "url": "https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/compatibility/vive-sranipal",
+      "note": "SRanipal-to-UnifiedExpression comparison table."
+    },
+    {
+      "title": "VRCFaceTracking Tracking Compatibility",
+      "url": "https://docs.vrcft.io/docs/hardware/interface-compatibilities",
+      "note": "Hardware-level capability table for the selected hardware."
+    }
+  ],
+  "full": [
+    "EyeLookOutRight",
+    "EyeLookInRight",
+    "EyeLookUpRight",
+    "EyeLookDownRight",
+    "EyeLookOutLeft",
+    "EyeLookInLeft",
+    "EyeLookUpLeft",
+    "EyeLookDownLeft",
+    "EyeDilationRight",
+    "EyeDilationLeft",
+    "EyeConstrictRight",
+    "EyeConstrictLeft"
+  ],
+  "converted": [
+    "EyeClosedRight",
+    "EyeClosedLeft"
+  ]
+}
