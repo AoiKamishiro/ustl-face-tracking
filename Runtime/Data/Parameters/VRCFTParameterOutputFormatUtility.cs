@@ -6,7 +6,7 @@ namespace USTL.FaceTracking
     {
         internal static int ClampIndex(FaceTrackingFeatureDefinition featureDefinition, int outputFormatIndex)
         {
-            int maxOutputFormatIndex = featureDefinition == null ? -1 : featureDefinition.OutputFormats.Length - 1;
+            int maxOutputFormatIndex = featureDefinition == null ? -1 : featureDefinition.OutputFormats.Count - 1;
             return maxOutputFormatIndex <= 0 ? 0 : Math.Max(0, Math.Min(outputFormatIndex, maxOutputFormatIndex));
         }
 

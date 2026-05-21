@@ -32,6 +32,23 @@ namespace USTL.FaceTracking.Editor
             return true;
         }
 
+        internal bool Refresh(Mesh mesh)
+        {
+            int blendShapeCount = mesh ? mesh.blendShapeCount : 0;
+            if (_currentBlendShapeMesh == mesh && _currentBlendShapeCount == blendShapeCount && HasCompleteChoices)
+            {
+                return false;
+            }
+
+            _currentBlendShapeMesh = mesh;
+            _currentBlendShapeCount = blendShapeCount;
+
+            _choices.Clear();
+            _choices.Add(string.Empty);
+            _choices.AddRange(FaceTrackingEditorUtility.GetBlendShapeNames(mesh));
+            return true;
+        }
+
         internal List<string> GetChoicesForValue(string currentValue)
         {
             if (string.IsNullOrEmpty(currentValue) || _choices.Contains(currentValue))

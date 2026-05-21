@@ -6,35 +6,7 @@ namespace USTL.FaceTracking.Editor
     {
         internal static IReadOnlyList<HardwareSupportProfile> Profiles => HardwareSupportData.Profiles;
 
-        internal static List<string> GetProfileChoices()
-        {
-            List<string> choices = new()
-            {
-                FormatNoProfile(),
-            };
-
-            foreach (HardwareSupportProfile profile in Profiles)
-            {
-                choices.Add(FormatProfile(profile));
-            }
-
-            return choices;
-        }
-
-        internal static int FindProfile(string displayName)
-        {
-            foreach (HardwareSupportProfile profile in Profiles)
-            {
-                if (FormatProfile(profile) == displayName)
-                {
-                    return profile.Flag;
-                }
-            }
-
-            return 0;
-        }
-
-        internal static string FormatNoProfile()
+        internal static string FormatProfile()
         {
             return T("hardware.None", "No Tracking Hardware");
         }
@@ -54,7 +26,7 @@ namespace USTL.FaceTracking.Editor
             List<string> selectedProfiles = GetSelectedProfileNames(profiles);
             if (selectedProfiles.Count == 0)
             {
-                return FormatNoProfile();
+                return FormatProfile();
             }
 
             if (selectedProfiles.Count <= 2)
@@ -209,14 +181,6 @@ namespace USTL.FaceTracking.Editor
             }
 
             return hasUnknown ? HardwareSupportStatus.Unknown : HardwareSupportStatus.Unsupported;
-        }
-
-        internal static string FormatStatusTooltip(HardwareSupportProfile profile, string featureName, HardwareSupportStatus status)
-        {
-            string profileName = FormatProfile(profile);
-            string explanation = FormatStatusExplanation(status);
-
-            return $"{profileName} / {featureName}\n{FormatStatus(status)}\n\n{explanation}";
         }
 
         private static string FormatStatusExplanation(HardwareSupportStatus status)

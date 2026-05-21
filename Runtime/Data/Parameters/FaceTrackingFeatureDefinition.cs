@@ -53,6 +53,6 @@ namespace USTL.FaceTracking
 
         internal FaceTrackingFeature Feature { get; }
         internal string DisplayName { get; }
-        internal VRCFTParameterOutputFormat[] OutputFormats { get; }
+        internal IReadOnlyList<VRCFTParameterOutputFormat> OutputFormats { get; }
     }
 }

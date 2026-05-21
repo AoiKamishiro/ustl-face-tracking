@@ -69,7 +69,7 @@ namespace USTL.FaceTracking.Editor.Tests
             {
                 AddRequiredKey(requiredKeys, acceptedKeys, $"feature.{featureDefinition.Feature}");
 
-                for (int i = 0; i < featureDefinition.OutputFormats.Length; i++)
+                for (int i = 0; i < featureDefinition.OutputFormats.Count; i++)
                 {
                     VRCFTParameterOutputFormat outputFormat = featureDefinition.OutputFormats[i];
                     AddRequiredKey(requiredKeys, acceptedKeys, $"output_format.{featureDefinition.Feature}.{i}");

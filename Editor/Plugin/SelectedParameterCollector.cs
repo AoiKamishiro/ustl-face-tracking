@@ -16,7 +16,7 @@ namespace USTL.FaceTracking.Editor
 
             foreach (FaceTrackingFeatureSetting setting in source.featureSettings)
             {
-                if (setting == null || setting.syncMode == ParameterSyncMode.None || !FaceTrackingFeatureDefinition.All.TryGetValue(setting.feature, out FaceTrackingFeatureDefinition feature) || feature.OutputFormats.Length == 0)
+                if (setting == null || setting.syncMode == ParameterSyncMode.None || !FaceTrackingFeatureDefinition.All.TryGetValue(setting.feature, out FaceTrackingFeatureDefinition feature) || feature.OutputFormats.Count == 0)
                 {
                     continue;
                 }

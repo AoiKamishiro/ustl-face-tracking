@@ -25,6 +25,20 @@ namespace USTL.FaceTracking.Editor
 
         internal static IReadOnlyList<HardwareSupportProfile> Profiles => ProfileOrder.Value;
 
+        internal static List<HardwareSupportProfile> GetProfiles(int profileFlags)
+        {
+            List<HardwareSupportProfile> profiles = new();
+            foreach (HardwareSupportProfile profile in Profiles)
+            {
+                if (profile.Flag != 0 && (profileFlags & profile.Flag) == profile.Flag)
+                {
+                    profiles.Add(profile);
+                }
+            }
+
+            return profiles;
+        }
+
         internal static string GetProfileDisplayName(HardwareSupportProfile profile)
         {
             return ProfileRecordsByFlag.Value.TryGetValue(profile.Flag, out HardwareSupportProfileRecord record) ? record.Profile.DisplayName : !string.IsNullOrEmpty(profile.DisplayName) ? profile.DisplayName : profile.Name;

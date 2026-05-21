@@ -5,15 +5,14 @@ namespace USTL.FaceTracking.Editor
 {
     internal static class OutputFormatDisplay
     {
-        internal static string FormatFeatureName(SerializedProperty element, FaceTrackingFeatureDefinition featureDefinition)
+        internal static string FormatFeatureName(SerializedProperty spFeature, FaceTrackingFeatureDefinition featureDefinition)
         {
             if (featureDefinition != null)
             {
                 return FaceTrackingEditorText.Get($"feature.{featureDefinition.Feature}", featureDefinition.DisplayName);
             }
 
-            SerializedProperty featureProperty = element.FindPropertyRelative(nameof(FaceTrackingFeatureSetting.feature));
-            return $"{(FaceTrackingFeature)featureProperty.intValue}";
+            return $"{(FaceTrackingFeature)spFeature.intValue}";
         }
 
         internal static List<string> GetChoices(FaceTrackingFeatureDefinition featureDefinition)
@@ -34,7 +33,7 @@ namespace USTL.FaceTracking.Editor
 
         internal static string GetValue(FaceTrackingFeatureDefinition featureDefinition, int outputFormatIndex)
         {
-            if (featureDefinition == null || featureDefinition.OutputFormats.Length == 0)
+            if (featureDefinition == null || featureDefinition.OutputFormats.Count == 0)
             {
                 return string.Empty;
             }
@@ -50,7 +49,7 @@ namespace USTL.FaceTracking.Editor
 
         internal static string FormatTooltip(FaceTrackingFeatureDefinition featureDefinition, int outputFormatIndex)
         {
-            if (featureDefinition == null || featureDefinition.OutputFormats.Length == 0)
+            if (featureDefinition == null || featureDefinition.OutputFormats.Count == 0)
             {
                 return string.Empty;
             }
@@ -79,7 +78,7 @@ namespace USTL.FaceTracking.Editor
                 return -1;
             }
 
-            for (int i = 0; i < featureDefinition.OutputFormats.Length; i++)
+            for (int i = 0; i < featureDefinition.OutputFormats.Count; i++)
             {
                 if (featureDefinition.OutputFormats[i].DisplayName == displayName || GetDisplayName(featureDefinition, i) == displayName)
                 {
@@ -97,7 +96,7 @@ namespace USTL.FaceTracking.Editor
 
         private static string GetDisplayName(FaceTrackingFeatureDefinition featureDefinition, int outputFormatIndex)
         {
-            if (featureDefinition == null || featureDefinition.OutputFormats.Length == 0)
+            if (featureDefinition == null || featureDefinition.OutputFormats.Count == 0)
             {
                 return string.Empty;
             }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
 using nadena.dev.modular_avatar.core.editor;
-using nadena.dev.ndmf.localization;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -9,223 +9,439 @@ using UnityEngine.UIElements;
 namespace USTL.FaceTracking.Editor
 {
     [CustomEditor(typeof(USTLFaceTracking))]
-    internal sealed partial class USTLFaceTrackingEditor : FaceTrackingEditorBase
+    internal sealed class USTLFaceTrackingEditor : USTLEditorBase
     {
-        private const string HardwareProfileButtonName = "tracking-hardware";
-        private const string OutputFormatDropdownName = "output-format";
         private const string FeatureSettingsFoldoutName = "feature-settings";
-        private const string SyncModeDropdownName = "sync-mode";
-        private const string BlendShapeNameFieldName = "blend-shape-name";
-        private const string MaxValueFieldName = "max-value";
         private const string BlendShapeAssignmentFoldoutName = "blend-shape-assignments";
-        private const string SyncParameterUsageLabelName = "sync-parameter-usage";
-        private const string StatusIndicatorText = "●";
 
-        [SerializeField] private bool _featureSettingsFoldoutOpen;
-        [SerializeField] private bool _blendShapeAssignmentFoldoutOpen;
+        [SerializeField] private bool featureSettingsFoldoutOpen;
+        [SerializeField] private bool blendShapeAssignmentFoldoutOpen;
 
-        private readonly BlendShapeNameChoices _blendShapeNameChoices = new();
-        private readonly List<int> _featureSettingItems = new();
-        private readonly List<int> _blendShapeAssignmentItems = new();
+        private BlendShapeSettingView BlendShapeSettingView { get; set; }
+        private FeatureSettingView FeatureSettingView { get; set; }
+        private SyncParameterUsageLabel SyncParameterUsageLabel { get; set; }
 
-        private ObjectField _faceMeshRendererField;
-        private Button _hardwareProfileButton;
-        private VisualElement _hardwareProfileField;
-        private Foldout _featureSettingsFoldout;
-        private MultiColumnListView _featureSettingView;
-        private Foldout _blendShapeAssignmentFoldout;
-        private MultiColumnListView _blendShapeAssignmentView;
-        private Label _syncParameterUsageLabel;
-
-        private VisualElement HardwareProfileField => _hardwareProfileField ??= CreateHardwareProfileField();
-
-        private ObjectField FaceMeshRendererField => _faceMeshRendererField ??= CreateFaceMeshRendererField();
-
-        private Foldout FeatureSettingsFoldout => _featureSettingsFoldout ??= CreateFeatureSettingsFoldout();
-
-        private MultiColumnListView FeatureSettingView => _featureSettingView ??= CreateFeatureSettingView();
-
-        private Foldout BlendShapeAssignmentFoldout => _blendShapeAssignmentFoldout ??= CreateBlendShapeAssignmentFoldout();
-
-        private MultiColumnListView BlendShapeAssignmentView => _blendShapeAssignmentView ??= CreateBlendShapeAssignmentView();
-
-        private Label SyncParameterUsageLabel => _syncParameterUsageLabel ??= CreateSyncParameterUsageLabel();
+        private SerializedProperty SpFaceMeshRendererField => serializedObject.FindProperty(nameof(USTLFaceTracking.faceMeshRenderer));
+        private SerializedProperty SpTrackingHardwareField => serializedObject.FindProperty(nameof(USTLFaceTracking.trackingHardwareProfiles));
+        private SerializedProperty SpBlendshapeAssignments => serializedObject.FindProperty(nameof(USTLFaceTracking.blendShapeAssignments));
+        private SerializedProperty SpFeatureSettings => serializedObject.FindProperty(nameof(USTLFaceTracking.featureSettings));
 
         private void OnEnable()
         {
             FeatureSettingsInitializer.EnsureInitialized(serializedObject);
             BlendShapeAssignmentInitializer.EnsureInitialized(serializedObject);
-            RefreshFeatureSettingItems();
-            RefreshBlendShapeAssignmentItems();
         }
+
 
         protected override void BuildInspectorGUI(VisualElement root)
         {
-            RefreshBlendShapeAssignmentItems();
-            RefreshFeatureSettingItems();
-            AddFaceMeshRendererField(root);
-            AddHardwareProfileField(root);
-            AddFeatureSettingView(root);
-            AddBlendShapeAssignmentView(root);
-            AddLanguageSwitcher(root);
-            TrackHardwareProfileChanges(root);
-            TrackBlendShapeMeshChanges(root);
-            TrackFeatureSettingChanges(root);
-            FaceTrackingLocalization.Localize(root);
-            LanguagePrefs.RegisterLanguageChangeCallback(root, _ => ApplyLocalizedText());
-            ApplyLocalizedText();
-        }
+            // FaceMeshRenderField
 
-        private void AddFeatureSettingView(VisualElement root)
-        {
-            root.Add(FeatureSettingsFoldout);
-        }
-
-        private void AddBlendShapeAssignmentView(VisualElement root)
-        {
-            RefreshBlendShapeNameChoices();
-            root.Add(BlendShapeAssignmentFoldout);
-            root.Add(SyncParameterUsageLabel);
-            RefreshBlendShapeAssignmentViewForBlendShapeMesh(false);
-            RefreshSyncParameterUsageLabel();
-        }
-
-        private Foldout CreateFeatureSettingsFoldout()
-        {
-            Foldout foldout = CreateListViewFoldout(FeatureSettingsFoldoutName, _featureSettingsFoldoutOpen);
-            foldout.RegisterValueChangedCallback(evt => _featureSettingsFoldoutOpen = evt.newValue);
-            foldout.Add(FeatureSettingView);
-            return foldout;
-        }
-
-        private Foldout CreateBlendShapeAssignmentFoldout()
-        {
-            Foldout foldout = CreateListViewFoldout(BlendShapeAssignmentFoldoutName, _blendShapeAssignmentFoldoutOpen);
-            foldout.RegisterValueChangedCallback(evt => _blendShapeAssignmentFoldoutOpen = evt.newValue);
-            foldout.Add(BlendShapeAssignmentView);
-            return foldout;
-        }
-
-        private static Foldout CreateListViewFoldout(string name, bool isOpen)
-        {
-            Foldout foldout = new()
+            FaceMeshRendererField faceMeshRendererField = new()
             {
-                name = name,
-                value = isOpen,
+                bindingPath = nameof(USTLFaceTracking.faceMeshRenderer),
             };
-            FaceTrackingInspectorStyles.ApplyFieldSpacing(foldout);
-            return foldout;
-        }
+            faceMeshRendererField.RegisterValueChangedCallback(_ => Refresh());
+            faceMeshRendererField.OnLangChanged += () => { faceMeshRendererField.label = T("field.face_mesh_renderer", "Face Mesh Renderer"); };
+            root.Add(faceMeshRendererField);
 
-        private static void AddLanguageSwitcher(VisualElement root)
-        {
+            // HardwareProfileField
+
+            HardwareProfileField hardwareProfileField = new()
+            {
+                bindingPath = nameof(USTLFaceTracking.trackingHardwareProfiles),
+                LabelText = "Tracking Hardware",
+                ButtonTooltip = "Select one or more face-tracking hardware devices used by this avatar.",
+                ItemsSource = HardwareSupportData.Profiles.ToList(),
+            };
+            hardwareProfileField.RegisterValueChangedCallback(_ => Refresh());
+            hardwareProfileField.OnLangChanged += () =>
+            {
+                hardwareProfileField.LabelText = T("field.tracking_hardware", "Tracking Hardware");
+                hardwareProfileField.ButtonTooltip = T("tooltip.tracking_hardware", "Select one or more face-tracking hardware devices used by this avatar.");
+            };
+            root.Add(hardwareProfileField);
+
+            // FeatureSettingView
+
+            FeatureSettingView featureSettingView = new(BindCell_FeatureSettings_Feature, BindCell_FeatureSettings_HardwareSupport, BindCell_FeatureSettings_OutputFormat, BindCell_FeatureSettings_SyncMode)
+            {
+                itemsSource = Enumerable.Range(0, SpFeatureSettings.arraySize).ToList(),
+            };
+            featureSettingView.OnOutputFormatChanged += _ => Refresh();
+            featureSettingView.OnSyncModeChanged += _ => Refresh();
+            featureSettingView.OnLangChanged += () =>
+            {
+                featureSettingView.Column0Title = T("column.feature", "Feature");
+                featureSettingView.Column1Title = T("column.hardware_support_short", "HW");
+                featureSettingView.Column2Title = T("column.output_format", "Output Format");
+                featureSettingView.Column3Title = T("column.sync_mode", "Sync Mode");
+                featureSettingView.Rebuild();
+            };
+            FeatureSettingView = featureSettingView;
+
+            LocalizedFoldout featureFoldout = new()
+            {
+                name = FeatureSettingsFoldoutName,
+                value = featureSettingsFoldoutOpen,
+                text = "Feature Settings",
+            };
+            featureFoldout.RegisterValueChangedCallback(evt => featureSettingsFoldoutOpen = evt.newValue);
+            featureFoldout.Add(featureSettingView);
+            featureFoldout.OnLangChanged += () => { featureFoldout.text = T("section.feature_settings", "Feature Settings"); };
+            root.Add(featureFoldout);
+
+            // BlendShapeSettingView
+            BlendShapeSettingView blendShapeSettingView = new(BindCell_BlendshapeSettings_Expression, BindCell_BlendshapeSettings_HardwareSupport, BindCell_BlendshapeSettings_Blendshape, BindCell_BlendshapeSettings_maxValue)
+            {
+                itemsSource = Enumerable.Range(0, SpBlendshapeAssignments.arraySize).ToList(),
+            };
+            blendShapeSettingView.OnAssignmentChanged += _ => Refresh();
+            blendShapeSettingView.OnLangChanged += () =>
+            {
+                blendShapeSettingView.Column0Title = T("column.unified_expression", "Unified Expression");
+                blendShapeSettingView.Column1Title = T("column.hardware_support_short", "HW");
+                blendShapeSettingView.Column2Title = T("column.blend_shape", "Blend Shape");
+                blendShapeSettingView.Column3Title = T("column.max_value", "Max Value");
+                blendShapeSettingView.Rebuild();
+            };
+            BlendShapeSettingView = blendShapeSettingView;
+
+            LocalizedFoldout blendshapeFold = new()
+            {
+                name = BlendShapeAssignmentFoldoutName,
+                value = blendShapeAssignmentFoldoutOpen,
+                text = "Blend Shape Assignments",
+            };
+            blendshapeFold.RegisterValueChangedCallback(evt => blendShapeAssignmentFoldoutOpen = evt.newValue);
+            blendshapeFold.Add(blendShapeSettingView);
+            blendshapeFold.OnLangChanged += () => { blendshapeFold.text = T("section.blend_shape_assignments", "Blend Shape Assignments"); };
+            root.Add(blendshapeFold);
+
+            // SyncParameterUsageLabel
+
+            SyncParameterUsageLabel syncParameterUsageLabel = new();
+            syncParameterUsageLabel.OnLangChanged += () =>
+            {
+                syncParameterUsageLabel.SummaryFormat = T("summary.sync_parameter_usage", "Sync Parameter Usage: {0} bits ({1}/{2} parameters, {3} without blend shape assignments)");
+                syncParameterUsageLabel.Rebuild();
+            };
+            SyncParameterUsageLabel = syncParameterUsageLabel;
+            root.Add(syncParameterUsageLabel);
+
+            // LanguageSwitcherElement
+
             VisualElement languageSwitcher = new LanguageSwitcherElement();
-            languageSwitcher.style.marginTop = FaceTrackingInspectorStyles.InspectorFieldSpacing;
+            languageSwitcher.style.marginTop = 4;
             root.Add(languageSwitcher);
         }
 
-        private void TrackBlendShapeMeshChanges(VisualElement root)
+
+        #region Reflesh
+
+        private void Refresh()
         {
-            root.TrackPropertyValue(serializedObject.FindProperty(nameof(USTLFaceTracking.faceMeshRenderer)), _ => RefreshBlendShapeAssignmentViewForBlendShapeMesh(true));
-            root.schedule.Execute(RefreshBlendShapeAssignmentViewIfBlendShapeMeshChanged).Every(250);
+            serializedObject.Update();
+            SyncParameterUsage usage = SyncParameterUsageCalculator.Calculate(target as USTLFaceTracking);
+            SyncParameterUsageLabel.ParameterUsage = usage;
+            BlendShapeSettingView.Rebuild();
+            FeatureSettingView.Rebuild();
         }
 
-        private void TrackFeatureSettingChanges(VisualElement root)
+        #endregion
+
+        #region BindCalls Feature
+
+        private void BindCell_FeatureSettings_Feature(Label label, int index)
         {
-            root.TrackPropertyValue(serializedObject.FindProperty(nameof(USTLFaceTracking.featureSettings)), _ => RefreshSyncParameterUsageLabel());
-            root.TrackPropertyValue(serializedObject.FindProperty(nameof(USTLFaceTracking.blendShapeAssignments)), _ => RefreshSyncParameterUsageLabel());
+            FeatureSetting setting = new(SpFeatureSettings, index);
+
+            label.text = OutputFormatDisplay.FormatFeatureName(setting.FeatureProperty, setting.FeatureDefinition);
+            label.tooltip = label.text;
         }
 
-        private void TrackHardwareProfileChanges(VisualElement root)
+        private void BindCell_FeatureSettings_HardwareSupport(Label label, int index)
         {
-            root.TrackPropertyValue(serializedObject.FindProperty(nameof(USTLFaceTracking.trackingHardwareProfiles)), _ =>
+            FeatureSetting setting = new(SpFeatureSettings, index);
+            TrackingHardwareSetting hwSetting = new(SpTrackingHardwareField);
+            FaceTrackingFeatureDefinition featureDefinition = setting.FeatureDefinition;
+            HardwareSupportStatus status = HardwareSupportStatus.Unknown;
+            if (featureDefinition != null)
             {
-                RefreshHardwareProfileField();
-                _featureSettingView?.Rebuild();
-                _blendShapeAssignmentView?.Rebuild();
-            });
-        }
-
-        private void ApplyLocalizedText()
-        {
-            RefreshHardwareProfileField();
-            FaceMeshRendererField.label = T("field.face_mesh_renderer", "Face Mesh Renderer");
-
-            if (_featureSettingsFoldout != null)
-            {
-                _featureSettingsFoldout.text = T("section.feature_settings", "Feature Settings");
+                VRCFTParameterOutputFormat outputFormat = featureDefinition.OutputFormats[OutputFormatDisplay.ClampIndex(featureDefinition, setting.OutputFormatIndex)];
+                HardwareSupportStatus tmp = HardwareSupportDisplay.GetOutputFormatStatus(hwSetting.TrackingHardware, outputFormat);
+                if (status > tmp)
+                {
+                    status = tmp;
+                }
             }
 
-            if (_blendShapeAssignmentFoldout != null)
-            {
-                _blendShapeAssignmentFoldout.text = T("section.blend_shape_assignments", "Blend Shape Assignments");
-            }
-
-            if (_featureSettingView != null)
-            {
-                _featureSettingView.columns[0].title = T("column.feature", "Feature");
-                _featureSettingView.columns[1].title = T("column.hardware_support_short", "HW");
-                _featureSettingView.columns[2].title = T("column.output_format", "Output Format");
-                _featureSettingView.columns[3].title = T("column.sync_mode", "Sync Mode");
-                _featureSettingView.Rebuild();
-            }
-
-            if (_blendShapeAssignmentView != null)
-            {
-                _blendShapeAssignmentView.columns[0].title = T("column.unified_expression", "Unified Expression");
-                _blendShapeAssignmentView.columns[1].title = T("column.hardware_support_short", "HW");
-                _blendShapeAssignmentView.columns[2].title = T("column.blend_shape", "Blend Shape");
-                _blendShapeAssignmentView.columns[3].title = T("column.max_value", "Max Value");
-                _blendShapeAssignmentView.Rebuild();
-            }
-
-            RefreshSyncParameterUsageLabel();
+            label.style.color = FaceTrackingInspectorStyles.GetSupportStatusTextColor(status);
         }
 
-        private static Label CreateSyncParameterUsageLabel()
+        private void BindCell_FeatureSettings_OutputFormat(DropdownField dropdownField, int index)
         {
-            Label label = new()
-            {
-                name = SyncParameterUsageLabelName,
-            };
-            FaceTrackingInspectorStyles.ApplySyncParameterUsageLabel(label);
-            return label;
+            FeatureSetting setting = new(SpFeatureSettings, index);
+            FaceTrackingFeatureDefinition featureDefinition = setting.FeatureDefinition;
+            List<string> choices = OutputFormatDisplay.GetChoices(featureDefinition);
+
+            dropdownField.UnregisterValueChangedCallback(ChangeCallback_FeatureSettings_OnOutputFormatChanged);
+            dropdownField.userData = index;
+            dropdownField.choices = choices;
+            dropdownField.formatListItemCallback = value => OutputFormatDisplay.FormatChoice(featureDefinition, value);
+            dropdownField.formatSelectedValueCallback = value => OutputFormatDisplay.FormatChoice(featureDefinition, value);
+            dropdownField.SetValueWithoutNotify(dropdownField.choices[setting.OutputFormatIndex]);
+            dropdownField.RegisterValueChangedCallback(ChangeCallback_FeatureSettings_OnOutputFormatChanged);
         }
 
-        private void RefreshSyncParameterUsageLabel()
+        private void BindCell_FeatureSettings_SyncMode(DropdownField dropdownField, int index)
         {
-            if (_syncParameterUsageLabel == null)
+            FeatureSetting setting = new(SpFeatureSettings, index);
+            ParameterSyncMode syncMode = setting.SyncMode;
+
+            dropdownField.UnregisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
+            dropdownField.userData = index;
+            dropdownField.choices = ParameterSyncModeDisplay.GetChoices();
+            dropdownField.formatListItemCallback = ParameterSyncModeDisplay.FormatChoice;
+            dropdownField.formatSelectedValueCallback = ParameterSyncModeDisplay.FormatChoice;
+
+            if (setting.Feature is FaceTrackingFeature.EyeDirection or FaceTrackingFeature.EyeLid && setting.OutputFormatIndex == 2)
+            {
+                if (syncMode != ParameterSyncMode.None)
+                {
+                    setting.SyncModeProperty.intValue = (int)ParameterSyncMode.None;
+                    serializedObject.ApplyModifiedProperties();
+                    syncMode = ParameterSyncMode.None;
+                }
+
+                dropdownField.SetEnabled(false);
+            }
+            else
+            {
+                dropdownField.SetEnabled(true);
+            }
+
+            dropdownField.SetValueWithoutNotify(dropdownField.choices[(int)syncMode]);
+            dropdownField.RegisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
+        }
+
+
+        private void ChangeCallback_FeatureSettings_OnOutputFormatChanged(ChangeEvent<string> evt)
+        {
+            if (evt.currentTarget is not DropdownField { userData: int index, } dropdownField)
             {
                 return;
             }
 
             serializedObject.Update();
-            SyncParameterUsage usage = SyncParameterUsageCalculator.Calculate(target as USTLFaceTracking);
-            _syncParameterUsageLabel.text = SyncParameterUsageDisplay.FormatSummary(usage);
-            _syncParameterUsageLabel.tooltip = SyncParameterUsageDisplay.FormatTooltip(usage);
-        }
 
-        private static VisualElement CreateStatusIndicatorHeader()
-        {
-            Label label = new();
-            FaceTrackingInspectorStyles.ApplyStatusIndicatorHeader(label);
-            return label;
-        }
+            FeatureSetting setting = new(SpFeatureSettings, index);
+            int currentFormatIndex = setting.OutputFormatIndex;
+            int newFormatIndex = dropdownField.index;
+            if (newFormatIndex < 0 || setting.FeatureDefinition.OutputFormats.Count <= newFormatIndex)
+            {
+                dropdownField.SetValueWithoutNotify(dropdownField.choices[currentFormatIndex]);
+                return;
+            }
 
-        private static void BindStatusIndicatorHeader(VisualElement element, string text, string tooltip)
-        {
-            if (element is not Label label)
+            if (newFormatIndex == currentFormatIndex)
             {
                 return;
             }
 
-            label.text = text;
-            label.tooltip = tooltip;
+            setting.OutputFormatProperty.intValue = newFormatIndex;
+            serializedObject.ApplyModifiedProperties();
         }
 
-        private static string T(string key, string fallback)
+        private void ChangeCallback_FeatureSettings_OnSyncModeChanged(ChangeEvent<string> evt)
         {
-            return FaceTrackingEditorText.Get(key, fallback);
+            if (evt.currentTarget is not DropdownField { userData: int index, } dropdownField)
+            {
+                return;
+            }
+
+            serializedObject.Update();
+
+            FeatureSetting setting = new(SpFeatureSettings, index);
+            ParameterSyncMode currentSyncMode = setting.SyncMode;
+            ParameterSyncMode newSyncMode = (ParameterSyncMode)dropdownField.index;
+            if (!FaceTrackingEditorUtility.AllSyncModes.Contains(newSyncMode))
+            {
+                dropdownField.SetValueWithoutNotify(dropdownField.choices[(int)currentSyncMode]);
+                return;
+            }
+
+            if (newSyncMode == currentSyncMode)
+            {
+                return;
+            }
+
+            setting.SyncModeProperty.intValue = (int)newSyncMode;
+            serializedObject.ApplyModifiedProperties();
         }
+
+        #endregion
+
+        #region BindCalls Blendshape
+
+        private void BindCell_BlendshapeSettings_Expression(Label label, int index)
+        {
+            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            label.text = setting.Expression.ToString();
+            label.tooltip = label.text;
+        }
+
+        private void BindCell_BlendshapeSettings_HardwareSupport(Label label, int index)
+        {
+            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            TrackingHardwareSetting hwSetting = new(SpTrackingHardwareField);
+            HardwareSupportStatus status = HardwareSupportStatus.Unknown;
+            foreach (HardwareSupportProfile profile in hwSetting.HardwareSupportProfiles)
+            {
+                if (status == HardwareSupportStatus.Full)
+                {
+                    break;
+                }
+
+                HardwareSupportStatus tmp = HardwareSupportData.GetExpressionStatus(profile, setting.Expression);
+                if (status > tmp)
+                {
+                    status = tmp;
+                }
+            }
+
+            label.style.color = FaceTrackingInspectorStyles.GetSupportStatusTextColor(status);
+        }
+
+        private void BindCell_BlendshapeSettings_Blendshape(DropdownField field, int index)
+        {
+            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            FaceMeshSetting faceSetting = new(SpFaceMeshRendererField);
+            IReadOnlyList<string> blendshapes = faceSetting.Blendshapes;
+            List<string> choices = GetChoicesForValue(blendshapes, setting.Blendshape);
+            field.Unbind();
+            field.choices = choices;
+            field.BindProperty(setting.BlendshapeProperty);
+
+            TextElement textElement = field.Q<TextElement>(className: FaceTrackingInspectorStyles.PopupFieldTextUssClassName);
+
+            textElement.style.color = !blendshapes.Contains(setting.Blendshape) ? new Color(1f, 0.25f, 0.25f) : StyleKeyword.Null;
+
+            return;
+
+            List<string> GetChoicesForValue(IReadOnlyList<string> list, string currentValue)
+            {
+                if (string.IsNullOrEmpty(currentValue) || list.Contains(currentValue))
+                {
+                    return list.ToList();
+                }
+
+                List<string> newChoices = new(list.Count + 1);
+                newChoices.AddRange(list);
+                newChoices.Add(currentValue);
+                return newChoices;
+            }
+        }
+
+        private void BindCell_BlendshapeSettings_maxValue(RangeFloatField field, int index)
+        {
+            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            field.Unbind();
+            field.BindProperty(setting.MaxValueProperty);
+        }
+
+        #endregion
+
+        #region Weapper
+
+        private readonly struct FaceMeshSetting
+        {
+            private static readonly Dictionary<Mesh, IReadOnlyList<string>> BlendshapeCache = new();
+
+            private static IReadOnlyList<string> GetBlendshape(Mesh mesh)
+            {
+                if (BlendshapeCache.TryGetValue(mesh, out IReadOnlyList<string> blendshape))
+                {
+                    return blendshape;
+                }
+
+                List<string> blendshapeList = new(mesh.blendShapeCount);
+                for (int i = 0; i < mesh.blendShapeCount; i++)
+                {
+                    blendshapeList.Add(mesh.GetBlendShapeName(i));
+                }
+
+                BlendshapeCache.Add(mesh, blendshapeList);
+                return blendshapeList;
+            }
+
+            [InitializeOnLoadMethod]
+            private static void ResetCache()
+            {
+                BlendshapeCache.Clear();
+            }
+
+            public FaceMeshSetting(SerializedProperty serializedProperty)
+            {
+                FaceMeshProperty = serializedProperty;
+            }
+
+            public SerializedProperty FaceMeshProperty { get; }
+            public SkinnedMeshRenderer FaceMeshRenderer => FaceMeshProperty.objectReferenceValue as SkinnedMeshRenderer;
+            public Mesh FaceMesh => FaceMeshRenderer.sharedMesh;
+            public IReadOnlyList<string> Blendshapes => GetBlendshape(FaceMesh);
+        }
+
+        private readonly struct TrackingHardwareSetting
+        {
+            public TrackingHardwareSetting(SerializedProperty serializedProperty)
+            {
+                TrackingHardwareProperty = serializedProperty;
+            }
+
+            public SerializedProperty TrackingHardwareProperty { get; }
+            public int TrackingHardware => TrackingHardwareProperty.intValue;
+            public List<HardwareSupportProfile> HardwareSupportProfiles => HardwareSupportData.GetProfiles(TrackingHardware);
+        }
+
+        private readonly struct FeatureSetting
+        {
+            public FeatureSetting(SerializedProperty arraySerializedProperty, int index)
+            {
+                FeatureProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTrackingFeatureSetting.feature));
+                OutputFormatProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTrackingFeatureSetting.outputFormatIndex));
+                SyncModeProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTrackingFeatureSetting.syncMode));
+            }
+
+            public SerializedProperty FeatureProperty { get; }
+            public SerializedProperty OutputFormatProperty { get; }
+            public SerializedProperty SyncModeProperty { get; }
+
+            public FaceTrackingFeature Feature => (FaceTrackingFeature)FeatureProperty.intValue;
+
+            public FaceTrackingFeatureDefinition FeatureDefinition => FaceTrackingFeatureDefinition.All.GetValueOrDefault(Feature);
+            public int OutputFormatIndex => OutputFormatProperty.intValue;
+            public ParameterSyncMode SyncMode => (ParameterSyncMode)SyncModeProperty.intValue;
+        }
+
+        private readonly struct BlendshapeSetting
+        {
+            public BlendshapeSetting(SerializedProperty arraySerializedProperty, int index)
+            {
+                ExpressionProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(BlendShapeAssignment.expression));
+                BlendshapeProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(BlendShapeAssignment.blendShapeName));
+                MaxValueProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(BlendShapeAssignment.maxValue));
+            }
+
+            public SerializedProperty ExpressionProperty { get; }
+            public SerializedProperty BlendshapeProperty { get; }
+            public SerializedProperty MaxValueProperty { get; }
+
+            public UnifiedExpression Expression => (UnifiedExpression)ExpressionProperty.intValue;
+            public string Blendshape => BlendshapeProperty.stringValue;
+            public float MaxValue => MaxValueProperty.floatValue;
+        }
+
+        #endregion
     }
 }
