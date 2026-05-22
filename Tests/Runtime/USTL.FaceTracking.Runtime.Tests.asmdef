@@ -5,7 +5,9 @@
     "UnityEditor.TestRunner",
     "UnityEngine.TestRunner",
     "USTL.FaceTracking",
-    "USTL.FaceTracking.Editor"
+    "USTL.FaceTracking.Editor",
+    "nadena.dev.ndmf",
+    "nadena.dev.modular-avatar.core"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

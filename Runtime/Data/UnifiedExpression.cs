@@ -3,7 +3,7 @@ namespace USTL.FaceTracking
     /// <summary>
     ///     https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendshapes
     /// </summary>
-    internal enum UnifiedExpression
+    public enum UnifiedExpression
     {
         // Eyes
         EyeLookOutRight,

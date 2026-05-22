@@ -1,6 +1,6 @@
 namespace USTL.FaceTracking
 {
-    internal enum FaceTrackingFeature
+    public enum FaceTrackingFeature
     {
         EyeDirection,
         EyeLid,

@@ -1,0 +1,1700 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: USTLFaceTracking
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 004930c9d1d1429d87889719d912d3b4,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: trackingHardwareProfiles
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: faceMeshRenderer
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.size
+    value: 36
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[0].feature
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[0].outputFormatId
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[0].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[1].feature
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[1].outputFormatId
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[1].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[2].feature
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[2].outputFormatId
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[2].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[3].feature
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[3].outputFormatId
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[3].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[4].feature
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[4].outputFormatId
+    value: 11
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[4].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[5].feature
+    value: 5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[5].outputFormatId
+    value: 16
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[5].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[6].feature
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[6].outputFormatId
+    value: 18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[6].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[7].feature
+    value: 7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[7].outputFormatId
+    value: 19
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[7].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[8].feature
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[8].outputFormatId
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[8].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[9].feature
+    value: 9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[9].outputFormatId
+    value: 22
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[9].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[10].feature
+    value: 10
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[10].outputFormatId
+    value: 24
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[10].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[11].feature
+    value: 11
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[11].outputFormatId
+    value: 25
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[11].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[12].feature
+    value: 12
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[12].outputFormatId
+    value: 26
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[12].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[13].feature
+    value: 13
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[13].outputFormatId
+    value: 27
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[13].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[14].feature
+    value: 14
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[14].outputFormatId
+    value: 28
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[14].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[15].feature
+    value: 15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[15].outputFormatId
+    value: 29
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[15].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[16].feature
+    value: 16
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[16].outputFormatId
+    value: 32
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[16].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[17].feature
+    value: 17
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[17].outputFormatId
+    value: 33
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[17].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[18].feature
+    value: 18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[18].outputFormatId
+    value: 36
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[18].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[19].feature
+    value: 19
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[19].outputFormatId
+    value: 39
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[19].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[20].feature
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[20].outputFormatId
+    value: 42
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[20].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[21].feature
+    value: 21
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[21].outputFormatId
+    value: 43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[21].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[22].feature
+    value: 22
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[22].outputFormatId
+    value: 45
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[22].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[23].feature
+    value: 23
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[23].outputFormatId
+    value: 51
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[23].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[24].feature
+    value: 24
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[24].outputFormatId
+    value: 52
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[24].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[25].feature
+    value: 25
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[25].outputFormatId
+    value: 53
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[25].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[26].feature
+    value: 26
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[26].outputFormatId
+    value: 54
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[26].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[27].feature
+    value: 27
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[27].outputFormatId
+    value: 55
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[27].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[28].feature
+    value: 28
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[28].outputFormatId
+    value: 56
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[28].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[29].feature
+    value: 29
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[29].outputFormatId
+    value: 57
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[29].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[30].feature
+    value: 30
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[30].outputFormatId
+    value: 58
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[30].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[31].feature
+    value: 31
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[31].outputFormatId
+    value: 59
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[31].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[32].feature
+    value: 32
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[32].outputFormatId
+    value: 60
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[32].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[33].feature
+    value: 33
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[33].outputFormatId
+    value: 61
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[33].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[34].feature
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[34].outputFormatId
+    value: 62
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[34].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[35].feature
+    value: 35
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[35].outputFormatId
+    value: 63
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: featureSettings.Array.data[35].syncMode
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.size
+    value: 102
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[0].expression
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[0].blendShapeName
+    value: EyeLookOutRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[0].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[1].expression
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[1].blendShapeName
+    value: EyeLookInRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[1].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[2].expression
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[2].blendShapeName
+    value: EyeLookUpRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[2].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[3].expression
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[3].blendShapeName
+    value: EyeLookDownRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[3].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[4].expression
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[4].blendShapeName
+    value: EyeLookOutLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[4].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[5].expression
+    value: 5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[5].blendShapeName
+    value: EyeLookInLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[5].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[6].expression
+    value: 6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[6].blendShapeName
+    value: EyeLookUpLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[6].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[7].expression
+    value: 7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[7].blendShapeName
+    value: EyeLookDownLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[7].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[8].expression
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[8].blendShapeName
+    value: EyeClosedRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[8].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[9].expression
+    value: 9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[9].blendShapeName
+    value: EyeClosedLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[9].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[10].expression
+    value: 10
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[10].blendShapeName
+    value: EyeSquintRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[10].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[11].expression
+    value: 11
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[11].blendShapeName
+    value: EyeSquintLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[11].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[12].expression
+    value: 12
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[12].blendShapeName
+    value: EyeWideRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[12].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[13].expression
+    value: 13
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[13].blendShapeName
+    value: EyeWideLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[13].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[14].expression
+    value: 14
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[14].blendShapeName
+    value: EyeDilationRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[14].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[15].expression
+    value: 15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[15].blendShapeName
+    value: EyeDilationLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[15].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[16].expression
+    value: 16
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[16].blendShapeName
+    value: EyeConstrictRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[16].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[17].expression
+    value: 17
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[17].blendShapeName
+    value: EyeConstrictLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[17].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[18].expression
+    value: 18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[18].blendShapeName
+    value: BrowPinchRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[18].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[19].expression
+    value: 19
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[19].blendShapeName
+    value: BrowPinchLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[19].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[20].expression
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[20].blendShapeName
+    value: BrowLowererRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[20].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[21].expression
+    value: 21
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[21].blendShapeName
+    value: BrowLowererLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[21].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[22].expression
+    value: 22
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[22].blendShapeName
+    value: BrowInnerUpRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[22].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[23].expression
+    value: 23
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[23].blendShapeName
+    value: BrowInnerUpLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[23].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[24].expression
+    value: 24
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[24].blendShapeName
+    value: BrowOuterUpRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[24].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[25].expression
+    value: 25
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[25].blendShapeName
+    value: BrowOuterUpLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[25].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[26].expression
+    value: 26
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[26].blendShapeName
+    value: NoseSneerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[26].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[27].expression
+    value: 27
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[27].blendShapeName
+    value: NoseSneerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[27].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[28].expression
+    value: 28
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[28].blendShapeName
+    value: NasalDilationRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[28].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[29].expression
+    value: 29
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[29].blendShapeName
+    value: NasalDilationLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[29].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[30].expression
+    value: 30
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[30].blendShapeName
+    value: NasalConstrictRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[30].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[31].expression
+    value: 31
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[31].blendShapeName
+    value: NasalConstrictLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[31].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[32].expression
+    value: 32
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[32].blendShapeName
+    value: CheekSquintRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[32].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[33].expression
+    value: 33
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[33].blendShapeName
+    value: CheekSquintLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[33].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[34].expression
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[34].blendShapeName
+    value: CheekPuffRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[34].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[35].expression
+    value: 35
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[35].blendShapeName
+    value: CheekPuffLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[35].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[36].expression
+    value: 36
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[36].blendShapeName
+    value: CheekSuckRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[36].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[37].expression
+    value: 37
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[37].blendShapeName
+    value: CheekSuckLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[37].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[38].expression
+    value: 38
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[38].blendShapeName
+    value: JawOpen
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[38].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[39].expression
+    value: 39
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[39].blendShapeName
+    value: MouthClosed
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[39].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[40].expression
+    value: 40
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[40].blendShapeName
+    value: JawRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[40].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[41].expression
+    value: 41
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[41].blendShapeName
+    value: JawLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[41].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[42].expression
+    value: 42
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[42].blendShapeName
+    value: JawForward
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[42].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[43].expression
+    value: 43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[43].blendShapeName
+    value: JawBackward
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[43].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[44].expression
+    value: 44
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[44].blendShapeName
+    value: JawClench
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[44].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[45].expression
+    value: 45
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[45].blendShapeName
+    value: JawMandibleRaise
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[45].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[46].expression
+    value: 46
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[46].blendShapeName
+    value: LipSuckUpperRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[46].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[47].expression
+    value: 47
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[47].blendShapeName
+    value: LipSuckUpperLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[47].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[48].expression
+    value: 48
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[48].blendShapeName
+    value: LipSuckLowerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[48].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[49].expression
+    value: 49
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[49].blendShapeName
+    value: LipSuckLowerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[49].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[50].expression
+    value: 50
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[50].blendShapeName
+    value: LipSuckCornerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[50].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[51].expression
+    value: 51
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[51].blendShapeName
+    value: LipSuckCornerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[51].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[52].expression
+    value: 52
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[52].blendShapeName
+    value: LipFunnelUpperRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[52].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[53].expression
+    value: 53
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[53].blendShapeName
+    value: LipFunnelUpperLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[53].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[54].expression
+    value: 54
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[54].blendShapeName
+    value: LipFunnelLowerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[54].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[55].expression
+    value: 55
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[55].blendShapeName
+    value: LipFunnelLowerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[55].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[56].expression
+    value: 56
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[56].blendShapeName
+    value: LipPuckerUpperRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[56].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[57].expression
+    value: 57
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[57].blendShapeName
+    value: LipPuckerUpperLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[57].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[58].expression
+    value: 58
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[58].blendShapeName
+    value: LipPuckerLowerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[58].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[59].expression
+    value: 59
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[59].blendShapeName
+    value: LipPuckerLowerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[59].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[60].expression
+    value: 60
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[60].blendShapeName
+    value: MouthUpperUpRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[60].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[61].expression
+    value: 61
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[61].blendShapeName
+    value: MouthUpperUpLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[61].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[62].expression
+    value: 62
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[62].blendShapeName
+    value: MouthLowerDownRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[62].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[63].expression
+    value: 63
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[63].blendShapeName
+    value: MouthLowerDownLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[63].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[64].expression
+    value: 64
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[64].blendShapeName
+    value: MouthUpperDeepenRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[64].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[65].expression
+    value: 65
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[65].blendShapeName
+    value: MouthUpperDeepenLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[65].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[66].expression
+    value: 66
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[66].blendShapeName
+    value: MouthUpperRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[66].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[67].expression
+    value: 67
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[67].blendShapeName
+    value: MouthUpperLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[67].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[68].expression
+    value: 68
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[68].blendShapeName
+    value: MouthLowerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[68].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[69].expression
+    value: 69
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[69].blendShapeName
+    value: MouthLowerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[69].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[70].expression
+    value: 70
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[70].blendShapeName
+    value: MouthCornerPullRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[70].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[71].expression
+    value: 71
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[71].blendShapeName
+    value: MouthCornerPullLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[71].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[72].expression
+    value: 72
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[72].blendShapeName
+    value: MouthCornerSlantRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[72].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[73].expression
+    value: 73
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[73].blendShapeName
+    value: MouthCornerSlantLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[73].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[74].expression
+    value: 74
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[74].blendShapeName
+    value: MouthFrownRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[74].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[75].expression
+    value: 75
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[75].blendShapeName
+    value: MouthFrownLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[75].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[76].expression
+    value: 76
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[76].blendShapeName
+    value: MouthStretchRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[76].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[77].expression
+    value: 77
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[77].blendShapeName
+    value: MouthStretchLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[77].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[78].expression
+    value: 78
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[78].blendShapeName
+    value: MouthDimpleRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[78].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[79].expression
+    value: 79
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[79].blendShapeName
+    value: MouthDimpleLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[79].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[80].expression
+    value: 80
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[80].blendShapeName
+    value: MouthRaiserUpper
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[80].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[81].expression
+    value: 81
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[81].blendShapeName
+    value: MouthRaiserLower
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[81].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[82].expression
+    value: 82
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[82].blendShapeName
+    value: MouthPressRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[82].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[83].expression
+    value: 83
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[83].blendShapeName
+    value: MouthPressLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[83].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[84].expression
+    value: 84
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[84].blendShapeName
+    value: MouthTightenerRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[84].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[85].expression
+    value: 85
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[85].blendShapeName
+    value: MouthTightenerLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[85].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[86].expression
+    value: 86
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[86].blendShapeName
+    value: TongueOut
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[86].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[87].expression
+    value: 87
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[87].blendShapeName
+    value: TongueUp
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[87].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[88].expression
+    value: 88
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[88].blendShapeName
+    value: TongueDown
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[88].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[89].expression
+    value: 89
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[89].blendShapeName
+    value: TongueRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[89].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[90].expression
+    value: 90
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[90].blendShapeName
+    value: TongueLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[90].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[91].expression
+    value: 91
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[91].blendShapeName
+    value: TongueRoll
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[91].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[92].expression
+    value: 92
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[92].blendShapeName
+    value: TongueBendDown
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[92].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[93].expression
+    value: 93
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[93].blendShapeName
+    value: TongueCurlUp
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[93].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[94].expression
+    value: 94
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[94].blendShapeName
+    value: TongueSquish
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[94].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[95].expression
+    value: 95
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[95].blendShapeName
+    value: TongueFlat
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[95].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[96].expression
+    value: 96
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[96].blendShapeName
+    value: TongueTwistRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[96].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[97].expression
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[97].blendShapeName
+    value: TongueTwistLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[97].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[98].expression
+    value: 98
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[98].blendShapeName
+    value: SoftPalateClose
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[98].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[99].expression
+    value: 99
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[99].blendShapeName
+    value: ThroatSwallow
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[99].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[100].expression
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[100].blendShapeName
+    value: NeckFlexRight
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[100].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[101].expression
+    value: 101
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[101].blendShapeName
+    value: NeckFlexLeft
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: blendshapeSettings.Array.data[101].maxValue
+    value: 100
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []

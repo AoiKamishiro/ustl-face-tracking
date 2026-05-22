@@ -1,0 +1,1085 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!43 &4300000
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: unified_expression_mesh
+  serializedVersion: 11
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 0
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 0
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes:
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    - firstVertex: 0
+      vertexCount: 0
+      hasNormals: 0
+      hasTangents: 0
+    channels:
+    - name: EyeLookOutRight
+      nameHash: 480441925
+      frameIndex: 0
+      frameCount: 1
+    - name: EyeLookInRight
+      nameHash: 999315695
+      frameIndex: 1
+      frameCount: 1
+    - name: EyeLookUpRight
+      nameHash: 2721238462
+      frameIndex: 2
+      frameCount: 1
+    - name: EyeLookDownRight
+      nameHash: 1975240688
+      frameIndex: 3
+      frameCount: 1
+    - name: EyeLookOutLeft
+      nameHash: 1966859205
+      frameIndex: 4
+      frameCount: 1
+    - name: EyeLookInLeft
+      nameHash: 1171579828
+      frameIndex: 5
+      frameCount: 1
+    - name: EyeLookUpLeft
+      nameHash: 3994028215
+      frameIndex: 6
+      frameCount: 1
+    - name: EyeLookDownLeft
+      nameHash: 1791535190
+      frameIndex: 7
+      frameCount: 1
+    - name: EyeClosedRight
+      nameHash: 1166495034
+      frameIndex: 8
+      frameCount: 1
+    - name: EyeClosedLeft
+      nameHash: 3820850105
+      frameIndex: 9
+      frameCount: 1
+    - name: EyeSquintRight
+      nameHash: 3966054596
+      frameIndex: 10
+      frameCount: 1
+    - name: EyeSquintLeft
+      nameHash: 3178112597
+      frameIndex: 11
+      frameCount: 1
+    - name: EyeWideRight
+      nameHash: 751462896
+      frameIndex: 12
+      frameCount: 1
+    - name: EyeWideLeft
+      nameHash: 2824585002
+      frameIndex: 13
+      frameCount: 1
+    - name: EyeDilationRight
+      nameHash: 4062862409
+      frameIndex: 14
+      frameCount: 1
+    - name: EyeDilationLeft
+      nameHash: 4092642247
+      frameIndex: 15
+      frameCount: 1
+    - name: EyeConstrictRight
+      nameHash: 3603736908
+      frameIndex: 16
+      frameCount: 1
+    - name: EyeConstrictLeft
+      nameHash: 2712035380
+      frameIndex: 17
+      frameCount: 1
+    - name: BrowPinchRight
+      nameHash: 1199456801
+      frameIndex: 18
+      frameCount: 1
+    - name: BrowPinchLeft
+      nameHash: 1998690938
+      frameIndex: 19
+      frameCount: 1
+    - name: BrowLowererRight
+      nameHash: 3228402719
+      frameIndex: 20
+      frameCount: 1
+    - name: BrowLowererLeft
+      nameHash: 1816426219
+      frameIndex: 21
+      frameCount: 1
+    - name: BrowInnerUpRight
+      nameHash: 2807071412
+      frameIndex: 22
+      frameCount: 1
+    - name: BrowInnerUpLeft
+      nameHash: 2349338992
+      frameIndex: 23
+      frameCount: 1
+    - name: BrowOuterUpRight
+      nameHash: 4113987066
+      frameIndex: 24
+      frameCount: 1
+    - name: BrowOuterUpLeft
+      nameHash: 2182965699
+      frameIndex: 25
+      frameCount: 1
+    - name: NoseSneerRight
+      nameHash: 1921586820
+      frameIndex: 26
+      frameCount: 1
+    - name: NoseSneerLeft
+      nameHash: 903726418
+      frameIndex: 27
+      frameCount: 1
+    - name: NasalDilationRight
+      nameHash: 2841486970
+      frameIndex: 28
+      frameCount: 1
+    - name: NasalDilationLeft
+      nameHash: 1520758136
+      frameIndex: 29
+      frameCount: 1
+    - name: NasalConstrictRight
+      nameHash: 1766309792
+      frameIndex: 30
+      frameCount: 1
+    - name: NasalConstrictLeft
+      nameHash: 4208040455
+      frameIndex: 31
+      frameCount: 1
+    - name: CheekSquintRight
+      nameHash: 1368161757
+      frameIndex: 32
+      frameCount: 1
+    - name: CheekSquintLeft
+      nameHash: 3922797477
+      frameIndex: 33
+      frameCount: 1
+    - name: CheekPuffRight
+      nameHash: 333879852
+      frameIndex: 34
+      frameCount: 1
+    - name: CheekPuffLeft
+      nameHash: 833535628
+      frameIndex: 35
+      frameCount: 1
+    - name: CheekSuckRight
+      nameHash: 3301808784
+      frameIndex: 36
+      frameCount: 1
+    - name: CheekSuckLeft
+      nameHash: 394062957
+      frameIndex: 37
+      frameCount: 1
+    - name: JawOpen
+      nameHash: 3494635247
+      frameIndex: 38
+      frameCount: 1
+    - name: MouthClosed
+      nameHash: 3463006458
+      frameIndex: 39
+      frameCount: 1
+    - name: JawRight
+      nameHash: 1437652585
+      frameIndex: 40
+      frameCount: 1
+    - name: JawLeft
+      nameHash: 240943651
+      frameIndex: 41
+      frameCount: 1
+    - name: JawForward
+      nameHash: 853490453
+      frameIndex: 42
+      frameCount: 1
+    - name: JawBackward
+      nameHash: 995561403
+      frameIndex: 43
+      frameCount: 1
+    - name: JawClench
+      nameHash: 238879020
+      frameIndex: 44
+      frameCount: 1
+    - name: JawMandibleRaise
+      nameHash: 407708490
+      frameIndex: 45
+      frameCount: 1
+    - name: LipSuckUpperRight
+      nameHash: 484202100
+      frameIndex: 46
+      frameCount: 1
+    - name: LipSuckUpperLeft
+      nameHash: 194761413
+      frameIndex: 47
+      frameCount: 1
+    - name: LipSuckLowerRight
+      nameHash: 3202054383
+      frameIndex: 48
+      frameCount: 1
+    - name: LipSuckLowerLeft
+      nameHash: 1808022502
+      frameIndex: 49
+      frameCount: 1
+    - name: LipSuckCornerRight
+      nameHash: 1337233492
+      frameIndex: 50
+      frameCount: 1
+    - name: LipSuckCornerLeft
+      nameHash: 3503211063
+      frameIndex: 51
+      frameCount: 1
+    - name: LipFunnelUpperRight
+      nameHash: 846118587
+      frameIndex: 52
+      frameCount: 1
+    - name: LipFunnelUpperLeft
+      nameHash: 226401464
+      frameIndex: 53
+      frameCount: 1
+    - name: LipFunnelLowerRight
+      nameHash: 2422837280
+      frameIndex: 54
+      frameCount: 1
+    - name: LipFunnelLowerLeft
+      nameHash: 1830909339
+      frameIndex: 55
+      frameCount: 1
+    - name: LipPuckerUpperRight
+      nameHash: 3515729220
+      frameIndex: 56
+      frameCount: 1
+    - name: LipPuckerUpperLeft
+      nameHash: 2366533936
+      frameIndex: 57
+      frameCount: 1
+    - name: LipPuckerLowerRight
+      nameHash: 1938484191
+      frameIndex: 58
+      frameCount: 1
+    - name: LipPuckerLowerLeft
+      nameHash: 3981547539
+      frameIndex: 59
+      frameCount: 1
+    - name: MouthUpperUpRight
+      nameHash: 1048592897
+      frameIndex: 60
+      frameCount: 1
+    - name: MouthUpperUpLeft
+      nameHash: 1436098163
+      frameIndex: 61
+      frameCount: 1
+    - name: MouthLowerDownRight
+      nameHash: 1156198088
+      frameIndex: 62
+      frameCount: 1
+    - name: MouthLowerDownLeft
+      nameHash: 1437564920
+      frameIndex: 63
+      frameCount: 1
+    - name: MouthUpperDeepenRight
+      nameHash: 1776462781
+      frameIndex: 64
+      frameCount: 1
+    - name: MouthUpperDeepenLeft
+      nameHash: 1606780679
+      frameIndex: 65
+      frameCount: 1
+    - name: MouthUpperRight
+      nameHash: 2121027300
+      frameIndex: 66
+      frameCount: 1
+    - name: MouthUpperLeft
+      nameHash: 1721671065
+      frameIndex: 67
+      frameCount: 1
+    - name: MouthLowerRight
+      nameHash: 3698024575
+      frameIndex: 68
+      frameCount: 1
+    - name: MouthLowerLeft
+      nameHash: 113341626
+      frameIndex: 69
+      frameCount: 1
+    - name: MouthCornerPullRight
+      nameHash: 197367549
+      frameIndex: 70
+      frameCount: 1
+    - name: MouthCornerPullLeft
+      nameHash: 2749700187
+      frameIndex: 71
+      frameCount: 1
+    - name: MouthCornerSlantRight
+      nameHash: 2874367649
+      frameIndex: 72
+      frameCount: 1
+    - name: MouthCornerSlantLeft
+      nameHash: 969882811
+      frameIndex: 73
+      frameCount: 1
+    - name: MouthFrownRight
+      nameHash: 3184341001
+      frameIndex: 74
+      frameCount: 1
+    - name: MouthFrownLeft
+      nameHash: 3413037412
+      frameIndex: 75
+      frameCount: 1
+    - name: MouthStretchRight
+      nameHash: 2278055239
+      frameIndex: 76
+      frameCount: 1
+    - name: MouthStretchLeft
+      nameHash: 2068992261
+      frameIndex: 77
+      frameCount: 1
+    - name: MouthDimpleRight
+      nameHash: 184487813
+      frameIndex: 78
+      frameCount: 1
+    - name: MouthDimpleLeft
+      nameHash: 1141728794
+      frameIndex: 79
+      frameCount: 1
+    - name: MouthRaiserUpper
+      nameHash: 3721841262
+      frameIndex: 80
+      frameCount: 1
+    - name: MouthRaiserLower
+      nameHash: 3172167377
+      frameIndex: 81
+      frameCount: 1
+    - name: MouthPressRight
+      nameHash: 1304094776
+      frameIndex: 82
+      frameCount: 1
+    - name: MouthPressLeft
+      nameHash: 3005588724
+      frameIndex: 83
+      frameCount: 1
+    - name: MouthTightenerRight
+      nameHash: 2785270410
+      frameIndex: 84
+      frameCount: 1
+    - name: MouthTightenerLeft
+      nameHash: 69282097
+      frameIndex: 85
+      frameCount: 1
+    - name: TongueOut
+      nameHash: 1294476412
+      frameIndex: 86
+      frameCount: 1
+    - name: TongueUp
+      nameHash: 1432902246
+      frameIndex: 87
+      frameCount: 1
+    - name: TongueDown
+      nameHash: 3429581957
+      frameIndex: 88
+      frameCount: 1
+    - name: TongueRight
+      nameHash: 2562948939
+      frameIndex: 89
+      frameCount: 1
+    - name: TongueLeft
+      nameHash: 2868065238
+      frameIndex: 90
+      frameCount: 1
+    - name: TongueRoll
+      nameHash: 4263634544
+      frameIndex: 91
+      frameCount: 1
+    - name: TongueBendDown
+      nameHash: 158629340
+      frameIndex: 92
+      frameCount: 1
+    - name: TongueCurlUp
+      nameHash: 3797579001
+      frameIndex: 93
+      frameCount: 1
+    - name: TongueSquish
+      nameHash: 1604465026
+      frameIndex: 94
+      frameCount: 1
+    - name: TongueFlat
+      nameHash: 2245951226
+      frameIndex: 95
+      frameCount: 1
+    - name: TongueTwistRight
+      nameHash: 1514838059
+      frameIndex: 96
+      frameCount: 1
+    - name: TongueTwistLeft
+      nameHash: 4109104234
+      frameIndex: 97
+      frameCount: 1
+    - name: SoftPalateClose
+      nameHash: 2941606536
+      frameIndex: 98
+      frameCount: 1
+    - name: ThroatSwallow
+      nameHash: 2982725239
+      frameIndex: 99
+      frameCount: 1
+    - name: NeckFlexRight
+      nameHash: 3217375653
+      frameIndex: 100
+      frameCount: 1
+    - name: NeckFlexLeft
+      nameHash: 2928441255
+      frameIndex: 101
+      frameCount: 1
+    fullWeights:
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+    - 100
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 0
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 0
+    _typelessdata: 
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
