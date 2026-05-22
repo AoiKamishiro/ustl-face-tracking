@@ -25,7 +25,7 @@ namespace USTL.FaceTracking.Editor
             return root;
         }
 
-        public static void ApplyLocalization(VisualElement root)
+        private static void ApplyLocalization(VisualElement root)
         {
             root.Query<VisualElement>().ForEach(element =>
             {
@@ -34,6 +34,7 @@ namespace USTL.FaceTracking.Editor
                     localization.OnLangChanged.Invoke();
                 }
             });
+            LocalizationUtility.Localize(root);
         }
 
         protected abstract void BuildInspectorGUI(VisualElement root);
@@ -54,11 +55,6 @@ namespace USTL.FaceTracking.Editor
         private static void AddLogo(VisualElement root)
         {
             root.Add(new LogoElement());
-        }
-
-        protected static string T(string key, string fallback)
-        {
-            return FaceTrackingEditorText.Get(key, fallback);
         }
     }
 }

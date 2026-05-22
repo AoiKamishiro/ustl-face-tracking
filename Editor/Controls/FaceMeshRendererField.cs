@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal sealed class FaceMeshRendererField : ILocalizedObjectField
+    internal sealed class FaceMeshRendererField : LocalizedObjectField
     {
         internal FaceMeshRendererField()
         {

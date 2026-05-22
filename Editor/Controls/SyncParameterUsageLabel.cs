@@ -4,29 +4,22 @@ namespace USTL.FaceTracking.Editor
 {
     internal sealed class SyncParameterUsageLabel : LocalizedHelpBox
     {
-        private SyncParameterUsage _parameterUsage;
-
-        internal SyncParameterUsageLabel()
+        internal SyncParameterUsageLabel(USTLFaceTracking faceTracking)
         {
             messageType = HelpBoxMessageType.Info;
             name = "sync-parameter-usage";
+            FaceTracking = faceTracking;
         }
+
+        private USTLFaceTracking FaceTracking { get; }
 
         internal string SummaryFormat { get; set; } = "Sync Parameter Usage: {0} bits ({1}/{2} parameters, {3} without blend shape assignments)";
 
-        internal SyncParameterUsage ParameterUsage
-        {
-            get => _parameterUsage;
-            set
-            {
-                _parameterUsage = value;
-                Rebuild();
-            }
-        }
-
         public void Rebuild()
         {
-            text = string.Format(SummaryFormat, ParameterUsage.ConsumedBits, ParameterUsage.ConsumedParameterCount, ParameterUsage.ExpectedParameterCount, ParameterUsage.UnassignedParameterCount);
+            //TODO: 表示項目はあとで調整したい
+            text = $"Use {VRCParameterUtility.CalculateUsage(FaceTracking)} parameters.";
+            // text = string.Format(SummaryFormat, ParameterUsage.ConsumedBits, ParameterUsage.ConsumedParameterCount, ParameterUsage.ExpectedParameterCount, ParameterUsage.UnassignedParameterCount);
         }
     }
 }

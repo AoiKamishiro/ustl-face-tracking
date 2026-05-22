@@ -17,7 +17,7 @@ namespace USTL.FaceTracking.Editor
         private const string OutputFormatDropdownName = "output-format";
         private const string SyncModeDropdownName = "sync-mode";
 
-        internal FeatureSettingView(Action<Label, int> bindFeatureCell, Action<Label, int> bindHardwareSupportCell, Action<DropdownField, int> bindOutputFormatCell, Action<DropdownField, int> bindSyncModeCell)
+        internal FeatureSettingView(Action<LocalizationLabel, int> bindFeatureCell, Action<Label, int> bindHardwareSupportCell, Action<LocalizationDropdownField, int> bindOutputFormatCell, Action<EnumField, int> bindSyncModeCell)
         {
             fixedItemHeight = ItemHeight;
             showAddRemoveFooter = false;
@@ -67,7 +67,7 @@ namespace USTL.FaceTracking.Editor
         internal event Action<int> OnSyncModeChanged;
 
 
-        private static Column CreateFeatureColumn(Action<Label, int> bindCell)
+        private static Column CreateFeatureColumn(Action<LocalizationLabel, int> bindCell)
         {
             return new Column
             {
@@ -80,7 +80,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateFeatureCell,
                 bindCell = (elem, index) =>
                 {
-                    Label label = elem.Q<Label>(FeatureLabelName);
+                    LocalizationLabel label = elem.Q<LocalizationLabel>(FeatureLabelName);
                     bindCell(label, index);
                 },
             };
@@ -105,7 +105,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private Column CreateOutputFormatColumn(Action<DropdownField, int> bindCell)
+        private Column CreateOutputFormatColumn(Action<LocalizationDropdownField, int> bindCell)
         {
             return new Column
             {
@@ -114,7 +114,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateOutputFormatCell,
                 bindCell = (elem, index) =>
                 {
-                    DropdownField field = elem.Q<DropdownField>(OutputFormatDropdownName);
+                    LocalizationDropdownField field = elem.Q<LocalizationDropdownField>(OutputFormatDropdownName);
                     field.UnregisterValueChangedCallback(HandleOutputFormatChanged);
                     bindCell(field, index);
                     field.userData = index;
@@ -123,7 +123,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private Column CreateSyncModeColumn(Action<DropdownField, int> bindCell)
+        private Column CreateSyncModeColumn(Action<EnumField, int> bindCell)
         {
             return new Column
             {
@@ -136,7 +136,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateSyncModeCell,
                 bindCell = (elem, index) =>
                 {
-                    DropdownField field = elem.Q<DropdownField>(SyncModeDropdownName);
+                    EnumField field = elem.Q<EnumField>(SyncModeDropdownName);
                     field.UnregisterValueChangedCallback(HandleSyncModeChanged);
                     bindCell(field, index);
                     field.userData = index;
@@ -156,7 +156,7 @@ namespace USTL.FaceTracking.Editor
             };
             ApplyColumnCellStyle(innerRoot);
 
-            Label label = new()
+            LocalizationLabel label = new()
             {
                 name = FeatureLabelName,
                 text = "Feature",
@@ -199,7 +199,7 @@ namespace USTL.FaceTracking.Editor
             VisualElement innerRoot = new();
             ApplyColumnCellStyle(innerRoot);
 
-            DropdownField field = new()
+            LocalizationDropdownField field = new()
             {
                 name = OutputFormatDropdownName,
                 style =
@@ -217,7 +217,7 @@ namespace USTL.FaceTracking.Editor
             VisualElement innerRoot = new();
             ApplyColumnCellStyle(innerRoot);
 
-            DropdownField field = new()
+            EnumField field = new(ParameterSyncMode.LocalOnly)
             {
                 name = SyncModeDropdownName,
                 style =
@@ -240,9 +240,9 @@ namespace USTL.FaceTracking.Editor
             schedule.Execute(() => OnOutputFormatChanged?.Invoke(index));
         }
 
-        private void HandleSyncModeChanged(ChangeEvent<string> evt)
+        private void HandleSyncModeChanged(ChangeEvent<Enum> evt)
         {
-            if (evt.currentTarget is not DropdownField { userData: int index, })
+            if (evt.currentTarget is not EnumField { userData: int index, })
             {
                 return;
             }

@@ -7,11 +7,11 @@ namespace USTL.FaceTracking.Editor.Editor
     [InitializeOnLoad]
     public static class ForceReSerializer
     {
-        private const string path = "Packages/jp.co.u-stella.facetracking";
+        private const string PATH = "Packages/jp.co.u-stella.facetracking";
 
         static ForceReSerializer()
         {
-            IEnumerable<string> list = AssetDatabase.GetAllAssetPaths().Where(c => c.StartsWith(path));
+            IEnumerable<string> list = AssetDatabase.GetAllAssetPaths().Where(c => c.StartsWith(PATH));
             AssetDatabase.ForceReserializeAssets(list);
         }
     }
