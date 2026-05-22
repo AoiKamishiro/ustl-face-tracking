@@ -12,8 +12,6 @@ namespace USTL.FaceTracking.Editor
     [CustomEditor(typeof(USTLFaceTracking))]
     internal sealed class USTLFaceTrackingEditor : USTLEditorBase
     {
-        private const string LocalizationKeyPrefix = "ustl.facetracking.editor.";
-
         private const string FeatureSettingsFoldoutName = "feature-settings";
         private const string BlendShapeAssignmentFoldoutName = "blend-shape-assignments";
 
@@ -35,12 +33,6 @@ namespace USTL.FaceTracking.Editor
             BlendshapeSettingInitializer.EnsureInitialized(serializedObject);
         }
 
-        private static string Tr(string key, string fallback)
-        {
-            return LocalizationUtility.S(LocalizationKeyPrefix + key, fallback);
-        }
-
-
         protected override void BuildInspectorGUI(VisualElement root)
         {
             // FaceMeshRenderField
@@ -48,9 +40,10 @@ namespace USTL.FaceTracking.Editor
             FaceMeshRendererField faceMeshRendererField = new()
             {
                 bindingPath = nameof(USTLFaceTracking.faceMeshRenderer),
+                label = TrKey("field.face_mesh_renderer"),
             };
+            faceMeshRendererField.AddToClassList(LocalizationUtility.TranslationClassName);
             faceMeshRendererField.RegisterValueChangedCallback(_ => Refresh());
-            faceMeshRendererField.OnLangChanged = () => { faceMeshRendererField.label = Tr("field.face_mesh_renderer", "Face Mesh Renderer"); };
             root.Add(faceMeshRendererField);
 
             // HardwareProfileField
@@ -58,15 +51,11 @@ namespace USTL.FaceTracking.Editor
             HardwareProfileField hardwareProfileField = new()
             {
                 bindingPath = nameof(USTLFaceTracking.trackingHardwareProfiles),
-                LabelText = "Tracking Hardware",
-                ButtonTooltip = "Select one or more face-tracking hardware devices used by this avatar.",
+                LabelText = TrKey("field.tracking_hardware"),
+                ButtonTooltip = TrKey("tooltip.tracking_hardware"),
             };
+            hardwareProfileField.AddToClassList(LocalizationUtility.TranslationClassName);
             hardwareProfileField.RegisterValueChangedCallback(_ => Refresh());
-            hardwareProfileField.OnLangChanged = () =>
-            {
-                hardwareProfileField.LabelText = Tr("field.tracking_hardware", "Tracking Hardware");
-                hardwareProfileField.ButtonTooltip = Tr("tooltip.tracking_hardware", "Select one or more face-tracking hardware devices used by this avatar.");
-            };
             root.Add(hardwareProfileField);
 
             // FeatureSettingView
@@ -74,55 +63,49 @@ namespace USTL.FaceTracking.Editor
             FeatureSettingView featureSettingView = new(BindCell_FeatureSettings_Feature, BindCell_FeatureSettings_HardwareSupport, BindCell_FeatureSettings_OutputFormat, BindCell_FeatureSettings_SyncMode)
             {
                 itemsSource = Enumerable.Range(0, SpFeatureSettings.arraySize).ToList(),
+                Column0Title = TrKey("column.feature"),
+                Column1Title = TrKey("column.hardware_support_short"),
+                Column2Title = TrKey("column.output_format"),
+                Column3Title = TrKey("column.sync_mode"),
             };
+            featureSettingView.AddToClassList(LocalizationUtility.ColumnTranslationClassName);
             featureSettingView.OnOutputFormatChanged += _ => Refresh();
             featureSettingView.OnSyncModeChanged += _ => Refresh();
-            featureSettingView.OnLangChanged = () =>
-            {
-                featureSettingView.Column0Title = Tr("column.feature", "Feature");
-                featureSettingView.Column1Title = Tr("column.hardware_support_short", "HW");
-                featureSettingView.Column2Title = Tr("column.output_format", "Output Format");
-                featureSettingView.Column3Title = Tr("column.sync_mode", "Sync Mode");
-                featureSettingView.Rebuild();
-            };
             FeatureSettingView = featureSettingView;
 
-            LocalizedFoldout featureFoldout = new()
+            Foldout featureFoldout = new()
             {
                 name = FeatureSettingsFoldoutName,
                 value = featureSettingsFoldoutOpen,
-                text = "Feature Settings",
+                text = TrKey("section.feature_settings"),
             };
+            featureFoldout.AddToClassList(LocalizationUtility.TranslationClassName);
             featureFoldout.RegisterValueChangedCallback(evt => featureSettingsFoldoutOpen = evt.newValue);
             featureFoldout.Add(featureSettingView);
-            featureFoldout.OnLangChanged = () => { featureFoldout.text = Tr("section.feature_settings", "Feature Settings"); };
             root.Add(featureFoldout);
 
             // BlendShapeSettingView
             BlendShapeSettingView blendShapeSettingView = new(BindCell_BlendshapeSettings_Expression, BindCell_BlendshapeSettings_HardwareSupport, BindCell_BlendshapeSettings_Blendshape, BindCell_BlendshapeSettings_maxValue)
             {
                 itemsSource = Enumerable.Range(0, SpBlendshapeAssignments.arraySize).ToList(),
+                Column0Title = TrKey("column.unified_expression"),
+                Column1Title = TrKey("column.hardware_support_short"),
+                Column2Title = TrKey("column.blend_shape"),
+                Column3Title = TrKey("column.max_value"),
             };
+            blendShapeSettingView.AddToClassList(LocalizationUtility.ColumnTranslationClassName);
             blendShapeSettingView.OnAssignmentChanged += _ => Refresh();
-            blendShapeSettingView.OnLangChanged = () =>
-            {
-                blendShapeSettingView.Column0Title = Tr("column.unified_expression", "Unified Expression");
-                blendShapeSettingView.Column1Title = Tr("column.hardware_support_short", "HW");
-                blendShapeSettingView.Column2Title = Tr("column.blend_shape", "Blend Shape");
-                blendShapeSettingView.Column3Title = Tr("column.max_value", "Max Value");
-                blendShapeSettingView.Rebuild();
-            };
             BlendShapeSettingView = blendShapeSettingView;
 
-            LocalizedFoldout blendshapeFold = new()
+            Foldout blendshapeFold = new()
             {
                 name = BlendShapeAssignmentFoldoutName,
                 value = blendShapeAssignmentFoldoutOpen,
-                text = "Blend Shape Assignments",
+                text = TrKey("section.blend_shape_assignments"),
             };
+            blendshapeFold.AddToClassList(LocalizationUtility.TranslationClassName);
             blendshapeFold.RegisterValueChangedCallback(evt => blendShapeAssignmentFoldoutOpen = evt.newValue);
             blendshapeFold.Add(blendShapeSettingView);
-            blendshapeFold.OnLangChanged = () => { blendshapeFold.text = Tr("section.blend_shape_assignments", "Blend Shape Assignments"); };
             root.Add(blendshapeFold);
 
             // SyncParameterUsageLabel
@@ -143,7 +126,6 @@ namespace USTL.FaceTracking.Editor
             root.Add(languageSwitcher);
         }
 
-
         private static Color SupportedHardwareStatusIndicator(HardwareSupportStatus status)
         {
             bool proSkin = EditorGUIUtility.isProSkin;
@@ -155,6 +137,16 @@ namespace USTL.FaceTracking.Editor
                 HardwareSupportStatus.Unknown => proSkin ? new Color(0.62f, 0.72f, 0.86f) : new Color(0.24f, 0.34f, 0.48f),
                 _ => proSkin ? Color.white : Color.black,
             };
+        }
+
+        private static string TrKey(string key)
+        {
+            return LocalizationUtility.EditorKey(key);
+        }
+
+        private static string Tr(string key, string fallback)
+        {
+            return LocalizationUtility.S(TrKey(key), fallback);
         }
 
         #region Reflesh
@@ -171,7 +163,7 @@ namespace USTL.FaceTracking.Editor
 
         #region BindCalls Feature
 
-        private void BindCell_FeatureSettings_Feature(LocalizationLabel label, int index)
+        private void BindCell_FeatureSettings_Feature(Label label, int index)
         {
             FeatureSetting setting = new(SpFeatureSettings, index);
 
@@ -207,7 +199,7 @@ namespace USTL.FaceTracking.Editor
             label.style.color = SupportedHardwareStatusIndicator(status);
         }
 
-        private void BindCell_FeatureSettings_OutputFormat(LocalizationDropdownField dropdownField, int index)
+        private void BindCell_FeatureSettings_OutputFormat(DropdownField dropdownField, int index)
         {
             FeatureSetting setting = new(SpFeatureSettings, index);
             FaceTrackingFeatureDefinition featureDefinition = setting.FeatureDefinition;

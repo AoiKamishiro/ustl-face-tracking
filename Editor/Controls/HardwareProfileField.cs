@@ -1,11 +1,10 @@
-using System;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal sealed class HardwareProfileField : EnumFlagsField, ILocalization
+    internal sealed class HardwareProfileField : EnumFlagsField
     {
         private const string FieldName = "tracking-hardware";
 
@@ -29,7 +28,5 @@ namespace USTL.FaceTracking.Editor
             get => tooltip;
             set => tooltip = value;
         }
-
-        public Action OnLangChanged { get; set; }
     }
 }

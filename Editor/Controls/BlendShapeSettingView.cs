@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal sealed class BlendShapeSettingView : MultiColumnListView, ILocalization
+    internal sealed class BlendShapeSettingView : MultiColumnListView
     {
         private const int ItemHeight = 32;
         private const int ExpressionColumnWidth = 148;
@@ -60,8 +60,6 @@ namespace USTL.FaceTracking.Editor
             get => columns[3].title;
             set => columns[3].title = value;
         }
-
-        public Action OnLangChanged { get; set; } = () => { };
 
         internal event Action<int> OnAssignmentChanged;
         internal event Action<int> OnMaxValueChanged;

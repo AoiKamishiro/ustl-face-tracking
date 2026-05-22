@@ -1,8 +1,9 @@
+using System;
 using UnityEngine.UIElements;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal sealed class SyncParameterUsageLabel : LocalizedHelpBox
+    internal sealed class SyncParameterUsageLabel : HelpBox
     {
         internal SyncParameterUsageLabel(USTLFaceTracking faceTracking)
         {
@@ -14,6 +15,8 @@ namespace USTL.FaceTracking.Editor
         private USTLFaceTracking FaceTracking { get; }
 
         internal string SummaryFormat { get; set; } = "Sync Parameter Usage: {0} bits ({1}/{2} parameters, {3} without blend shape assignments)";
+
+        public Action OnLangChanged { get; set; }
 
         public void Rebuild()
         {

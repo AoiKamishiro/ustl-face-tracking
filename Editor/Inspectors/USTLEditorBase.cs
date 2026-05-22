@@ -27,13 +27,6 @@ namespace USTL.FaceTracking.Editor
 
         private static void ApplyLocalization(VisualElement root)
         {
-            root.Query<VisualElement>().ForEach(element =>
-            {
-                if (element is ILocalization { OnLangChanged: not null, } localization)
-                {
-                    localization.OnLangChanged.Invoke();
-                }
-            });
             LocalizationUtility.Localize(root);
         }
 
