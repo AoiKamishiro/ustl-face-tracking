@@ -171,7 +171,7 @@ namespace USTL.FaceTracking
         internal IReadOnlyList<VRCFTParameter> Parameters { get; }
     }
 
-    internal enum VRCFTParameterSetId
+    public enum VRCFTParameterSetId
     {
         None,
         PerEyeGazeXY,

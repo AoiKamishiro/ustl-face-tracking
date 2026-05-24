@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace USTL.FaceTracking
 {
-    internal enum ParameterSyncMode
+    public enum ParameterSyncMode
     {
         [InspectorName("Disabled")] None,
         [InspectorName("Local Only")] LocalOnly,

@@ -2,12 +2,10 @@
   "name": "USTL.FaceTracking.Runtime.Tests",
   "rootNamespace": "USTL.FaceTracking.Runtime.Tests",
   "references": [
-    "UnityEditor.TestRunner",
     "UnityEngine.TestRunner",
     "USTL.FaceTracking",
     "USTL.FaceTracking.Editor",
-    "nadena.dev.ndmf",
-    "nadena.dev.modular-avatar.core"
+    "nadena.dev.ndmf"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
