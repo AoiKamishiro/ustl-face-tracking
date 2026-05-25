@@ -12,6 +12,8 @@ When adding hardware, add a hardware profile JSON and always keep a source URL t
 | --- | --- |
 | Support profile JSON | `Editor/Data/HardwareSupport/Profiles/*.json` |
 | Expression list, only when adding a new expression key | `Runtime/Data/Expressions/UnifiedExpression.cs` |
+| Generated hardware enum | `Runtime/Data/HardwareSupport/SupportedHardwares.generated.cs` |
+| Generated support definition dictionary | `Editor/Data/HardwareSupport/HardwareSupportProfileDefinition.generated.cs` |
 
 ## 1. Add the support profile JSON
 
@@ -68,7 +70,13 @@ Invalid names or `None` cause a load error.
 If the device documentation uses its own expression names, map them to VRCFaceTracking Unified Expressions before adding them.
 You do not need to list the same expression more than once in a single hardware profile.
 
-## 3. Run tests
+## 3. Generate support code
+
+After changing JSON, run `Tools > U-Stella > Face Tracking > Generate Hardware Support Data` in Unity.
+This updates `SupportedHardwares.generated.cs` and `HardwareSupportProfileDefinition.generated.cs`.
+Do not edit generated files manually.
+
+## 4. Run tests
 
 Run Unity EditMode tests and confirm that:
 
@@ -76,6 +84,7 @@ Run Unity EditMode tests and confirm that:
 - `profile` values do not conflict.
 - `id` values do not conflict.
 - All `UnifiedExpression` names in JSON exist.
+- The generated enum and support definition dictionary match the JSON.
 
 ## Support status criteria
 

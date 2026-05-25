@@ -352,6 +352,7 @@ namespace USTL.FaceTracking.Editor
             field.Unbind();
             field.choices = choices;
             field.BindProperty(setting.BlendshapeProperty);
+            field.SetEnabled(IsBlendshapeSettingEditable(setting.Expression));
 
             TextElement textElement = field.Q<TextElement>(className: BasePopupField<string, string>.textUssClassName);
 
@@ -378,6 +379,42 @@ namespace USTL.FaceTracking.Editor
             BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
             field.Unbind();
             field.BindProperty(setting.MaxValueProperty);
+            field.SetEnabled(IsBlendshapeSettingEditable(setting.Expression));
+        }
+
+        private bool IsBlendshapeSettingEditable(UnifiedExpression expression)
+        {
+            if (expression == UnifiedExpression.None)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < SpFeatureSettings.arraySize; i++)
+            {
+                FeatureSetting featureSetting = new(SpFeatureSettings, i);
+                if (featureSetting.SyncMode == ParameterSyncMode.None || featureSetting.OutputFormat == null)
+                {
+                    continue;
+                }
+
+                foreach (VRCFTParameter parameter in featureSetting.OutputFormat.Parameters)
+                {
+                    if (!VRCFTParameterDefinition.All.TryGetValue(parameter, out VRCFTParameterDefinition definition))
+                    {
+                        continue;
+                    }
+
+                    foreach (ExpressionWeightTarget target in definition.ExpressionTargets)
+                    {
+                        if (target.Expression == expression)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         #endregion
