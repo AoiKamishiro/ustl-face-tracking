@@ -5,31 +5,36 @@ using UnityEngine;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal static class BlendshapeSettingInitializer
+    internal static class BlendShapeSettingInitializer
     {
         internal static void EnsureInitialized(SerializedObject serializedObject)
         {
+            if(serializedObject.targetObject is not USTLFaceTracking)
+            {
+                throw new System.ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
+            }
+            
             serializedObject.Update();
 
-            IReadOnlyList<UnifiedExpression> expressions = FaceTrackingEditorUtility.AllExpressions;
+            IReadOnlyList<UnifiedExpression> expressions = EnumUtility.GetAllElements<UnifiedExpression>();
 
-            SerializedProperty settings = serializedObject.FindProperty(nameof(USTLFaceTracking.blendshapeSettings));
-            Dictionary<UnifiedExpression, BlendshapeSetting> current = new(settings.arraySize);
+            SerializedProperty settings = serializedObject.FindProperty(nameof(USTLFaceTracking.blendShapeSettings));
+            Dictionary<UnifiedExpression, BlendShapeSetting> current = new(settings.arraySize);
             for (int i = 0; i < settings.arraySize; i++)
             {
                 SerializedProperty element = settings.GetArrayElementAtIndex(i);
-                UnifiedExpression expression = (UnifiedExpression)element.FindPropertyRelative(nameof(BlendshapeSetting.expression)).intValue;
-                if (!FaceTrackingEditorUtility.AllExpressions.Contains(expression))
+                UnifiedExpression expression = (UnifiedExpression)element.FindPropertyRelative(nameof(BlendShapeSetting.expression)).intValue;
+                if (!expressions.Contains(expression))
                 {
                     continue;
                 }
 
-                string blendshape = element.FindPropertyRelative(nameof(BlendshapeSetting.blendShapeName)).stringValue;
-                float maxValue = element.FindPropertyRelative(nameof(BlendshapeSetting.maxValue)).floatValue;
-                BlendshapeSetting setting = new()
+                string blendShape = element.FindPropertyRelative(nameof(BlendShapeSetting.blendShapeName)).stringValue;
+                float maxValue = element.FindPropertyRelative(nameof(BlendShapeSetting.maxValue)).floatValue;
+                BlendShapeSetting setting = new()
                 {
                     expression = expression,
-                    blendShapeName = ValidateBlendshape(expression, blendshape),
+                    blendShapeName = ValidateBlendShape(expression, blendShape),
                     maxValue = ValidateMaxValue(maxValue),
                 };
                 current[expression] = setting;
@@ -41,9 +46,9 @@ namespace USTL.FaceTracking.Editor
             for (int i = 0; i < expressions.Count; i++)
             {
                 SerializedProperty elementProperty = settings.GetArrayElementAtIndex(i);
-                SerializedProperty expressionProperty = elementProperty.FindPropertyRelative(nameof(BlendshapeSetting.expression));
-                SerializedProperty blendShapeProperty = elementProperty.FindPropertyRelative(nameof(BlendshapeSetting.blendShapeName));
-                SerializedProperty maxValueProperty = elementProperty.FindPropertyRelative(nameof(BlendshapeSetting.maxValue));
+                SerializedProperty expressionProperty = elementProperty.FindPropertyRelative(nameof(BlendShapeSetting.expression));
+                SerializedProperty blendShapeProperty = elementProperty.FindPropertyRelative(nameof(BlendShapeSetting.blendShapeName));
+                SerializedProperty maxValueProperty = elementProperty.FindPropertyRelative(nameof(BlendShapeSetting.maxValue));
 
                 if ((UnifiedExpression)expressionProperty.intValue != expressions[i])
                 {
@@ -93,9 +98,9 @@ namespace USTL.FaceTracking.Editor
             }
         }
 
-        private static string ValidateBlendshape(UnifiedExpression expression, string blendshapeName)
+        private static string ValidateBlendShape(UnifiedExpression expression, string blendShapeName)
         {
-            return string.IsNullOrWhiteSpace(blendshapeName) ? expression.ToString() : blendshapeName;
+            return string.IsNullOrWhiteSpace(blendShapeName) ? expression.ToString() : blendShapeName;
         }
 
         private static float ValidateMaxValue(float maxValue)

@@ -13,7 +13,7 @@ namespace USTL.FaceTracking.Editor
         private const int CellHorizontalPadding = 6;
         private const int CellVerticalPadding = 4;
         private const string ExpressionLabelName = "expression";
-        private const string HardwareUsageLabelName = "hardware-usage";
+        private const string HardwareSupportLabelName = "hardware-support";
         private const string BlendShapeNameFieldName = "blend-shape-name";
         private const string MaxValueFieldName = "max-value";
 
@@ -34,31 +34,6 @@ namespace USTL.FaceTracking.Editor
             columns.Add(CreateMaxValueColumn(bindMaxValueCell));
             style.width = Length.Percent(100);
             style.flexGrow = 0;
-        }
-
-
-        internal string Column0Title
-        {
-            get => columns[0].title;
-            set => columns[0].title = value;
-        }
-
-        internal string Column1Title
-        {
-            get => columns[1].title;
-            set => columns[1].title = value;
-        }
-
-        internal string Column2Title
-        {
-            get => columns[2].title;
-            set => columns[2].title = value;
-        }
-
-        internal string Column3Title
-        {
-            get => columns[3].title;
-            set => columns[3].title = value;
         }
 
         internal event Action<int> OnAssignmentChanged;
@@ -97,7 +72,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateAssignmentStatusCell,
                 bindCell = (elem, index) =>
                 {
-                    Label label = elem.Q<Label>(HardwareUsageLabelName);
+                    Label label = elem.Q<Label>(HardwareSupportLabelName);
                     bindCell(label, index);
                 },
             };
@@ -180,7 +155,7 @@ namespace USTL.FaceTracking.Editor
 
             Label label = new()
             {
-                name = HardwareUsageLabelName,
+                name = HardwareSupportLabelName,
                 text = "●",
                 style =
                 {

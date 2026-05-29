@@ -13,11 +13,11 @@ namespace USTL.FaceTracking.Editor
         private const int CellHorizontalPadding = 6;
         private const int CellVerticalPadding = 2;
         private const string FeatureLabelName = "feature";
-        private const string HardwareUsageLabelName = "hardware-usage";
+        private const string HardwareSupportLabelName = "hardware-support";
         private const string OutputFormatDropdownName = "output-format";
         private const string SyncModeDropdownName = "sync-mode";
 
-        internal FeatureSettingView(Action<Label, int> bindFeatureCell, Action<Label, int> bindHardwareSupportCell, Action<DropdownField, int> bindOutputFormatCell, Action<EnumField, int> bindSyncModeCell)
+        internal FeatureSettingView(Action<Label, int> bindFeatureCell, Action<Label, int> bindHardwareSupportCell, Action<DropdownField, int> bindOutputFormatCell, Action<DropdownField, int> bindSyncModeCell)
         {
             fixedItemHeight = ItemHeight;
             showAddRemoveFooter = false;
@@ -34,31 +34,6 @@ namespace USTL.FaceTracking.Editor
             columns.Add(CreateSyncModeColumn(bindSyncModeCell));
             style.width = Length.Percent(100);
             style.flexGrow = 0;
-        }
-
-
-        internal string Column0Title
-        {
-            get => columns[0].title;
-            set => columns[0].title = value;
-        }
-
-        internal string Column1Title
-        {
-            get => columns[1].title;
-            set => columns[1].title = value;
-        }
-
-        internal string Column2Title
-        {
-            get => columns[2].title;
-            set => columns[2].title = value;
-        }
-
-        internal string Column3Title
-        {
-            get => columns[3].title;
-            set => columns[3].title = value;
         }
 
         internal event Action<int> OnOutputFormatChanged;
@@ -97,7 +72,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateHardwareSupportCell,
                 bindCell = (elem, index) =>
                 {
-                    Label label = elem.Q<Label>(HardwareUsageLabelName);
+                    Label label = elem.Q<Label>(HardwareSupportLabelName);
                     bindCell(label, index);
                 },
             };
@@ -121,7 +96,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private Column CreateSyncModeColumn(Action<EnumField, int> bindCell)
+        private Column CreateSyncModeColumn(Action<DropdownField, int> bindCell)
         {
             return new Column
             {
@@ -134,7 +109,7 @@ namespace USTL.FaceTracking.Editor
                 makeCell = CreateSyncModeCell,
                 bindCell = (elem, index) =>
                 {
-                    EnumField field = elem.Q<EnumField>(SyncModeDropdownName);
+                    DropdownField field = elem.Q<DropdownField>(SyncModeDropdownName);
                     field.UnregisterValueChangedCallback(HandleSyncModeChanged);
                     bindCell(field, index);
                     field.userData = index;
@@ -180,7 +155,7 @@ namespace USTL.FaceTracking.Editor
 
             Label label = new()
             {
-                name = HardwareUsageLabelName,
+                name = HardwareSupportLabelName,
                 text = "●",
                 style =
                 {
@@ -215,7 +190,7 @@ namespace USTL.FaceTracking.Editor
             VisualElement innerRoot = new();
             ApplyColumnCellStyle(innerRoot);
 
-            EnumField field = new(ParameterSyncMode.LocalOnly)
+            DropdownField field = new()
             {
                 name = SyncModeDropdownName,
                 style =
@@ -238,9 +213,9 @@ namespace USTL.FaceTracking.Editor
             schedule.Execute(() => OnOutputFormatChanged?.Invoke(index));
         }
 
-        private void HandleSyncModeChanged(ChangeEvent<Enum> evt)
+        private void HandleSyncModeChanged(ChangeEvent<string> evt)
         {
-            if (evt.currentTarget is not EnumField { userData: int index, })
+            if (evt.currentTarget is not DropdownField { userData: int index, })
             {
                 return;
             }

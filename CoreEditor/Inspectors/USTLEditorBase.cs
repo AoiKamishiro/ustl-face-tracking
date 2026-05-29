@@ -1,9 +1,9 @@
 using nadena.dev.ndmf.localization;
 using UnityEngine.UIElements;
 
-namespace USTL.FaceTracking.Editor
+namespace USTL.Core.Editor
 {
-    internal abstract class USTLEditorBase : UnityEditor.Editor
+    public abstract class USTLEditorBase : UnityEditor.Editor
     {
         protected VisualElement Root { get; private set; }
 
@@ -20,14 +20,14 @@ namespace USTL.FaceTracking.Editor
             }
 
             BuildInspectorGUI(root);
-            LanguagePrefs.RegisterLanguageChangeCallback(root, _ => ApplyLocalization(root));
+            LanguagePrefs.RegisterLanguageChangeCallback(root, ApplyLocalization);
             ApplyLocalization(root);
             return root;
         }
 
         private static void ApplyLocalization(VisualElement root)
         {
-            LocalizationUtility.Localize(root);
+            USTLLocalizer.Localize(root);
         }
 
         protected abstract void BuildInspectorGUI(VisualElement root);
@@ -48,6 +48,12 @@ namespace USTL.FaceTracking.Editor
         private static void AddLogo(VisualElement root)
         {
             root.Add(new LogoElement());
+        }
+
+        protected static string Tr(string key, string fallback)
+        {
+            string localized = USTLLocalizer.GetLocalizedString(key);
+            return !string.IsNullOrEmpty(localized) ? localized : fallback;
         }
     }
 }

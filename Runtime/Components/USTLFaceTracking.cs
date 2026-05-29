@@ -10,7 +10,7 @@ namespace USTL.FaceTracking
         [SerializeField] internal SupportedHardwares trackingHardwareProfiles;
         [SerializeField] internal SkinnedMeshRenderer faceMeshRenderer;
         [SerializeField] internal FeatureSetting[] featureSettings;
-        [SerializeField] internal BlendshapeSetting[] blendshapeSettings;
+        [SerializeField] internal BlendShapeSetting[] blendShapeSettings;
     }
 
     [Serializable]
@@ -22,7 +22,7 @@ namespace USTL.FaceTracking
     }
 
     [Serializable]
-    internal sealed class BlendshapeSetting
+    internal sealed class BlendShapeSetting
     {
         [SerializeField] internal UnifiedExpression expression;
         [SerializeField] internal string blendShapeName;

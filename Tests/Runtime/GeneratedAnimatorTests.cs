@@ -54,13 +54,14 @@ namespace USTL.FaceTracking.Runtime.Tests
         {
             get
             {
-                IReadOnlyList<FaceTrackingFeature> allFeatures = FaceTrackingEditorUtility.AllFeatures;
+                IReadOnlyList<FaceTrackingFeature> allFeatures = EnumUtility.GetAllElements<FaceTrackingFeature>();
+                IReadOnlyList<ParameterSyncMode> allSyncModes = EnumUtility.GetAllElements<ParameterSyncMode>();
                 List<(FaceTrackingFeature, VRCFTParameterSetId, ParameterSyncMode, bool)> list = new();
                 foreach (FaceTrackingFeature feature in allFeatures)
                 {
                     foreach (VRCFTParameterSet set in FaceTrackingFeatureDefinition.All[feature].OutputFormats)
                     {
-                        foreach (ParameterSyncMode syncMode in FaceTrackingEditorUtility.AllSyncModes)
+                        foreach (ParameterSyncMode syncMode in allSyncModes)
                         {
                             list.Add((feature, set.Id, syncMode, true));
                             list.Add((feature, set.Id, syncMode, false));
@@ -110,7 +111,7 @@ namespace USTL.FaceTracking.Runtime.Tests
         }
 
         [UnityTest]
-        public IEnumerator GeneratedAnimator_ShouldMapVRCFTParametersToBlendshapeWeights([ValueSource(nameof(GetAllTestCases))] (FaceTrackingFeature feature, VRCFTParameterSetId setId, ParameterSyncMode syncMode, bool isLocal) testCase)
+        public IEnumerator GeneratedAnimator_ShouldMapVRCFTParametersToBlendShapeWeights([ValueSource(nameof(GetAllTestCases))] (FaceTrackingFeature feature, VRCFTParameterSetId setId, ParameterSyncMode syncMode, bool isLocal) testCase)
         {
             Animator animator = _localGameObject.GetComponent<Animator>();
             USTLFaceTracking target = _localGameObject.GetComponentInChildren<USTLFaceTracking>();
@@ -153,7 +154,7 @@ namespace USTL.FaceTracking.Runtime.Tests
         {
             animator.SetBool(ParamIsLocal, true);
 
-            foreach (UnifiedExpression expression in FaceTrackingEditorUtility.AllExpressions)
+            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
             {
                 int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
                 float weight = smr.GetBlendShapeWeight(index);
@@ -205,7 +206,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 yield return null;
             }
 
-            foreach (UnifiedExpression expression in FaceTrackingEditorUtility.AllExpressions)
+            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
             {
                 int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
                 float weight = smr.GetBlendShapeWeight(index);
@@ -224,7 +225,7 @@ namespace USTL.FaceTracking.Runtime.Tests
         {
             animator.SetBool(ParamIsLocal, false);
 
-            foreach (UnifiedExpression expression in FaceTrackingEditorUtility.AllExpressions)
+            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
             {
                 int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
                 float weight = smr.GetBlendShapeWeight(index);
@@ -281,7 +282,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 yield return null;
             }
 
-            foreach (UnifiedExpression expression in FaceTrackingEditorUtility.AllExpressions)
+            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
             {
                 int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
                 float weight = smr.GetBlendShapeWeight(index);

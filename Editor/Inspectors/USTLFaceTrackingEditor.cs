@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using USTL.Core.Editor;
 
 namespace USTL.FaceTracking.Editor
 {
@@ -20,29 +21,30 @@ namespace USTL.FaceTracking.Editor
 
         private BlendShapeSettingView BlendShapeSettingView { get; set; }
         private FeatureSettingView FeatureSettingView { get; set; }
-        private SyncParameterUsageLabel SyncParameterUsageLabel { get; set; }
+        private IntegerField SyncParameterUsageLabel { get; set; }
+
 
         private SerializedProperty SpFaceMeshRendererField => serializedObject.FindProperty(nameof(USTLFaceTracking.faceMeshRenderer));
         private SerializedProperty SpTrackingHardwareField => serializedObject.FindProperty(nameof(USTLFaceTracking.trackingHardwareProfiles));
-        private SerializedProperty SpBlendshapeAssignments => serializedObject.FindProperty(nameof(USTLFaceTracking.blendshapeSettings));
+        private SerializedProperty SpBlendShapeAssignments => serializedObject.FindProperty(nameof(USTLFaceTracking.blendShapeSettings));
         private SerializedProperty SpFeatureSettings => serializedObject.FindProperty(nameof(USTLFaceTracking.featureSettings));
 
         private void OnEnable()
         {
             FeatureSettingsInitializer.EnsureInitialized(serializedObject);
-            BlendshapeSettingInitializer.EnsureInitialized(serializedObject);
+            BlendShapeSettingInitializer.EnsureInitialized(serializedObject);
         }
 
         protected override void BuildInspectorGUI(VisualElement root)
         {
-            // FaceMeshRenderField
+            // FaceMeshRendererField
 
             FaceMeshRendererField faceMeshRendererField = new()
             {
                 bindingPath = nameof(USTLFaceTracking.faceMeshRenderer),
-                label = TrKey("field.face_mesh_renderer"),
             };
-            faceMeshRendererField.AddToClassList(LocalizationUtility.TranslationClassName);
+            faceMeshRendererField.AddToClassList(USTLLocalizer.TrClassName);
+            faceMeshRendererField.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__field__face_mesh_renderer");
             faceMeshRendererField.RegisterValueChangedCallback(_ => Refresh());
             root.Add(faceMeshRendererField);
 
@@ -51,10 +53,9 @@ namespace USTL.FaceTracking.Editor
             HardwareProfileField hardwareProfileField = new()
             {
                 bindingPath = nameof(USTLFaceTracking.trackingHardwareProfiles),
-                LabelText = TrKey("field.tracking_hardware"),
-                ButtonTooltip = TrKey("tooltip.tracking_hardware"),
             };
-            hardwareProfileField.AddToClassList(LocalizationUtility.TranslationClassName);
+            hardwareProfileField.AddToClassList(USTLLocalizer.TrClassName);
+            hardwareProfileField.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__field__tracking_hardware");
             hardwareProfileField.RegisterValueChangedCallback(_ => Refresh());
             root.Add(hardwareProfileField);
 
@@ -63,12 +64,9 @@ namespace USTL.FaceTracking.Editor
             FeatureSettingView featureSettingView = new(BindCell_FeatureSettings_Feature, BindCell_FeatureSettings_HardwareSupport, BindCell_FeatureSettings_OutputFormat, BindCell_FeatureSettings_SyncMode)
             {
                 itemsSource = Enumerable.Range(0, SpFeatureSettings.arraySize).ToList(),
-                Column0Title = TrKey("column.feature"),
-                Column1Title = TrKey("column.hardware_support_short"),
-                Column2Title = TrKey("column.output_format"),
-                Column3Title = TrKey("column.sync_mode"),
             };
-            featureSettingView.AddToClassList(LocalizationUtility.ColumnTranslationClassName);
+            featureSettingView.AddToClassList(USTLLocalizer.TrClassName);
+            featureSettingView.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__field__feature_settings");
             featureSettingView.OnOutputFormatChanged += _ => Refresh();
             featureSettingView.OnSyncModeChanged += _ => Refresh();
             FeatureSettingView = featureSettingView;
@@ -77,47 +75,43 @@ namespace USTL.FaceTracking.Editor
             {
                 name = FeatureSettingsFoldoutName,
                 value = featureSettingsFoldoutOpen,
-                text = TrKey("section.feature_settings"),
             };
-            featureFoldout.AddToClassList(LocalizationUtility.TranslationClassName);
+            featureFoldout.AddToClassList(USTLLocalizer.TrClassName);
+            featureFoldout.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__section__feature_settings");
             featureFoldout.RegisterValueChangedCallback(evt => featureSettingsFoldoutOpen = evt.newValue);
             featureFoldout.Add(featureSettingView);
             root.Add(featureFoldout);
 
             // BlendShapeSettingView
-            BlendShapeSettingView blendShapeSettingView = new(BindCell_BlendshapeSettings_Expression, BindCell_BlendshapeSettings_HardwareSupport, BindCell_BlendshapeSettings_Blendshape, BindCell_BlendshapeSettings_maxValue)
+            BlendShapeSettingView blendShapeSettingView = new(BindCell_BlendShapeSettings_Expression, BindCell_BlendShapeSettings_HardwareSupport, BindCell_BlendShapeSettings_BlendShape, BindCell_BlendShapeSettings_MaxValue)
             {
-                itemsSource = Enumerable.Range(0, SpBlendshapeAssignments.arraySize).ToList(),
-                Column0Title = TrKey("column.unified_expression"),
-                Column1Title = TrKey("column.hardware_support_short"),
-                Column2Title = TrKey("column.blend_shape"),
-                Column3Title = TrKey("column.max_value"),
+                itemsSource = Enumerable.Range(0, SpBlendShapeAssignments.arraySize).ToList(),
             };
-            blendShapeSettingView.AddToClassList(LocalizationUtility.ColumnTranslationClassName);
+            blendShapeSettingView.AddToClassList(USTLLocalizer.TrClassName);
+            blendShapeSettingView.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__field__blend_shape_settings");
             blendShapeSettingView.OnAssignmentChanged += _ => Refresh();
             BlendShapeSettingView = blendShapeSettingView;
 
-            Foldout blendshapeFold = new()
+            Foldout blendShapeFold = new()
             {
                 name = BlendShapeAssignmentFoldoutName,
                 value = blendShapeAssignmentFoldoutOpen,
-                text = TrKey("section.blend_shape_assignments"),
             };
-            blendshapeFold.AddToClassList(LocalizationUtility.TranslationClassName);
-            blendshapeFold.RegisterValueChangedCallback(evt => blendShapeAssignmentFoldoutOpen = evt.newValue);
-            blendshapeFold.Add(blendShapeSettingView);
-            root.Add(blendshapeFold);
+            blendShapeFold.AddToClassList(USTLLocalizer.TrClassName);
+            blendShapeFold.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__section__blend_shape_settings");
+            blendShapeFold.RegisterValueChangedCallback(evt => blendShapeAssignmentFoldoutOpen = evt.newValue);
+            blendShapeFold.Add(blendShapeSettingView);
+            root.Add(blendShapeFold);
 
             // SyncParameterUsageLabel
 
-            SyncParameterUsageLabel syncParameterUsageLabel = new(target as USTLFaceTracking);
-            syncParameterUsageLabel.OnLangChanged = () =>
-            {
-                syncParameterUsageLabel.SummaryFormat = Tr("summary.sync_parameter_usage", "Sync Parameter Usage: {0} bits ({1}/{2} parameters, {3} without blend shape assignments)");
-                syncParameterUsageLabel.Rebuild();
-            };
-            SyncParameterUsageLabel = syncParameterUsageLabel;
-            root.Add(syncParameterUsageLabel);
+            IntegerField parameterUsageField = new();
+            parameterUsageField.SetEnabled(false);
+            parameterUsageField.value = VRCParameterUtility.CalculateUsage(target as USTLFaceTracking);
+            parameterUsageField.AddToClassList(USTLLocalizer.TrClassName);
+            parameterUsageField.AddToClassList($"{USTLLocalizer.TrClassNamePrefix}__ft__field__parameter_usage");
+            root.Add(parameterUsageField);
+            SyncParameterUsageLabel = parameterUsageField;
 
             // LanguageSwitcherElement
 
@@ -139,24 +133,30 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private static string TrKey(string key)
-        {
-            return LocalizationUtility.EditorKey(key);
-        }
+        #region Refresh
 
-        private static string Tr(string key, string fallback)
-        {
-            return LocalizationUtility.S(TrKey(key), fallback);
-        }
-
-        #region Reflesh
+        private bool _refreshQueued;
 
         private void Refresh()
         {
+            if (_refreshQueued)
+            {
+                return;
+            }
+
+            _refreshQueued = true;
+            Root.schedule.Execute(DoRefresh);
+        }
+
+        private void DoRefresh()
+        {
+            _refreshQueued = false;
+
             serializedObject.Update();
-            SyncParameterUsageLabel.Rebuild();
-            BlendShapeSettingView.Rebuild();
-            FeatureSettingView.Rebuild();
+            // SyncParameterUsageLabel.Rebuild();
+            BlendShapeSettingView.RefreshItems();
+            FeatureSettingView.RefreshItems();
+            USTLLocalizer.Localize(Root);
         }
 
         #endregion
@@ -167,14 +167,10 @@ namespace USTL.FaceTracking.Editor
         {
             FeatureSetting setting = new(SpFeatureSettings, index);
 
-            string text = "Invalid";
-            if (setting.FeatureDefinition != null)
-            {
-                text = Tr(setting.FeatureDefinition.TranslationKey, setting.FeatureDefinition.DisplayName);
-            }
+            USTLLocalizer.RemoveLocalizeClass(label);
+            USTLLocalizer.AddLocalizeClass(label, $"{USTLLocalizer.TrClassNamePrefix}__ft__enum__feature__{setting.Feature.ToString()}");
 
-            label.text = text;
-            label.tooltip = text;
+            USTLLocalizer.Localize(label);
         }
 
         private void BindCell_FeatureSettings_HardwareSupport(Label label, int index)
@@ -209,44 +205,58 @@ namespace USTL.FaceTracking.Editor
             int formatIndex = 0;
             if (featureDefinition != null)
             {
-                choices.AddRange(featureDefinition.OutputFormats.Select(outputFormat => Tr($"output_format.{outputFormat.Id}", outputFormat.DisplayName)));
+                choices.AddRange(featureDefinition.OutputFormats.Select(outputFormat => outputFormat.Id.ToString()));
                 formatIndex = featureDefinition.IndexOfOutputFormat(setting.OutputFormat.Id);
             }
 
             dropdownField.UnregisterValueChangedCallback(ChangeCallback_FeatureSettings_OnOutputFormatChanged);
             dropdownField.userData = index;
             dropdownField.choices = choices;
-
-            dropdownField.SetValueWithoutNotify(choices[formatIndex]);
+            dropdownField.formatListItemCallback = FormatString;
+            dropdownField.formatSelectedValueCallback = FormatString;
+            dropdownField.SetValueWithoutNotify(formatIndex >= 0 && formatIndex < choices.Count ? choices[formatIndex] : string.Empty);
             dropdownField.RegisterValueChangedCallback(ChangeCallback_FeatureSettings_OnOutputFormatChanged);
+            USTLLocalizer.RemoveLocalizeClass(dropdownField);
+            USTLLocalizer.AddLocalizeClass(dropdownField);
+            return;
+
+            string FormatString(string key)
+            {
+                string localized = Tr($"{USTLLocalizer.TrClassNamePrefix}__ft__enum__set_id__{key}", key);
+                return string.IsNullOrEmpty(localized) ? key : localized;
+            }
         }
 
-        private void BindCell_FeatureSettings_SyncMode(EnumField enumField, int index)
+        private void BindCell_FeatureSettings_SyncMode(DropdownField dropdownField, int index)
         {
             FeatureSetting setting = new(SpFeatureSettings, index);
             ParameterSyncMode syncMode = setting.SyncMode;
-
-            enumField.UnregisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
-            enumField.userData = index;
-
-            if (setting.Feature is FaceTrackingFeature.EyeDirection or FaceTrackingFeature.EyeLid && setting.OutputFormatId == VRCFTParameterSetId.VRChatNative)
+            bool isVrcMode = setting.Feature is FaceTrackingFeature.EyeDirection or FaceTrackingFeature.EyeLid && setting.OutputFormatId == VRCFTParameterSetId.VRChatNative;
+            dropdownField.UnregisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
+            dropdownField.userData = index;
+            dropdownField.choices = EnumUtility.GetAllElements<ParameterSyncMode>().Select(mode => mode.ToString()).ToList();
+            dropdownField.formatListItemCallback = FormatString;
+            dropdownField.formatSelectedValueCallback = FormatString;
+            dropdownField.SetValueWithoutNotify(syncMode.ToString());
+            dropdownField.RegisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
+            dropdownField.SetEnabled(!isVrcMode);
+            USTLLocalizer.RemoveLocalizeClass(dropdownField);
+            USTLLocalizer.AddLocalizeClass(dropdownField);
+            if (isVrcMode && syncMode != ParameterSyncMode.None)
             {
-                if (syncMode != ParameterSyncMode.None)
-                {
-                    setting.SyncModeProperty.intValue = (int)ParameterSyncMode.None;
-                    serializedObject.ApplyModifiedProperties();
-                    syncMode = ParameterSyncMode.None;
-                }
-
-                enumField.SetEnabled(false);
+                setting.SyncModeProperty.intValue = (int)ParameterSyncMode.None;
+                serializedObject.ApplyModifiedProperties();
+                syncMode = ParameterSyncMode.None;
+                dropdownField.SetValueWithoutNotify(syncMode.ToString());
             }
-            else
+
+            return;
+
+            string FormatString(string key)
             {
-                enumField.SetEnabled(true);
+                string localized = Tr($"{USTLLocalizer.TrClassNamePrefix}__ft__enum__sync_mode__{key}", key);
+                return string.IsNullOrEmpty(localized) ? key : localized;
             }
-
-            enumField.SetValueWithoutNotify(syncMode);
-            enumField.RegisterValueChangedCallback(ChangeCallback_FeatureSettings_OnSyncModeChanged);
         }
 
 
@@ -278,9 +288,9 @@ namespace USTL.FaceTracking.Editor
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void ChangeCallback_FeatureSettings_OnSyncModeChanged(ChangeEvent<Enum> evt)
+        private void ChangeCallback_FeatureSettings_OnSyncModeChanged(ChangeEvent<string> evt)
         {
-            if (evt.currentTarget is not EnumField { userData: int index, } enumField)
+            if (evt.currentTarget is not DropdownField { userData: int index, } dropdownField)
             {
                 return;
             }
@@ -289,15 +299,15 @@ namespace USTL.FaceTracking.Editor
 
             FeatureSetting setting = new(SpFeatureSettings, index);
             ParameterSyncMode currentSyncMode = setting.SyncMode;
-            if (evt.newValue is not ParameterSyncMode newSyncMode)
+            if (!Enum.TryParse(evt.newValue, out ParameterSyncMode newSyncMode))
             {
-                enumField.SetValueWithoutNotify(currentSyncMode);
+                dropdownField.SetValueWithoutNotify(currentSyncMode.ToString());
                 return;
             }
 
-            if (!FaceTrackingEditorUtility.AllSyncModes.Contains(newSyncMode))
+            if (!EnumUtility.GetAllElements<ParameterSyncMode>().Contains(newSyncMode))
             {
-                enumField.SetValueWithoutNotify(currentSyncMode);
+                dropdownField.SetValueWithoutNotify(currentSyncMode.ToString());
                 return;
             }
 
@@ -312,18 +322,18 @@ namespace USTL.FaceTracking.Editor
 
         #endregion
 
-        #region BindCalls Blendshape
+        #region BindCalls BlendShape
 
-        private void BindCell_BlendshapeSettings_Expression(Label label, int index)
+        private void BindCell_BlendShapeSettings_Expression(Label label, int index)
         {
-            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            BlendShapeSetting setting = new(SpBlendShapeAssignments, index);
             label.text = setting.Expression.ToString();
             label.tooltip = label.text;
         }
 
-        private void BindCell_BlendshapeSettings_HardwareSupport(Label label, int index)
+        private void BindCell_BlendShapeSettings_HardwareSupport(Label label, int index)
         {
-            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            BlendShapeSetting setting = new(SpBlendShapeAssignments, index);
             TrackingHardwareSetting hwSetting = new(SpTrackingHardwareField);
             HardwareSupportStatus status = HardwareSupportStatus.Unknown;
             foreach (SupportedHardwareDefinition profile in hwSetting.HardwareSupportProfiles)
@@ -343,19 +353,20 @@ namespace USTL.FaceTracking.Editor
             label.style.color = SupportedHardwareStatusIndicator(status);
         }
 
-        private void BindCell_BlendshapeSettings_Blendshape(DropdownField field, int index)
+        private void BindCell_BlendShapeSettings_BlendShape(DropdownField field, int index)
         {
-            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            BlendShapeSetting setting = new(SpBlendShapeAssignments, index);
             FaceMeshSetting faceSetting = new(SpFaceMeshRendererField);
-            IReadOnlyList<string> blendshapes = faceSetting.Blendshapes;
-            List<string> choices = GetChoicesForValue(blendshapes, setting.Blendshape);
+            IReadOnlyList<string> blendShapes = faceSetting.BlendShapes;
+            List<string> choices = GetChoicesForValue(blendShapes, setting.BlendShape);
             field.Unbind();
             field.choices = choices;
-            field.BindProperty(setting.BlendshapeProperty);
+            field.BindProperty(setting.BlendShapeProperty);
+            field.SetEnabled(IsBlendShapeSettingEditable(setting.Expression));
 
             TextElement textElement = field.Q<TextElement>(className: BasePopupField<string, string>.textUssClassName);
 
-            textElement.style.color = !blendshapes.Contains(setting.Blendshape) ? new Color(1f, 0.25f, 0.25f) : StyleKeyword.Null;
+            textElement.style.color = !blendShapes.Contains(setting.BlendShape) ? new Color(1f, 0.25f, 0.25f) : StyleKeyword.Null;
 
             return;
 
@@ -373,16 +384,52 @@ namespace USTL.FaceTracking.Editor
             }
         }
 
-        private void BindCell_BlendshapeSettings_maxValue(RangeFloatField field, int index)
+        private void BindCell_BlendShapeSettings_MaxValue(RangeFloatField field, int index)
         {
-            BlendshapeSetting setting = new(SpBlendshapeAssignments, index);
+            BlendShapeSetting setting = new(SpBlendShapeAssignments, index);
             field.Unbind();
             field.BindProperty(setting.MaxValueProperty);
+            field.SetEnabled(IsBlendShapeSettingEditable(setting.Expression));
+        }
+
+        private bool IsBlendShapeSettingEditable(UnifiedExpression expression)
+        {
+            if (expression == UnifiedExpression.None)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < SpFeatureSettings.arraySize; i++)
+            {
+                FeatureSetting featureSetting = new(SpFeatureSettings, i);
+                if (featureSetting.SyncMode == ParameterSyncMode.None || featureSetting.OutputFormat == null)
+                {
+                    continue;
+                }
+
+                foreach (VRCFTParameter parameter in featureSetting.OutputFormat.Parameters)
+                {
+                    if (!VRCFTParameterDefinition.All.TryGetValue(parameter, out VRCFTParameterDefinition definition))
+                    {
+                        continue;
+                    }
+
+                    foreach (ExpressionWeightTarget tgt in definition.ExpressionTargets)
+                    {
+                        if (tgt.Expression == expression)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         #endregion
 
-        #region Weapper
+        #region Wrapper
 
         private readonly struct FaceMeshSetting
         {
@@ -394,7 +441,7 @@ namespace USTL.FaceTracking.Editor
             public SerializedProperty FaceMeshProperty { get; }
             public SkinnedMeshRenderer FaceMeshRenderer => FaceMeshProperty.objectReferenceValue as SkinnedMeshRenderer;
             public Mesh FaceMesh => FaceMeshRenderer?.sharedMesh;
-            public IReadOnlyList<string> Blendshapes => MeshUtility.GetBlendShapeNames(FaceMesh);
+            public IReadOnlyList<string> BlendShapes => MeshUtility.GetBlendShapeNames(FaceMesh);
         }
 
         private readonly struct TrackingHardwareSetting
@@ -412,7 +459,7 @@ namespace USTL.FaceTracking.Editor
                 get
                 {
                     List<SupportedHardwareDefinition> profiles = new();
-                    foreach (SupportedHardwares hardware in FaceTrackingEditorUtility.AllHardwares)
+                    foreach (SupportedHardwares hardware in EnumUtility.GetAllElements<SupportedHardwares>())
                     {
                         if (hardware != SupportedHardwares.None && (TrackingHardware & hardware) == hardware)
                         {
@@ -448,21 +495,21 @@ namespace USTL.FaceTracking.Editor
             public ParameterSyncMode SyncMode => (ParameterSyncMode)SyncModeProperty.intValue;
         }
 
-        private readonly struct BlendshapeSetting
+        private readonly struct BlendShapeSetting
         {
-            public BlendshapeSetting(SerializedProperty arraySerializedProperty, int index)
+            public BlendShapeSetting(SerializedProperty arraySerializedProperty, int index)
             {
-                ExpressionProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendshapeSetting.expression));
-                BlendshapeProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendshapeSetting.blendShapeName));
-                MaxValueProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendshapeSetting.maxValue));
+                ExpressionProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendShapeSetting.expression));
+                BlendShapeProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendShapeSetting.blendShapeName));
+                MaxValueProperty = arraySerializedProperty.GetArrayElementAtIndex(index).FindPropertyRelative(nameof(FaceTracking.BlendShapeSetting.maxValue));
             }
 
             public SerializedProperty ExpressionProperty { get; }
-            public SerializedProperty BlendshapeProperty { get; }
+            public SerializedProperty BlendShapeProperty { get; }
             public SerializedProperty MaxValueProperty { get; }
 
             public UnifiedExpression Expression => (UnifiedExpression)ExpressionProperty.intValue;
-            public string Blendshape => BlendshapeProperty.stringValue;
+            public string BlendShape => BlendShapeProperty.stringValue;
             public float MaxValue => MaxValueProperty.floatValue;
         }
 

@@ -8,9 +8,14 @@ namespace USTL.FaceTracking.Editor
     {
         internal static void EnsureInitialized(SerializedObject serializedObject)
         {
+            if(serializedObject.targetObject is not USTLFaceTracking)
+            {
+                throw new System.ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
+            }
+
             serializedObject.Update();
 
-            IReadOnlyList<FaceTrackingFeature> features = FaceTrackingEditorUtility.AllFeatures;
+            IReadOnlyList<FaceTrackingFeature> features = EnumUtility.GetAllElements<FaceTrackingFeature>();
 
             SerializedProperty settings = serializedObject.FindProperty(nameof(USTLFaceTracking.featureSettings));
             Dictionary<FaceTrackingFeature, FeatureSetting> current = new(settings.arraySize);
@@ -18,7 +23,7 @@ namespace USTL.FaceTracking.Editor
             {
                 SerializedProperty element = settings.GetArrayElementAtIndex(i);
                 FaceTrackingFeature feature = (FaceTrackingFeature)element.FindPropertyRelative(nameof(FeatureSetting.feature)).intValue;
-                if (!FaceTrackingEditorUtility.AllFeatures.Contains(feature))
+                if (!features.Contains(feature))
                 {
                     continue;
                 }
@@ -115,7 +120,7 @@ namespace USTL.FaceTracking.Editor
 
         private static ParameterSyncMode ValidateSyncMode(ParameterSyncMode mode)
         {
-            return FaceTrackingEditorUtility.AllSyncModes.Contains(mode) ? mode : ParameterSyncMode.LocalOnly;
+            return EnumUtility.GetAllElements<ParameterSyncMode>().Contains(mode) ? mode : ParameterSyncMode.LocalOnly;
         }
     }
 }

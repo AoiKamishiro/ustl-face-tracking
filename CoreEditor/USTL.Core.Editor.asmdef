@@ -1,12 +1,10 @@
 {
-  "name": "USTL.FaceTracking.Editor",
-  "rootNamespace": "USTL.FaceTracking.Editor",
+  "name": "USTL.Core.Editor",
+  "rootNamespace": "USTL.Core.Editor",
   "references": [
     "nadena.dev.ndmf",
     "nadena.dev.modular-avatar.core",
     "nadena.dev.modular-avatar.core.editor",
-    "USTL.Core.Editor",
-    "USTL.FaceTracking",
     "VRC.SDKBase"
   ],
   "includePlatforms": [

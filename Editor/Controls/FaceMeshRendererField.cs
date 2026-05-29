@@ -9,6 +9,7 @@ namespace USTL.FaceTracking.Editor
         {
             objectType = typeof(SkinnedMeshRenderer);
             allowSceneObjects = true;
+            label = "Face Mesh";
         }
     }
 }

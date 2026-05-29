@@ -374,9 +374,9 @@ namespace USTL.FaceTracking.Editor
         private static Dictionary<UnifiedExpression, BlendShapeBinding> CollectBlendShapeBindings(USTLFaceTracking source)
         {
             Dictionary<UnifiedExpression, BlendShapeBinding> bindings = new();
-            BlendshapeSetting[] blendshapeSettings = source.blendshapeSettings ?? Array.Empty<BlendshapeSetting>();
+            BlendShapeSetting[] blendShapeSettings = source.blendShapeSettings ?? Array.Empty<BlendShapeSetting>();
 
-            foreach (BlendshapeSetting setting in blendshapeSettings)
+            foreach (BlendShapeSetting setting in blendShapeSettings)
             {
                 if (setting == null || setting.expression == UnifiedExpression.None || string.IsNullOrWhiteSpace(setting.blendShapeName))
                 {

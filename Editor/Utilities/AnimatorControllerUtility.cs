@@ -215,11 +215,12 @@ namespace USTL.FaceTracking.Editor
         {
             ThrowIfNull(controller, nameof(controller));
 
+            string blendParameter = GetDefaultBlendTreeParameter(controller);
             tree = new BlendTree
             {
                 name = name,
-                blendParameter = GetDefaultBlendTreeParameter(controller),
-                blendParameterY = GetDefaultBlendTreeParameter(controller),
+                blendParameter = blendParameter,
+                blendParameterY = blendParameter,
             };
 
             AnimatorStateMachine stateMachine = controller.layers[layerIndex].stateMachine;

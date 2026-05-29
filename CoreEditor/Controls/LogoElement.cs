@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace USTL.FaceTracking.Editor
+namespace USTL.Core.Editor
 {
     internal sealed class LogoElement : VisualElement
     {

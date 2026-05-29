@@ -1,7 +1,7 @@
 namespace USTL.FaceTracking
 {
     /// <summary>
-    ///     https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendshapes
+    ///     https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendShapes
     /// </summary>
     public enum UnifiedExpression
     {
