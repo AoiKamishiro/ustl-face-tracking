@@ -6,6 +6,7 @@
     "nadena.dev.modular-avatar.core",
     "UnityEditor.TestRunner",
     "UnityEngine.TestRunner",
+    "USTL.Core.Editor",
     "USTL.FaceTracking",
     "USTL.FaceTracking.Editor"
   ],
