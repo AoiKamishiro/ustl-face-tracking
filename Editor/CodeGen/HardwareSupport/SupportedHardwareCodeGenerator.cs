@@ -10,7 +10,7 @@ namespace USTL.FaceTracking.Editor
     internal static class HardwareSupportCodeGenerator
     {
         private const string ProfileAssetsDirectoryGuid = "acb8333e55094b2caa2065288be3ac3e";
-        private const string ProfilesDirectorySuffix = "/Editor/Generation/HardwareSupport/Profiles";
+        private const string ProfilesDirectorySuffix = "/Editor/CodeGen/HardwareSupport/Profiles";
         private const string RuntimeGeneratedRelativePath = "Runtime/Data/SupportedHardwares.generated.cs";
         private const string EditorGeneratedRelativePath = "Editor/Data/Definitions/SupportedHardwareDefinition.generated.cs";
         private const string MenuPath = "Tools/U-Stella/Face Tracking/Reload Hardware Data";
@@ -193,14 +193,14 @@ namespace USTL.FaceTracking.Editor
             builder.AppendLine();
             builder.AppendLine("namespace USTL.FaceTracking.Editor");
             builder.AppendLine("{");
-            builder.AppendLine("    internal sealed partial class HardwareSupportProfileDefinition");
+            builder.AppendLine("    internal sealed partial class SupportedHardwareDefinition");
             builder.AppendLine("    {");
-            builder.AppendLine("        internal static readonly IReadOnlyDictionary<SupportedHardwares, HardwareSupportProfileDefinition> All = new Dictionary<SupportedHardwares, HardwareSupportProfileDefinition>");
+            builder.AppendLine("        internal static readonly IReadOnlyDictionary<SupportedHardwares, SupportedHardwareDefinition> All = new Dictionary<SupportedHardwares, SupportedHardwareDefinition>");
             builder.AppendLine("        {");
 
             foreach (HardwareSupportProfileJson profile in profiles)
             {
-                builder.AppendLine($"            [SupportedHardwares.{profile.profile}] = new HardwareSupportProfileDefinition(");
+                builder.AppendLine($"            [SupportedHardwares.{profile.profile}] = new SupportedHardwareDefinition(");
                 builder.AppendLine($"                SupportedHardwares.{profile.profile},");
                 builder.AppendLine($"                {Quote(profile.displayName)},");
                 builder.AppendLine($"                {profile.id},");

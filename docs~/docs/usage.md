@@ -24,7 +24,7 @@ Required packages are resolved through VPM.
 
 ## Select tracking devices
 
-Use `Tracking Devices` to select the face-tracking devices you want the avatar to support.
+Use `Tracking Hardware` to select the face-tracking devices you want the avatar to support.
 You can select more than one device.
 
 The support status shows how each facial expression is handled by the selected devices.
@@ -56,7 +56,7 @@ Use `Blend Shape Assignments` to map each face-tracking expression to a blend sh
 
 1. Set `Face Mesh Renderer`.
 2. Select the matching blend shape for each expression.
-3. Adjust `Maximum Value` when needed. Values are in the `0` to `100` range.
+3. Adjust `Max Value` when needed. Values are in the `0` to `100` range.
 4. Expressions that are not used by the current feature settings are disabled.
 
 If a blend shape has the same name as an expression, it may be filled automatically when the face mesh is assigned.

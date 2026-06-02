@@ -12,12 +12,11 @@ title: 機器情報の追加方法
 
 | 種類 | パス |
 | --- | --- |
-| 対応表JSON | `Editor/Data/HardwareSupport/Profiles/*.json` |
-| 表情名一覧（新しい表情キーを追加する場合のみ） | `Runtime/Data/Expressions/UnifiedExpression.cs` |
+| 対応表JSON | `Editor/CodeGen/HardwareSupport/Profiles/*.json` |
 
 ## 1. 対応表JSONを追加する
 
-`Editor/Data/HardwareSupport/Profiles/` にJSONを追加します。
+`Editor/CodeGen/HardwareSupport/Profiles/` にJSONを追加します。
 `profile` は機器を識別する一意なキーです。
 `id` はInspectorでの並び順と保存時のビット位置（`1 << id`）の両方に使うため、既存値と重複しない値にします。
 
@@ -72,14 +71,11 @@ JSONに書ける表情名は `UnifiedExpression` の値だけです。
 機器側のドキュメントが独自名を使っている場合は、VRCFaceTrackingのUnified Expressionsに対応づけてから記載します。
 1つの機器内で同じ表情名を重複して書く必要はありません。
 
-## 3. テストを実行する
+## 3. 対応コードを生成する
 
-UnityのEditModeテストで以下を確認します。
-
-- JSONが読み込めること
-- `profile` が重複していないこと
-- `id` が重複していないこと
-- JSON内の `UnifiedExpression` 名がすべて存在すること
+JSONを変更したら、Unityで `Tools > U-Stella > Face Tracking > Reload Hardware Data` を実行します。
+これにより `Runtime/Data/SupportedHardwares.generated.cs` と `Editor/Data/Definitions/SupportedHardwareDefinition.generated.cs` が更新されます。
+生成ファイルは手で編集しません。
 
 ## 判定基準
 
