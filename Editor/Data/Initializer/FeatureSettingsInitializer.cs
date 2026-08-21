@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -8,9 +9,9 @@ namespace USTL.FaceTracking.Editor
     {
         internal static void EnsureInitialized(SerializedObject serializedObject)
         {
-            if(serializedObject.targetObject is not USTLFaceTracking)
+            if (serializedObject.targetObject is not USTLFaceTracking)
             {
-                throw new System.ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
+                throw new ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
             }
 
             serializedObject.Update();

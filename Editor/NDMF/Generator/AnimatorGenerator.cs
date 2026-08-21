@@ -6,8 +6,9 @@ using UnityEngine;
 
 namespace USTL.FaceTracking.Editor
 {
-    internal static class GenerateFaceTrackingProcess
+    internal static class AnimatorGenerator
     {
+        private const string ControllerName = "USTL FaceTracking Generated FX";
         private const string ParameterPrefix = "USTL/v2/";
         private const string AlwaysOneParameterName = "USTL_FT_AlwaysOne";
         private const string IsLocalParameterName = "IsLocal";
@@ -19,16 +20,25 @@ namespace USTL.FaceTracking.Editor
         private const float EyelidNeutralValue = 0.75f;
         private const float DefaultSmoothing = 0.1f;
 
-        internal static AnimatorController GenerateAnimatorController(string controllerName, USTLFaceTracking source, Transform avatarRoot, out List<ParameterAnimation> parameterAnimations)
+        internal static void Generate(FTBuildContext context)
         {
-            AnimatorController controller = AnimatorControllerUtility.CreateAnimatorController(controllerName);
+            Transform avatarRoot = context.AvatarRootTransform;
+            IReadOnlyList<FTBuildContext.BlendShapeBinding> bindings = context.BlendShapeBindings;
+            AnimatorController controller = Generate(avatarRoot, context.Source, bindings, out List<ParameterAnimation> parameterAnimations);
+            context.ParameterAnimations = parameterAnimations;
+            context.AnimatorController = controller;
+        }
+
+        internal static AnimatorController Generate(Transform avatarRoot, USTLFaceTracking source, IReadOnlyList<FTBuildContext.BlendShapeBinding> blendShapeBindings, out List<ParameterAnimation> parameterAnimations)
+        {
+            AnimatorController controller = AnimatorControllerUtility.CreateAnimatorController(ControllerName);
             AddBoolParameter(controller, IsLocalParameterName, true);
             AddFloatParameter(controller, AlwaysOneParameterName, 1.0f);
             AddFloatParameter(controller, SmoothingParameterName, DefaultSmoothing);
 
             AnimationClip emptyClip = CreateEmptyClip();
 
-            parameterAnimations = CollectParameterAnimations(source, avatarRoot);
+            parameterAnimations = CollectParameterAnimations(source, avatarRoot, blendShapeBindings);
             if (parameterAnimations.Count == 0)
             {
                 CreateEmptyLayer(controller, emptyClip);
@@ -301,15 +311,15 @@ namespace USTL.FaceTracking.Editor
             return negative ? -value : value;
         }
 
-        private static List<ParameterAnimation> CollectParameterAnimations(USTLFaceTracking source, Transform avatarRoot)
+        private static List<ParameterAnimation> CollectParameterAnimations(USTLFaceTracking source, Transform avatarRoot, IReadOnlyList<FTBuildContext.BlendShapeBinding> generatedBlendShapeBindings)
         {
             List<ParameterAnimation> parameterAnimations = new();
-            if (!source || !source.faceMeshRenderer || !avatarRoot || !IsDescendantOf(source.faceMeshRenderer.transform, avatarRoot))
+            if (!source || !source.faceMeshRenderer || !source.faceMeshRenderer.sharedMesh || !avatarRoot || !IsDescendantOf(source.faceMeshRenderer.transform, avatarRoot))
             {
                 return parameterAnimations;
             }
 
-            Dictionary<UnifiedExpression, BlendShapeBinding> blendShapeBindings = CollectBlendShapeBindings(source);
+            Dictionary<UnifiedExpression, FTBuildContext.BlendShapeBinding> blendShapeBindings = CreateBlendShapeBindingMap(generatedBlendShapeBindings);
             if (blendShapeBindings.Count == 0)
             {
                 return parameterAnimations;
@@ -343,7 +353,7 @@ namespace USTL.FaceTracking.Editor
 
                     foreach (ExpressionWeightTarget target in parameterDefinition.ExpressionTargets)
                     {
-                        if (target.Expression == UnifiedExpression.None || !blendShapeBindings.TryGetValue(target.Expression, out BlendShapeBinding binding))
+                        if (target.Expression == UnifiedExpression.None || !blendShapeBindings.TryGetValue(target.Expression, out FTBuildContext.BlendShapeBinding binding))
                         {
                             continue;
                         }
@@ -357,13 +367,13 @@ namespace USTL.FaceTracking.Editor
 
                         parameterAnimation.MergeSyncMode(featureSetting.syncMode);
 
-                        TargetAnimationKey targetKey = new(parameter, target.Expression, target.Type, binding.BlendShapeName);
+                        TargetAnimationKey targetKey = new(parameter, target.Expression, target.Type, binding.GeneratedBlendShapeName);
                         if (!targetKeys.Add(targetKey))
                         {
                             continue;
                         }
 
-                        parameterAnimation.Targets.Add(new TargetAnimation(target.Type, binding.BlendShapeName, binding.MaxValue));
+                        parameterAnimation.Targets.Add(new TargetAnimation(target.Type, binding.GeneratedBlendShapeName, binding.MaxValue));
                     }
                 }
             }
@@ -371,19 +381,29 @@ namespace USTL.FaceTracking.Editor
             return parameterAnimations;
         }
 
-        private static Dictionary<UnifiedExpression, BlendShapeBinding> CollectBlendShapeBindings(USTLFaceTracking source)
+        private static Dictionary<UnifiedExpression, FTBuildContext.BlendShapeBinding> CreateBlendShapeBindingMap(IReadOnlyList<FTBuildContext.BlendShapeBinding> generatedBlendShapeBindings)
         {
-            Dictionary<UnifiedExpression, BlendShapeBinding> bindings = new();
-            BlendShapeSetting[] blendShapeSettings = source.blendShapeSettings ?? Array.Empty<BlendShapeSetting>();
-
-            foreach (BlendShapeSetting setting in blendShapeSettings)
+            Dictionary<UnifiedExpression, FTBuildContext.BlendShapeBinding> bindings = new();
+            if (generatedBlendShapeBindings == null)
             {
-                if (setting == null || setting.expression == UnifiedExpression.None || string.IsNullOrWhiteSpace(setting.blendShapeName))
+                return bindings;
+            }
+
+            foreach (FTBuildContext.BlendShapeBinding binding in generatedBlendShapeBindings)
+            {
+                if (binding.Expression == UnifiedExpression.None)
                 {
                     continue;
                 }
 
-                bindings[setting.expression] = new BlendShapeBinding(setting.blendShapeName, Mathf.Clamp(setting.maxValue, 0.0f, 100.0f));
+                if (binding.MaxValue <= 0.0f)
+                {
+                    bindings.Remove(binding.Expression);
+                }
+                else
+                {
+                    bindings[binding.Expression] = binding;
+                }
             }
 
             return bindings;
@@ -763,19 +783,6 @@ namespace USTL.FaceTracking.Editor
             return GetBinaryBitCount(nextSyncMode) > GetBinaryBitCount(currentSyncMode) ? nextSyncMode : currentSyncMode;
         }
 
-
-        private readonly struct BlendShapeBinding
-        {
-            public BlendShapeBinding(string blendShapeName, float maxValue)
-            {
-                BlendShapeName = blendShapeName;
-                MaxValue = maxValue;
-            }
-
-            public string BlendShapeName { get; }
-            public float MaxValue { get; }
-        }
-
         internal readonly struct TargetAnimation
         {
             public TargetAnimation(WeightCurveType curveType, string blendShapeName, float maxValue)
@@ -854,7 +861,7 @@ namespace USTL.FaceTracking.Editor
 
             public void MergeSyncMode(ParameterSyncMode syncMode)
             {
-                SyncMode = GenerateFaceTrackingProcess.MergeSyncMode(SyncMode, syncMode);
+                SyncMode = AnimatorGenerator.MergeSyncMode(SyncMode, syncMode);
             }
         }
     }

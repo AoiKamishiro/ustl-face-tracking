@@ -4,16 +4,12 @@ using nadena.dev.ndmf;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using VRC.SDK3.Avatars.Components;
 using Object = UnityEngine.Object;
 
 namespace USTL.FaceTracking.Editor
 {
     internal sealed class GenerateFaceTrackingPass : Pass<GenerateFaceTrackingPass>
     {
-        private const string GeneratedObjectName = "USTL FaceTracking Generated";
-        private const string GeneratedControllerName = "USTL FaceTracking Generated FX";
-
         public override string DisplayName => "Generate U-Stella FaceTracking";
 
         protected override void Execute(BuildContext context)
@@ -28,7 +24,7 @@ namespace USTL.FaceTracking.Editor
                     continue;
                 }
 
-                if (!proceeded)
+                if (!proceeded && component.gameObject.activeInHierarchy && component.enabled && component.faceMeshRenderer && component.faceMeshRenderer.sharedMesh)
                 {
                     Generate(context, component);
                     proceeded = true;
@@ -40,31 +36,23 @@ namespace USTL.FaceTracking.Editor
 
         private static void Generate(BuildContext context, USTLFaceTracking source)
         {
-            GameObject generatedObject = new(GeneratedObjectName);
-            generatedObject.transform.SetParent(source.transform, false);
+            FTBuildContext ftContext = new(context, source);
+            HierarchyGenerator.Generate(ftContext);
+            MeshGenerator.Generate(ftContext);
+            AnimatorGenerator.Generate(ftContext);
+            source.faceMeshRenderer.sharedMesh = ftContext.GeneratedMesh;
 
             List<ParameterConfig> parameterConfigs = new();
-            AnimatorController controller = GenerateFaceTrackingProcess.GenerateAnimatorController($"{GeneratedControllerName} ({source.gameObject.name})", source, context.AvatarRootTransform, out List<GenerateFaceTrackingProcess.ParameterAnimation> parameterAnimation);
-
-            foreach (GenerateFaceTrackingProcess.ParameterAnimation anims in parameterAnimation)
+            foreach (AnimatorGenerator.ParameterAnimation parameterAnimation in ftContext.ParameterAnimations)
             {
-                AddParameterConfigs(anims, ref parameterConfigs);
+                AddParameterConfigs(parameterAnimation, ref parameterConfigs);
             }
 
-            ModularAvatarParameters parameters = generatedObject.AddComponent<ModularAvatarParameters>();
-            parameters.parameters = parameterConfigs;
-            ModularAvatarMergeAnimator mergeAnimator = generatedObject.AddComponent<ModularAvatarMergeAnimator>();
-            mergeAnimator.animator = controller;
-            mergeAnimator.deleteAttachedAnimator = true;
-            mergeAnimator.pathMode = MergeAnimatorPathMode.Absolute;
-            mergeAnimator.matchAvatarWriteDefaults = false;
-            mergeAnimator.mergeAnimatorMode = MergeAnimatorMode.Append;
-            mergeAnimator.layerType = VRCAvatarDescriptor.AnimLayerType.FX;
+            ftContext.ModularAvatarParameters.parameters = parameterConfigs;
+            ftContext.ModularAvatarMergeAnimator.animator = ftContext.AnimatorController;
 
-            RegisterGeneratedObjects(context, controller);
-            RegisterGeneratedObjects(context, generatedObject);
+            RegisterGeneratedObject(ftContext);
         }
-
 
         private static ParameterConfig CreateParameterConfig(string name, ParameterSyncType syncType, bool localOnly, float defaultValue)
         {
@@ -227,7 +215,14 @@ namespace USTL.FaceTracking.Editor
             }
         }
 
-        private static void RegisterGeneratedObjects(BuildContext context, AnimatorController controller)
+        private static void RegisterGeneratedObject(FTBuildContext ftContext)
+        {
+            RegisterGeneratedObject(ftContext.BuildContext, ftContext.GeneratedObject);
+            RegisterGeneratedObject(ftContext.BuildContext, ftContext.GeneratedMesh);
+            RegisterGeneratedObject(ftContext.BuildContext, ftContext.AnimatorController);
+        }
+
+        private static void RegisterGeneratedObject(BuildContext context, AnimatorController controller)
         {
             List<Object> allAssets = CollectAllAsset(controller);
 
@@ -259,7 +254,27 @@ namespace USTL.FaceTracking.Editor
             }
         }
 
-        private static void RegisterGeneratedObjects(BuildContext context, GameObject gameObject)
+        private static void RegisterGeneratedObject(BuildContext context, Object generatedAsset)
+        {
+            if (!generatedAsset)
+            {
+                return;
+            }
+
+            using (SerializationScope scope = context.OpenSerializationScope())
+            {
+                scope.SaveAsset(generatedAsset);
+            }
+
+            using (new ObjectRegistryScope(context.ObjectRegistry))
+            {
+                ObjectRegistry.GetReference(generatedAsset);
+            }
+
+            EditorUtility.SetDirty(generatedAsset);
+        }
+
+        private static void RegisterGeneratedObject(BuildContext context, GameObject gameObject)
         {
             List<Object> allAssets = new() { gameObject, };
             allAssets.AddRange(gameObject.GetComponents<MonoBehaviour>());
@@ -285,12 +300,12 @@ namespace USTL.FaceTracking.Editor
         }
 
 
-        private static void AddParameterConfigs(GenerateFaceTrackingProcess.ParameterAnimation parameterAnimation, ref List<ParameterConfig> parameterConfigs)
+        private static void AddParameterConfigs(AnimatorGenerator.ParameterAnimation parameterAnimation, ref List<ParameterConfig> parameterConfigs)
         {
             bool syncFloatParameter = parameterAnimation.SyncMode == ParameterSyncMode.Float8;
             parameterConfigs.Add(CreateParameterConfig(parameterAnimation.ParameterName, ParameterSyncType.Float, !syncFloatParameter, parameterAnimation.DefaultValue));
 
-            int bitCount = GenerateFaceTrackingProcess.GetBinaryBitCount(parameterAnimation.SyncMode);
+            int bitCount = AnimatorGenerator.GetBinaryBitCount(parameterAnimation.SyncMode);
             if (bitCount <= 0)
             {
                 return;
@@ -298,7 +313,7 @@ namespace USTL.FaceTracking.Editor
 
             for (int bitIndex = 0; bitIndex < bitCount; bitIndex++)
             {
-                string binaryParameterName = GenerateFaceTrackingProcess.GetBinaryParameterName(parameterAnimation.Parameter, 1 << bitIndex);
+                string binaryParameterName = AnimatorGenerator.GetBinaryParameterName(parameterAnimation.Parameter, 1 << bitIndex);
                 parameterConfigs.Add(CreateParameterConfig(binaryParameterName, ParameterSyncType.Bool, false, 0.0f));
             }
 
@@ -307,7 +322,7 @@ namespace USTL.FaceTracking.Editor
                 return;
             }
 
-            string negativeParameterName = GenerateFaceTrackingProcess.GetBinaryNegativeParameterName(parameterAnimation.Parameter);
+            string negativeParameterName = AnimatorGenerator.GetBinaryNegativeParameterName(parameterAnimation.Parameter);
             parameterConfigs.Add(CreateParameterConfig(negativeParameterName, ParameterSyncType.Bool, false, 0.0f));
         }
     }

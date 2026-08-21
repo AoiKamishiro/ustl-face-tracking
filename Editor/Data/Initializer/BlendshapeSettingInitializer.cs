@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -9,11 +10,11 @@ namespace USTL.FaceTracking.Editor
     {
         internal static void EnsureInitialized(SerializedObject serializedObject)
         {
-            if(serializedObject.targetObject is not USTLFaceTracking)
+            if (serializedObject.targetObject is not USTLFaceTracking)
             {
-                throw new System.ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
+                throw new ArgumentException($"Expected targetObject of type {typeof(USTLFaceTracking).FullName}, but got {serializedObject.targetObject.GetType().FullName}.");
             }
-            
+
             serializedObject.Update();
 
             IReadOnlyList<UnifiedExpression> expressions = EnumUtility.GetAllElements<UnifiedExpression>();
@@ -57,7 +58,7 @@ namespace USTL.FaceTracking.Editor
                     if (!current.ContainsKey(expressions[i]))
                     {
                         blendShapeProperty.stringValue = expressions[i].ToString();
-                        maxValueProperty.floatValue = 100.0f;
+                        maxValueProperty.floatValue = BlendshapeUtility.DefaultMaxValue;
                     }
                     else
                     {
@@ -72,7 +73,7 @@ namespace USTL.FaceTracking.Editor
                     if (!current.ContainsKey(expressions[i]))
                     {
                         blendShapeProperty.stringValue = expressions[i].ToString();
-                        maxValueProperty.floatValue = 100.0f;
+                        maxValueProperty.floatValue = BlendshapeUtility.DefaultMaxValue;
                         hasChanges = true;
                     }
                     else
@@ -105,7 +106,7 @@ namespace USTL.FaceTracking.Editor
 
         private static float ValidateMaxValue(float maxValue)
         {
-            return maxValue is < 0.0f or > 100.0f ? 100.0f : maxValue;
+            return BlendshapeUtility.ClampMaxValue(maxValue);
         }
     }
 }

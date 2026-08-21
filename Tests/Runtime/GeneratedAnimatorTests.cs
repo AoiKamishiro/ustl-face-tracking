@@ -118,7 +118,7 @@ namespace USTL.FaceTracking.Runtime.Tests
             SkinnedMeshRenderer smr = animator.GetComponentInChildren<SkinnedMeshRenderer>();
             FaceTrackingFeatureDefinition featureDefinition = FaceTrackingFeatureDefinition.All[testCase.feature];
             VRCFTParameterSet parameterSet = featureDefinition.OutputFormats.First(outputFormat => outputFormat.Id == testCase.setId);
-            Dictionary<UnifiedExpression, WeightCurveType> ps = parameterSet.Parameters.SelectMany(x => VRCFTParameterDefinition.All[x].ExpressionTargets).ToDictionary(x => x.Expression, x => x.Type);
+            Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes = parameterSet.Parameters.SelectMany(x => VRCFTParameterDefinition.All[x].ExpressionTargets).ToDictionary(x => x.Expression, x => x.Type);
 
             target.featureSettings = new[]
             {
@@ -129,37 +129,51 @@ namespace USTL.FaceTracking.Runtime.Tests
                     syncMode = testCase.syncMode,
                 },
             };
-            AnimatorController controller = GenerateFaceTrackingProcess.GenerateAnimatorController("testController", target, _localGameObject.transform, out _);
+
+            Mesh originalMesh = smr.sharedMesh;
+            List<FTBuildContext.BlendShapeBinding> bindings = new(EnumUtility.GetAllElements<UnifiedExpression>().Count);
+            Dictionary<UnifiedExpression, string> generatedBlendShapeNames = new(bindings.Capacity);
+            foreach (BlendShapeSetting setting in target.blendShapeSettings)
+            {
+                FTBuildContext.BlendShapeBinding binding = new(setting.expression, setting.blendShapeName, setting.maxValue);
+                bindings.Add(binding);
+                if (setting.expression != UnifiedExpression.None)
+                {
+                    generatedBlendShapeNames[setting.expression] = binding.GeneratedBlendShapeName;
+                }
+            }
+
+            Mesh generatedMesh = MeshGenerator.Generate(originalMesh, bindings);
+            smr.sharedMesh = generatedMesh;
+
+            AnimatorController controller = AnimatorGenerator.Generate(_localGameObject.transform, target, bindings, out _);
             animator.runtimeAnimatorController = controller;
 
             if (testCase.isLocal)
             {
-                yield return LocalUserTest(animator, smr, ps, parameterSet, testCase.syncMode);
+                yield return LocalUserTest(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, testCase.syncMode);
             }
             else
             {
-                yield return RemoteUserTest(animator, smr, ps, parameterSet, testCase.syncMode);
+                yield return RemoteUserTest(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, testCase.syncMode);
             }
 
-            // Clear Generated
             animator.runtimeAnimatorController = null;
+            smr.sharedMesh = originalMesh;
+
             List<Object> allAsset = GenerateFaceTrackingPass.CollectAllAsset(controller);
             foreach (Object asset in allAsset)
             {
                 Object.DestroyImmediate(asset);
             }
+
+            Object.DestroyImmediate(generatedMesh);
         }
 
-        private static IEnumerator LocalUserTest(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, WeightCurveType> ps, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode)
+        private static IEnumerator LocalUserTest(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode)
         {
             animator.SetBool(ParamIsLocal, true);
-
-            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
-            {
-                int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
-                float weight = smr.GetBlendShapeWeight(index);
-                Assert.That(weight, Is.EqualTo(0.0f).Within(BLENDSHAPE_TOLERANCE));
-            }
+            AssertGeneratedBlendShapeWeightsAreZero(smr, generatedBlendShapeNames);
 
             if (syncMode == ParameterSyncMode.None)
             {
@@ -167,26 +181,26 @@ namespace USTL.FaceTracking.Runtime.Tests
             }
 
             // Min-Value Test
-            yield return LocalUserTestAssertion(animator, smr, ps, parameterSet, 0.0f, -1.0f, 0.0f);
+            yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, -1.0f, 0.0f);
 
             // Min-Mid-Value Test
-            yield return LocalUserTestAssertion(animator, smr, ps, parameterSet, 0.25f, -0.5f, 0.375f);
+            yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.25f, -0.5f, 0.375f);
 
             // Mid-Value Test
-            yield return LocalUserTestAssertion(animator, smr, ps, parameterSet, 0.5f, 0.0f, 0.75f);
+            yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.5f, 0.0f, 0.75f);
 
             // Max-Mid-Value Test
-            yield return LocalUserTestAssertion(animator, smr, ps, parameterSet, 0.75f, 0.7f, 0.875f);
+            yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.75f, 0.7f, 0.875f);
 
             // Max-Value Test
-            yield return LocalUserTestAssertion(animator, smr, ps, parameterSet, 1.0f, 1.0f, 1.0f);
+            yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 1.0f, 1.0f, 1.0f);
         }
 
-        private static IEnumerator LocalUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, WeightCurveType> ps, VRCFTParameterSet parameterSet, float unsigned, float signed, float eyelid)
+        private static IEnumerator LocalUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, float unsigned, float signed, float eyelid)
         {
             foreach (VRCFTParameter param in parameterSet.Parameters)
             {
-                string paramName = GenerateFaceTrackingProcess.GetVRCFTParameterName(param);
+                string paramName = AnimatorGenerator.GetVRCFTParameterName(param);
                 switch (VRCFTParameterDefinition.All[param].Range)
                 {
                     case ParameterRangeKind.Unsigned:
@@ -206,14 +220,14 @@ namespace USTL.FaceTracking.Runtime.Tests
                 yield return null;
             }
 
-            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
+            foreach (KeyValuePair<UnifiedExpression, string> generatedBlendShape in generatedBlendShapeNames)
             {
-                int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
+                int index = smr.sharedMesh.GetBlendShapeIndex(generatedBlendShape.Value);
                 float weight = smr.GetBlendShapeWeight(index);
                 float expected = 0.0f;
-                if (ps.TryGetValue(expression, out WeightCurveType p))
+                if (weightCurveTypes.TryGetValue(generatedBlendShape.Key, out WeightCurveType curveType))
                 {
-                    expected = CalculateExpectedWeight(p, unsigned, signed, eyelid);
+                    expected = CalculateExpectedWeight(curveType, unsigned, signed, eyelid);
                 }
 
                 Assert.That(weight, Is.EqualTo(expected).Within(BLENDSHAPE_TOLERANCE));
@@ -221,16 +235,10 @@ namespace USTL.FaceTracking.Runtime.Tests
         }
 
 
-        private static IEnumerator RemoteUserTest(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, WeightCurveType> ps, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode)
+        private static IEnumerator RemoteUserTest(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode)
         {
             animator.SetBool(ParamIsLocal, false);
-
-            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
-            {
-                int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
-                float weight = smr.GetBlendShapeWeight(index);
-                Assert.That(weight, Is.EqualTo(0.0f).Within(BLENDSHAPE_TOLERANCE));
-            }
+            AssertGeneratedBlendShapeWeightsAreZero(smr, generatedBlendShapeNames);
 
             if (syncMode == ParameterSyncMode.None || syncMode == ParameterSyncMode.LocalOnly)
             {
@@ -238,22 +246,22 @@ namespace USTL.FaceTracking.Runtime.Tests
             }
 
             // Min-Value Test
-            yield return RemoteUserTestAssertion(animator, smr, ps, parameterSet, syncMode, 0.0f, -1.0f, 0.0f);
+            yield return RemoteUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, syncMode, 0.0f, -1.0f, 0.0f);
 
             // Min-Mid-Value Test
-            yield return RemoteUserTestAssertion(animator, smr, ps, parameterSet, syncMode, 0.25f, -0.5f, 0.375f);
+            yield return RemoteUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, syncMode, 0.25f, -0.5f, 0.375f);
 
             // Mid-Value Test
-            yield return RemoteUserTestAssertion(animator, smr, ps, parameterSet, syncMode, 0.5f, 0.0f, 0.75f);
+            yield return RemoteUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, syncMode, 0.5f, 0.0f, 0.75f);
 
             // Max-Mid-Value Test
-            yield return RemoteUserTestAssertion(animator, smr, ps, parameterSet, syncMode, 0.75f, 0.7f, 0.875f);
+            yield return RemoteUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, syncMode, 0.75f, 0.7f, 0.875f);
 
             // Max-Value Test
-            yield return RemoteUserTestAssertion(animator, smr, ps, parameterSet, syncMode, 1.0f, 1.0f, 1.0f);
+            yield return RemoteUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, syncMode, 1.0f, 1.0f, 1.0f);
         }
 
-        private static IEnumerator RemoteUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, WeightCurveType> ps, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode, float unsignedOrigin, float signedOrigin, float eyelidOrigin)
+        private static IEnumerator RemoteUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, ParameterSyncMode syncMode, float unsignedOrigin, float signedOrigin, float eyelidOrigin)
         {
             float unsigned = GetExpectedValue(unsignedOrigin, syncMode, ParameterRangeKind.Unsigned);
             float signed = GetExpectedValue(signedOrigin, syncMode, ParameterRangeKind.Signed);
@@ -261,7 +269,7 @@ namespace USTL.FaceTracking.Runtime.Tests
 
             foreach (VRCFTParameter param in parameterSet.Parameters)
             {
-                string paramName = GenerateFaceTrackingProcess.GetVRCFTParameterName(param);
+                string paramName = AnimatorGenerator.GetVRCFTParameterName(param);
                 ParameterRangeKind range = VRCFTParameterDefinition.All[param].Range;
                 switch (range)
                 {
@@ -282,23 +290,33 @@ namespace USTL.FaceTracking.Runtime.Tests
                 yield return null;
             }
 
-            foreach (UnifiedExpression expression in EnumUtility.GetAllElements<UnifiedExpression>())
+            foreach (KeyValuePair<UnifiedExpression, string> generatedBlendShape in generatedBlendShapeNames)
             {
-                int index = smr.sharedMesh.GetBlendShapeIndex(expression.ToString());
+                int index = smr.sharedMesh.GetBlendShapeIndex(generatedBlendShape.Value);
                 float weight = smr.GetBlendShapeWeight(index);
                 float expected = 0.0f;
-                if (ps.TryGetValue(expression, out WeightCurveType p))
+                if (weightCurveTypes.TryGetValue(generatedBlendShape.Key, out WeightCurveType curveType))
                 {
-                    expected = CalculateExpectedWeight(p, unsigned, signed, eyelid);
+                    expected = CalculateExpectedWeight(curveType, unsigned, signed, eyelid);
                 }
 
                 Assert.That(weight, Is.EqualTo(expected).Within(BLENDSHAPE_TOLERANCE));
             }
         }
 
+        private static void AssertGeneratedBlendShapeWeightsAreZero(SkinnedMeshRenderer smr, IReadOnlyDictionary<UnifiedExpression, string> generatedBlendShapeNames)
+        {
+            foreach (string blendShapeName in generatedBlendShapeNames.Values)
+            {
+                int index = smr.sharedMesh.GetBlendShapeIndex(blendShapeName);
+                Assert.That(index, Is.GreaterThanOrEqualTo(0), $"Generated BlendShape '{blendShapeName}' was not found.");
+                Assert.That(smr.GetBlendShapeWeight(index), Is.EqualTo(0.0f).Within(BLENDSHAPE_TOLERANCE));
+            }
+        }
+
         private static void SetRemoteParameterInput(Animator animator, VRCFTParameter param, string paramName, ParameterSyncMode syncMode, ParameterRangeKind range, float value)
         {
-            int bitCount = GenerateFaceTrackingProcess.GetBinaryBitCount(syncMode);
+            int bitCount = AnimatorGenerator.GetBinaryBitCount(syncMode);
             if (bitCount <= 0)
             {
                 animator.SetFloat(paramName, value);
@@ -311,12 +329,12 @@ namespace USTL.FaceTracking.Runtime.Tests
             for (int bitIndex = 0; bitIndex < bitCount; bitIndex++)
             {
                 int bitValue = 1 << bitIndex;
-                animator.SetBool(GenerateFaceTrackingProcess.GetBinaryParameterName(param, bitValue), (magnitude & bitValue) != 0);
+                animator.SetBool(AnimatorGenerator.GetBinaryParameterName(param, bitValue), (magnitude & bitValue) != 0);
             }
 
             if (signed)
             {
-                animator.SetBool(GenerateFaceTrackingProcess.GetBinaryNegativeParameterName(param), negative);
+                animator.SetBool(AnimatorGenerator.GetBinaryNegativeParameterName(param), negative);
             }
 
             float unusedValue = range switch
@@ -325,7 +343,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 ParameterRangeKind.EyeLid => Mathf.Abs(value - EYELID_NEUTRAL_VALUE) < 0.001f ? 0.0f : EYELID_NEUTRAL_VALUE,
                 _ => value < 0.5f ? 1.0f : 0.0f,
             };
-            animator.SetFloat(GenerateFaceTrackingProcess.GetVRCFTParameterName(param), unusedValue);
+            animator.SetFloat(AnimatorGenerator.GetVRCFTParameterName(param), unusedValue);
         }
 
         private static float GetExpectedValue(float source, ParameterSyncMode syncMode, ParameterRangeKind range)

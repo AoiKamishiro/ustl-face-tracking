@@ -193,8 +193,8 @@ namespace USTL.FaceTracking.Editor
             RangeFloatField field = new()
             {
                 name = MaxValueFieldName,
-                minValue = 0.0f,
-                maxValue = 100.0f,
+                minValue = BlendshapeUtility.MinMaxValue,
+                maxValue = BlendshapeUtility.MaxMaxValue,
                 style =
                 {
                     flexGrow = 1,
