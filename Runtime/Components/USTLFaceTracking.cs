@@ -11,6 +11,22 @@ namespace USTL.FaceTracking
         [SerializeField] internal SkinnedMeshRenderer faceMeshRenderer;
         [SerializeField] internal FeatureSetting[] featureSettings;
         [SerializeField] internal BlendShapeSetting[] blendShapeSettings;
+
+        private void Reset()
+        {
+            NormalizeSettings();
+        }
+
+        private void OnValidate()
+        {
+            NormalizeSettings();
+        }
+
+        private void NormalizeSettings()
+        {
+            featureSettings = FeatureSettingNormalizer.Normalize(featureSettings);
+            blendShapeSettings = BlendShapeSettingNormalizer.Normalize(blendShapeSettings);
+        }
     }
 
     [Serializable]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace USTL.FaceTracking.Editor
@@ -8,10 +9,15 @@ namespace USTL.FaceTracking.Editor
         {
             int totalUsage = 0;
 
-            foreach (FeatureSetting setting in faceTracking.featureSettings)
+            foreach (FeatureSetting setting in faceTracking.featureSettings ?? Array.Empty<FeatureSetting>())
             {
+                if (setting == null || !FaceTrackingFeatureDefinition.All.TryGetValue(setting.feature, out FaceTrackingFeatureDefinition definition))
+                {
+                    continue;
+                }
+
                 IReadOnlyList<VRCFTParameter> parameters = new List<VRCFTParameter>();
-                foreach (VRCFTParameterSet set in FaceTrackingFeatureDefinition.All[setting.feature].OutputFormats)
+                foreach (VRCFTParameterSet set in definition.OutputFormats)
                 {
                     if (set.Id == setting.outputFormatId)
                     {

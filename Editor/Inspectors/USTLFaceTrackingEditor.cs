@@ -29,12 +29,6 @@ namespace USTL.FaceTracking.Editor
         private SerializedProperty SpBlendShapeAssignments => serializedObject.FindProperty(nameof(USTLFaceTracking.blendShapeSettings));
         private SerializedProperty SpFeatureSettings => serializedObject.FindProperty(nameof(USTLFaceTracking.featureSettings));
 
-        private void OnEnable()
-        {
-            FeatureSettingsInitializer.EnsureInitialized(serializedObject);
-            BlendShapeSettingInitializer.EnsureInitialized(serializedObject);
-        }
-
         protected override void BuildInspectorGUI(VisualElement root)
         {
             // FaceMeshRendererField
