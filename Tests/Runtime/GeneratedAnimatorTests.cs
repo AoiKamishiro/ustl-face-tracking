@@ -100,6 +100,30 @@ namespace USTL.FaceTracking.Runtime.Tests
             Object.DestroyImmediate(_localGameObject.GetComponent<Animator>());
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void QuantizeBinaryMagnitude_MatchesVRCFT545Boundaries(int bitCount)
+        {
+            const float boundaryOffset = 0.000001f;
+            int stepCount = 1 << bitCount;
+            int maxMagnitude = stepCount - 1;
+
+            Assert.That(QuantizeBinaryMagnitude(0.0f, bitCount), Is.Zero);
+            for (int magnitude = 1; magnitude < stepCount; magnitude++)
+            {
+                float boundary = magnitude / (float)stepCount;
+                Assert.That(QuantizeBinaryMagnitude(boundary - boundaryOffset, bitCount), Is.EqualTo(magnitude - 1), $"Before {boundary}");
+                Assert.That(QuantizeBinaryMagnitude(boundary, bitCount), Is.EqualTo(magnitude), $"At {boundary}");
+                Assert.That(QuantizeBinaryMagnitude(boundary + boundaryOffset, bitCount), Is.EqualTo(magnitude), $"After {boundary}");
+            }
+
+            Assert.That(QuantizeBinaryMagnitude(0.99999f, bitCount), Is.EqualTo(maxMagnitude));
+            Assert.That(QuantizeBinaryMagnitude(1.0f, bitCount), Is.EqualTo(maxMagnitude));
+            Assert.That(QuantizeBinaryMagnitude(Mathf.Abs(-0.5f), bitCount), Is.EqualTo(Mathf.Min(stepCount / 2, maxMagnitude)));
+        }
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -371,8 +395,14 @@ namespace USTL.FaceTracking.Runtime.Tests
 
         private static int QuantizeBinaryMagnitude(float value, int bitCount)
         {
+            // Mirrors VRCFT 5.4.5 BinaryBaseParameter.ProcessBinary at commit 2cafd0e.
             int maxMagnitude = (1 << bitCount) - 1;
-            return Mathf.Clamp(Mathf.FloorToInt(Mathf.Clamp01(value) * maxMagnitude + 0.5f), 0, maxMagnitude);
+            if (value > 0.99999f)
+            {
+                return maxMagnitude;
+            }
+
+            return Mathf.Clamp(Mathf.FloorToInt(value * (1 << bitCount)), 0, maxMagnitude);
         }
 
         private static float CalculateExpectedWeight(WeightCurveType type, float unsigned, float signed, float eyelid)

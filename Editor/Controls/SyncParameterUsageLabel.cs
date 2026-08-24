@@ -14,15 +14,13 @@ namespace USTL.FaceTracking.Editor
 
         private USTLFaceTracking FaceTracking { get; }
 
-        internal string SummaryFormat { get; set; } = "Sync Parameter Usage: {0} bits ({1}/{2} parameters, {3} without blend shape assignments)";
+        internal string SummaryFormat { get; set; } = "Sync Parameter Usage: {0} bits";
 
         public Action OnLangChanged { get; set; }
 
         public void Rebuild()
         {
-            //TODO: 表示項目はあとで調整したい
-            text = $"Use {VRCParameterUtility.CalculateUsage(FaceTracking)} parameters.";
-            // text = string.Format(SummaryFormat, ParameterUsage.ConsumedBits, ParameterUsage.ConsumedParameterCount, ParameterUsage.ExpectedParameterCount, ParameterUsage.UnassignedParameterCount);
+            text = string.Format(SummaryFormat, VRCParameterUtility.CalculateUsage(FaceTracking));
         }
     }
 }

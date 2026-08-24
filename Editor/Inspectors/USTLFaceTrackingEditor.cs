@@ -147,7 +147,7 @@ namespace USTL.FaceTracking.Editor
             _refreshQueued = false;
 
             serializedObject.Update();
-            // SyncParameterUsageLabel.Rebuild();
+            SyncParameterUsageLabel.value = VRCParameterUtility.CalculateUsage(target as USTLFaceTracking);
             BlendShapeSettingView.RefreshItems();
             FeatureSettingView.RefreshItems();
             USTLLocalizer.Localize(Root);

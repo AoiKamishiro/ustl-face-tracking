@@ -49,6 +49,17 @@ https://ustl-vpm.kamishiro.online/index.json
 
 Inspector下部の `同期パラメーター消費` で、現在の設定が消費するパラメーター量を確認できます。
 
+## アップロード後にOSC設定を更新する
+
+生成するフェイストラッキング用パラメーターの追加、削除、名前変更、または型変更を行った場合は、アバターをアップロードした後にVRChatのOSC設定を更新します。
+
+1. 更新したアバターをPublishします。`Build & Test` でもOSCは利用できますが、VRCFaceTrackingの通常のパラメーター検出に使うOSC Configファイルは生成されません。
+2. VRChatでPublish済みのアバターを着用します。
+3. Action Menuから `Options > OSC > Reset OSC Config` を実行します。
+4. アバターを再読み込みし、VRCFaceTrackingのAvatar Statusに想定したパラメーターが表示されることを確認します。
+
+アバターパラメーターが変わるアップロードのたびに、この手順を実行してください。更新しない場合、VRCFaceTrackingが古いパラメーター一覧や型定義を使い続けることがあります。
+
 ## ブレンドシェイプを割り当てる
 
 `Blend Shape Assignments` では、表情ごとに顔メッシュのブレンドシェイプ名を指定します。

@@ -15,7 +15,7 @@
   "ustl-tr___ft__field__blend_shape_settings__column2": "ブレンドシェイプ",
   "ustl-tr___ft__field__blend_shape_settings__column3": "最大値",
   "ustl-tr___ft__field__parameter_usage": "同期パラメーター消費",
-  "ustl-tr___ft__field__parameter_usage__tooltip": "有効なブレンドシェイプが1つ以上割り当てられた選択中の機能だけを集計します。Float同期は8 bitと同期アバターパラメーター1個、Binary同期は選択したビット数、符号付きBinaryパラメーターは符号用にさらに1 bitを消費します。",
+  "ustl-tr___ft__field__parameter_usage__tooltip": "同期方式をマージした後の一意なVRCFaceTracking出力パラメーターを1回ずつ集計します。Float同期は8 bit、Binary同期は選択したビット数、符号付きBinaryパラメーターは符号用にさらに1 bitを消費します。",
   "ustl-tr___ft__enum__hardware__None": "使用機材なし",
   "ustl-tr___ft__enum__hardware__selected_count": "{0} 件の機材を選択中",
   "ustl-tr___ft__enum__support__Full": "完全対応",

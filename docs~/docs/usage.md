@@ -50,6 +50,17 @@ This includes eyes, eyelids, brows, mouth, tongue, and related face-tracking fea
 
 Use the sync cost display at the bottom of the Inspector to check the current parameter usage.
 
+## Upload and refresh the OSC configuration
+
+After adding, removing, renaming, or changing the type of generated face-tracking parameters, upload the avatar and refresh its OSC configuration in VRChat.
+
+1. Publish the updated avatar. `Build & Test` supports OSC, but it does not create the OSC configuration file used for normal VRCFaceTracking parameter detection.
+2. Equip the published avatar in VRChat.
+3. Open the Action Menu and select `Options > OSC > Reset OSC Config`.
+4. Reload the avatar, then verify that VRCFaceTracking detects the expected parameters in Avatar Status.
+
+Repeat these steps whenever an upload changes the avatar parameters. Otherwise, VRCFaceTracking may continue using an older parameter list or type definition.
+
 ## Assign blend shapes
 
 Use `Blend Shape Assignments` to map each face-tracking expression to a blend shape on your face mesh.

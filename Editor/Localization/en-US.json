@@ -15,7 +15,7 @@
   "ustl-tr___ft__field__blend_shape_settings__column2": "Blend Shape",
   "ustl-tr___ft__field__blend_shape_settings__column3": "Max Value",
   "ustl-tr___ft__field__parameter_usage": "Sync Parameter Usage",
-  "ustl-tr___ft__field__parameter_usage__tooltip": "Counts selected features that have at least one valid blend shape assignment. Float sync costs 8 bits and one synced avatar parameter; binary sync costs the selected bit count, plus one sign bit for signed binary parameters.",
+  "ustl-tr___ft__field__parameter_usage__tooltip": "Counts each unique VRCFaceTracking output parameter once after merging sync modes. Float sync costs 8 bits; binary sync costs the selected bit count, plus one sign bit for signed binary parameters.",
   "ustl-tr___ft__enum__hardware__None": "No Tracking Hardware",
   "ustl-tr___ft__enum__hardware__selected_count": "{0} tracking hardware devices selected",
   "ustl-tr___ft__enum__support__Full": "Full",

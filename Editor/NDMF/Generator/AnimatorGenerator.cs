@@ -768,7 +768,7 @@ namespace USTL.FaceTracking.Editor
             };
         }
 
-        private static ParameterSyncMode MergeSyncMode(ParameterSyncMode currentSyncMode, ParameterSyncMode nextSyncMode)
+        internal static ParameterSyncMode MergeSyncMode(ParameterSyncMode currentSyncMode, ParameterSyncMode nextSyncMode)
         {
             if (!IsRemoteSyncMode(nextSyncMode))
             {
