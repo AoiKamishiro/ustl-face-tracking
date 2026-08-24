@@ -134,6 +134,58 @@ namespace USTL.FaceTracking.Editor.Tests
             Assert.That(allAssets.All(asset => !asset), Is.True, "Collected Animator objects must all be destroyable by the PlayMode cleanup path.");
         }
 
+        [Test]
+        public void GeneratedAnimator_IsLocalTransitionsHaveExactlyOneConditionInEachDirection()
+        {
+            _sourceAvatar = CreateAvatar(out _);
+            USTLFaceTracking faceTracking = _sourceAvatar.GetComponentInChildren<USTLFaceTracking>();
+            faceTracking.featureSettings = new[]
+            {
+                new FeatureSetting
+                {
+                    feature = FaceTrackingFeature.JawOpen,
+                    outputFormatId = VRCFTParameterSetId.SingleJawOpen,
+                    syncMode = ParameterSyncMode.Float8,
+                },
+            };
+            FTBuildContext.BlendShapeBinding binding = new(UnifiedExpression.JawOpen, "JawOpen", 50.0f);
+            AnimatorController controller = AnimatorGenerator.Generate(_sourceAvatar.transform, faceTracking, new[] { binding, }, out _);
+
+            try
+            {
+                AnimatorStateMachine[] stateMachines = controller.layers
+                    .Select(layer => layer.stateMachine)
+                    .Where(stateMachine => stateMachine.states.Any(child => child.state.name == "Local") &&
+                                           stateMachine.states.Any(child => child.state.name == "Remote"))
+                    .ToArray();
+                Assert.That(stateMachines, Has.Length.EqualTo(2), "Both local-user and remote-user layers must be checked.");
+
+                foreach (AnimatorStateMachine stateMachine in stateMachines)
+                {
+                    AnimatorState localState = stateMachine.states.Single(child => child.state.name == "Local").state;
+                    AnimatorState remoteState = stateMachine.states.Single(child => child.state.name == "Remote").state;
+
+                    AssertIsLocalTransition(remoteState, localState, AnimatorConditionMode.If);
+                    AssertIsLocalTransition(localState, remoteState, AnimatorConditionMode.IfNot);
+                }
+            }
+            finally
+            {
+                foreach (Object asset in GenerateFaceTrackingPass.CollectAllAsset(controller))
+                {
+                    Object.DestroyImmediate(asset);
+                }
+            }
+        }
+
+        private static void AssertIsLocalTransition(AnimatorState source, AnimatorState destination, AnimatorConditionMode expectedMode)
+        {
+            AnimatorStateTransition transition = source.transitions.Single(item => item.destinationState == destination);
+            Assert.That(transition.conditions, Has.Length.EqualTo(1));
+            Assert.That(transition.conditions[0].parameter, Is.EqualTo("IsLocal"));
+            Assert.That(transition.conditions[0].mode, Is.EqualTo(expectedMode));
+        }
+
         private GameObject CreateAvatar(out SkinnedMeshRenderer renderer)
         {
             GameObject avatar = new("Source Avatar");

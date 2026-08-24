@@ -657,7 +657,6 @@ namespace USTL.FaceTracking.Editor
             AnimatorStateTransition toLocal = AnimatorControllerUtility.AddTransition(remoteState, localState);
             ConfigureInstantTransition(toLocal);
             AnimatorControllerUtility.AddCondition(toLocal, AnimatorConditionMode.If, 0.0f, IsLocalParameterName);
-            AnimatorControllerUtility.AddCondition(toLocal, AnimatorConditionMode.If, 0.0f, IsLocalParameterName);
 
             AnimatorStateTransition toRemote = AnimatorControllerUtility.AddTransition(localState, remoteState);
             ConfigureInstantTransition(toRemote);
