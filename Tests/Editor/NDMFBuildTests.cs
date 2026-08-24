@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using nadena.dev.ndmf;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -53,6 +56,82 @@ namespace USTL.FaceTracking.Editor.Tests
             Assert.That(_originalMesh.GetBlendShapeIndex("USTL_JawOpen"), Is.EqualTo(-1));
             Assert.That(_sourceAvatar.GetComponentInChildren<USTLFaceTracking>(), Is.Not.Null);
             Assert.That(_buildAvatar.GetComponentInChildren<USTLFaceTracking>(), Is.Null);
+        }
+
+        [Test]
+        public void ProcessAvatar_SavesGeneratedAnimatorSubAssetsAndPreservesReferencesAfterImport()
+        {
+            _sourceAvatar = CreateAvatar(out _);
+            USTLFaceTracking faceTracking = _sourceAvatar.GetComponentInChildren<USTLFaceTracking>();
+            faceTracking.featureSettings = new[]
+            {
+                new FeatureSetting
+                {
+                    feature = FaceTrackingFeature.JawOpen,
+                    outputFormatId = VRCFTParameterSetId.SingleJawOpen,
+                    syncMode = ParameterSyncMode.Float8,
+                },
+            };
+            _buildAvatar = Object.Instantiate(_sourceAvatar);
+            _buildAvatar.name = "Build Avatar";
+            HashSet<int> existingControllerIds = Resources.FindObjectsOfTypeAll<AnimatorController>().Select(asset => asset.GetInstanceID()).ToHashSet();
+
+            AvatarProcessor.ProcessAvatar(_buildAvatar);
+
+            AnimatorController controller = Resources.FindObjectsOfTypeAll<AnimatorController>()
+                .FirstOrDefault(asset => !existingControllerIds.Contains(asset.GetInstanceID()) && asset.name == "USTL FaceTracking Generated FX");
+            Assert.That(controller, Is.Not.Null);
+
+            List<Object> allAssets = GenerateFaceTrackingPass.CollectAllAsset(controller);
+            Assert.That(allAssets, Has.Some.InstanceOf<AnimatorStateMachine>());
+            Assert.That(allAssets, Has.Some.InstanceOf<AnimatorState>());
+            Assert.That(allAssets, Has.Some.InstanceOf<AnimatorStateTransition>());
+            Assert.That(allAssets, Has.Some.InstanceOf<BlendTree>());
+            Assert.That(allAssets, Has.Some.InstanceOf<AnimationClip>());
+            Assert.That(allAssets.All(AssetDatabase.Contains), Is.True, "Every generated Animator object must be saved by NDMF.");
+
+            string controllerPath = AssetDatabase.GetAssetPath(controller);
+            Assert.That(controllerPath, Is.Not.Empty);
+            AssetDatabase.ImportAsset(controllerPath, ImportAssetOptions.ForceUpdate);
+
+            AnimatorController reloadedController = AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath);
+            Assert.That(reloadedController, Is.Not.Null);
+            Assert.That(reloadedController.layers, Is.Not.Empty);
+            Assert.That(reloadedController.layers.All(layer => layer.stateMachine), Is.True);
+            Assert.That(reloadedController.layers.SelectMany(layer => layer.stateMachine.states).Any(child => child.state && child.state.motion), Is.True,
+                "Generated state Motion references must survive serialization and reimport.");
+        }
+
+        [Test]
+        public void CollectAllAsset_ReturnsEveryGeneratedAnimatorObject()
+        {
+            AnimatorController controller = AnimatorControllerUtility.CreateAnimatorController("Collection Test");
+            AnimatorControllerLayer layer = AnimatorControllerUtility.AddLayer(controller, "Layer");
+            AnimatorState firstState = AnimatorControllerUtility.AddState(layer.stateMachine, "First");
+            AnimatorState secondState = AnimatorControllerUtility.AddState(layer.stateMachine, "Second");
+            AnimatorStateTransition transition = AnimatorControllerUtility.AddTransition(firstState, secondState);
+            BlendTree blendTree = new() { name = "Blend Tree" };
+            AnimationClip clip = new() { name = "Clip" };
+            AnimatorControllerUtility.AddBlendTreeChild(blendTree, clip, 0.0f);
+            firstState.motion = blendTree;
+
+            List<Object> allAssets = GenerateFaceTrackingPass.CollectAllAsset(controller);
+
+            Assert.That(allAssets, Does.Contain(controller));
+            Assert.That(allAssets, Does.Contain(layer.stateMachine));
+            Assert.That(allAssets, Does.Contain(firstState));
+            Assert.That(allAssets, Does.Contain(secondState));
+            Assert.That(allAssets, Does.Contain(transition));
+            Assert.That(allAssets, Does.Contain(blendTree));
+            Assert.That(allAssets, Does.Contain(clip));
+            Assert.That(allAssets, Is.Unique);
+
+            foreach (Object asset in allAssets)
+            {
+                Object.DestroyImmediate(asset);
+            }
+
+            Assert.That(allAssets.All(asset => !asset), Is.True, "Collected Animator objects must all be destroyable by the PlayMode cleanup path.");
         }
 
         private GameObject CreateAvatar(out SkinnedMeshRenderer renderer)

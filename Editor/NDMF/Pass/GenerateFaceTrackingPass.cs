@@ -110,10 +110,7 @@ namespace USTL.FaceTracking.Editor
                     return;
                 }
 
-                if (asset == controller)
-                {
-                    allAssets.Add(asset);
-                }
+                allAssets.Add(asset);
             }
 
             void AddStateMachine(AnimatorStateMachine stateMachine)
