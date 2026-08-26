@@ -158,7 +158,7 @@ namespace USTL.FaceTracking.Editor.Tests
                     .Where(stateMachine => stateMachine.states.Any(child => child.state.name == "Local") &&
                                            stateMachine.states.Any(child => child.state.name == "Remote"))
                     .ToArray();
-                Assert.That(stateMachines, Has.Length.EqualTo(2), "Both local-user and remote-user layers must be checked.");
+                Assert.That(stateMachines, Has.Length.EqualTo(1), "Local and remote OSCmooth trees must share one mutually exclusive layer.");
 
                 foreach (AnimatorStateMachine stateMachine in stateMachines)
                 {
@@ -176,6 +176,75 @@ namespace USTL.FaceTracking.Editor.Tests
                     Object.DestroyImmediate(asset);
                 }
             }
+        }
+
+        [Test]
+        public void GeneratedAnimator_UsesOscmoothFeedbackTreesForLocalAndRemoteValues()
+        {
+            _sourceAvatar = CreateAvatar(out _);
+            USTLFaceTracking faceTracking = _sourceAvatar.GetComponentInChildren<USTLFaceTracking>();
+            faceTracking.featureSettings = new[]
+            {
+                new FeatureSetting
+                {
+                    feature = FaceTrackingFeature.JawOpen,
+                    outputFormatId = VRCFTParameterSetId.SingleJawOpen,
+                    syncMode = ParameterSyncMode.Float8,
+                },
+            };
+            FTBuildContext.BlendShapeBinding binding = new(UnifiedExpression.JawOpen, "JawOpen", 50.0f);
+            AnimatorController controller = AnimatorGenerator.Generate(_sourceAvatar.transform, faceTracking, new[] { binding, }, out List<AnimatorGenerator.ParameterAnimation> parameterAnimations);
+
+            try
+            {
+                AnimatorControllerParameter localSmoothing = controller.parameters.Single(parameter => parameter.name == "USTL_FT_LocalSmoothing");
+                AnimatorControllerParameter remoteSmoothing = controller.parameters.Single(parameter => parameter.name == "USTL_FT_RemoteSmoothing");
+                Assert.That(localSmoothing.defaultFloat, Is.EqualTo(0.1f));
+                Assert.That(remoteSmoothing.defaultFloat, Is.EqualTo(0.7f));
+
+                AnimatorStateMachine stateMachine = controller.layers
+                    .Select(layer => layer.stateMachine)
+                    .Single(machine => machine.states.Any(child => child.state.name == "Local") &&
+                                       machine.states.Any(child => child.state.name == "Remote"));
+                AnimatorGenerator.ParameterAnimation parameterAnimation = parameterAnimations.Single();
+                AnimatorState localState = stateMachine.states.Single(child => child.state.name == "Local").state;
+                AnimatorState remoteState = stateMachine.states.Single(child => child.state.name == "Remote").state;
+
+                AssertOscmoothFeedbackTree(localState, parameterAnimation, "Local", "USTL_FT_LocalSmoothing", parameterAnimation.ParameterName);
+                AssertOscmoothFeedbackTree(remoteState, parameterAnimation, "Remote", "USTL_FT_RemoteSmoothing", parameterAnimation.ParameterName);
+            }
+            finally
+            {
+                foreach (Object asset in GenerateFaceTrackingPass.CollectAllAsset(controller))
+                {
+                    Object.DestroyImmediate(asset);
+                }
+            }
+        }
+
+        private static void AssertOscmoothFeedbackTree(AnimatorState state, AnimatorGenerator.ParameterAnimation parameterAnimation, string perspectiveName, string smoothingParameterName, string inputParameterName)
+        {
+            Assert.That(state.motion, Is.InstanceOf<BlendTree>());
+            BlendTree rootTree = (BlendTree)state.motion;
+            BlendTree smoothingTree = rootTree.children
+                .Select(child => child.motion)
+                .OfType<BlendTree>()
+                .Single(tree => tree.name == $"{parameterAnimation.Parameter} {perspectiveName} Smooth");
+
+            Assert.That(smoothingTree.blendType, Is.EqualTo(BlendTreeType.Simple1D));
+            Assert.That(smoothingTree.blendParameter, Is.EqualTo(smoothingParameterName));
+            Assert.That(smoothingTree.children, Has.Length.EqualTo(2));
+
+            BlendTree inputTree = (BlendTree)smoothingTree.children.Single(child => child.threshold == 0.0f).motion;
+            BlendTree feedbackTree = (BlendTree)smoothingTree.children.Single(child => child.threshold == 1.0f).motion;
+            Assert.That(inputTree.blendParameter, Is.EqualTo(inputParameterName));
+            Assert.That(feedbackTree.blendParameter, Is.EqualTo(parameterAnimation.SmoothedParameterName));
+
+            BlendTree outputTree = rootTree.children
+                .Select(child => child.motion)
+                .OfType<BlendTree>()
+                .Single(tree => tree.name == parameterAnimation.Parameter.ToString());
+            Assert.That(outputTree.blendParameter, Is.EqualTo(parameterAnimation.SmoothedParameterName));
         }
 
         private static void AssertIsLocalTransition(AnimatorState source, AnimatorState destination, AnimatorConditionMode expectedMode)

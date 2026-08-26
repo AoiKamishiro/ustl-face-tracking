@@ -16,7 +16,8 @@ namespace USTL.FaceTracking.Runtime.Tests
     {
         private const float BLENDSHAPE_TOLERANCE = 1.5f;
         private const float EYELID_NEUTRAL_VALUE = 0.75f;
-        private const int WAIT_FRAME_COUNT = 5;
+        private const int LOCAL_WAIT_FRAME_COUNT = 5;
+        private const int REMOTE_WAIT_FRAME_COUNT = 32;
         private const string UNIFIED_EXPRESSION_MESH_GUID = "c685687290a384d3aae25b8bf1fb69dc";
         private const string USTL_FACE_TRACKING_PRESET_GUID = "237cbfc24ef164359af96382a4f3e984";
         private static readonly int ParamIsLocal = Animator.StringToHash("IsLocal");
@@ -239,7 +240,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 }
             }
 
-            for (int i = 0; i < WAIT_FRAME_COUNT; i++)
+            for (int i = 0; i < LOCAL_WAIT_FRAME_COUNT; i++)
             {
                 yield return null;
             }
@@ -309,7 +310,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 }
             }
 
-            for (int i = 0; i < WAIT_FRAME_COUNT; i++)
+            for (int i = 0; i < REMOTE_WAIT_FRAME_COUNT; i++)
             {
                 yield return null;
             }

@@ -12,13 +12,15 @@ namespace USTL.FaceTracking.Editor
         private const string ParameterPrefix = "USTL/v2/";
         private const string AlwaysOneParameterName = "USTL_FT_AlwaysOne";
         private const string IsLocalParameterName = "IsLocal";
-        private const string SmoothingParameterName = "USTL_FT_Smoothing";
+        private const string LocalSmoothingParameterName = "USTL_FT_LocalSmoothing";
+        private const string RemoteSmoothingParameterName = "USTL_FT_RemoteSmoothing";
         private const string SmoothedParameterPrefix = "USTL_FT_Smoothed_";
         private const string DecodedParameterPrefix = "USTL_FT_Decoded_";
         private const string BinaryNegativeParameterSuffix = "Negative";
         private const string BlendShapePropertyPrefix = "blendShape.";
         private const float EyelidNeutralValue = 0.75f;
-        private const float DefaultSmoothing = 0.1f;
+        private const float DefaultLocalSmoothing = 0.5f;
+        private const float DefaultRemoteSmoothing = 0.7f;
 
         internal static void Generate(FTBuildContext context)
         {
@@ -34,7 +36,8 @@ namespace USTL.FaceTracking.Editor
             AnimatorController controller = AnimatorControllerUtility.CreateAnimatorController(ControllerName);
             AddBoolParameter(controller, IsLocalParameterName, true);
             AddFloatParameter(controller, AlwaysOneParameterName, 1.0f);
-            AddFloatParameter(controller, SmoothingParameterName, DefaultSmoothing);
+            AddFloatParameter(controller, LocalSmoothingParameterName, DefaultLocalSmoothing);
+            AddFloatParameter(controller, RemoteSmoothingParameterName, DefaultRemoteSmoothing);
 
             AnimationClip emptyClip = CreateEmptyClip();
 
@@ -65,8 +68,7 @@ namespace USTL.FaceTracking.Editor
                 }
             }
 
-            CreateLocalUserLayers(controller, emptyClip, ref parameterAnimations);
-            CreateRemoteUserLayers(controller, emptyClip, ref parameterAnimations);
+            CreateUserLayer(controller, emptyClip, parameterAnimations);
 
             return controller;
         }
@@ -97,58 +99,7 @@ namespace USTL.FaceTracking.Editor
             EditorUtility.SetDirty(controller);
         }
 
-        private static void CreateLocalUserLayers(AnimatorController controller, AnimationClip emptyClip, ref List<ParameterAnimation> parameterAnimations)
-        {
-            AnimatorStateMachine stateMachine = new()
-            {
-                name = controller.MakeUniqueLayerName("USTL FaceTracking Local Root"),
-                hideFlags = HideFlags.HideInHierarchy,
-            };
-            AnimatorControllerLayer layer = new()
-            {
-                name = stateMachine.name,
-                stateMachine = stateMachine,
-                defaultWeight = 1.0f,
-            };
-
-            AnimatorControllerUtility.AddLayer(controller, layer);
-            EditorUtility.SetDirty(controller);
-
-            BlendTree rootTree = new()
-            {
-                name = "USTL FaceTracking Root",
-                hideFlags = HideFlags.HideInHierarchy,
-                blendType = BlendTreeType.Direct,
-            };
-
-            AnimatorState remoteState = AnimatorControllerUtility.AddState(layer.stateMachine, "Remote");
-            remoteState.writeDefaultValues = true;
-            remoteState.motion = emptyClip;
-
-            AnimatorState localState = AnimatorControllerUtility.AddState(layer.stateMachine, "Local");
-            localState.motion = rootTree;
-            localState.writeDefaultValues = true;
-
-            layer.stateMachine.defaultState = remoteState;
-
-            EditorUtility.SetDirty(rootTree);
-            EditorUtility.SetDirty(remoteState);
-            EditorUtility.SetDirty(localState);
-            EditorUtility.SetDirty(layer.stateMachine);
-
-            AddIsLocalTransitions(remoteState, localState);
-
-            foreach (ParameterAnimation parameterAnimation in parameterAnimations)
-            {
-                BlendTree smoothingTree = CreateParameterSmoothingBlendTree(parameterAnimation);
-                AddDirectBlendTreeChild(rootTree, smoothingTree, AlwaysOneParameterName);
-
-                BlendTree parameterTree = CreateParameterBlendTree(parameterAnimation);
-                AddDirectBlendTreeChild(rootTree, parameterTree, AlwaysOneParameterName);
-            }
-        }
-
-        private static void CreateRemoteUserLayers(AnimatorController controller, AnimationClip emptyClip, ref List<ParameterAnimation> parameterAnimations)
+        private static void CreateUserLayer(AnimatorController controller, AnimationClip emptyClip, IReadOnlyList<ParameterAnimation> parameterAnimations)
         {
             List<ParameterAnimation> syncedParameterAnimations = new();
             foreach (ParameterAnimation parameterAnimation in parameterAnimations)
@@ -165,14 +116,9 @@ namespace USTL.FaceTracking.Editor
                 }
             }
 
-            if (syncedParameterAnimations.Count == 0)
-            {
-                return;
-            }
-
             AnimatorStateMachine stateMachine = new()
             {
-                name = controller.MakeUniqueLayerName("USTL FaceTracking Remote"),
+                name = controller.MakeUniqueLayerName("USTL FaceTracking"),
                 hideFlags = HideFlags.HideInHierarchy,
             };
             AnimatorControllerLayer layer = new()
@@ -182,40 +128,70 @@ namespace USTL.FaceTracking.Editor
                 defaultWeight = 1.0f,
             };
             AnimatorControllerUtility.AddLayer(controller, layer);
-
             EditorUtility.SetDirty(controller);
 
-            BlendTree rootTree = new()
+            BlendTree localRootTree = new()
             {
-                name = "USTL FaceTracking Remote Root",
+                name = "USTL FaceTracking Local Root",
                 hideFlags = HideFlags.HideInHierarchy,
                 blendType = BlendTreeType.Direct,
             };
 
-            AnimatorState remoteState = AnimatorControllerUtility.AddState(layer.stateMachine, "Remote");
-            remoteState.motion = rootTree;
-            remoteState.writeDefaultValues = true;
+            BlendTree remoteRootTree = syncedParameterAnimations.Count > 0
+                ? new BlendTree
+                {
+                    name = "USTL FaceTracking Remote Root",
+                    hideFlags = HideFlags.HideInHierarchy,
+                    blendType = BlendTreeType.Direct,
+                }
+                : null;
 
             AnimatorState localState = AnimatorControllerUtility.AddState(layer.stateMachine, "Local");
-            localState.motion = emptyClip;
+            localState.motion = localRootTree;
             localState.writeDefaultValues = true;
+
+            AnimatorState remoteState = AnimatorControllerUtility.AddState(layer.stateMachine, "Remote");
+            remoteState.motion = remoteRootTree ? remoteRootTree : emptyClip;
+            remoteState.writeDefaultValues = true;
 
             layer.stateMachine.defaultState = remoteState;
 
-            EditorUtility.SetDirty(rootTree);
-            EditorUtility.SetDirty(remoteState);
+            EditorUtility.SetDirty(localRootTree);
+            if (remoteRootTree)
+            {
+                EditorUtility.SetDirty(remoteRootTree);
+            }
+
             EditorUtility.SetDirty(localState);
+            EditorUtility.SetDirty(remoteState);
             EditorUtility.SetDirty(layer.stateMachine);
 
             AddIsLocalTransitions(remoteState, localState);
 
-            foreach (ParameterAnimation parameterAnimation in syncedParameterAnimations)
+            foreach (ParameterAnimation parameterAnimation in parameterAnimations)
             {
-                BlendTree smoothingTree = CreateParameterSmoothingBlendTree(parameterAnimation, GetRemoteInputParameterName(parameterAnimation));
-                AddDirectBlendTreeChild(rootTree, smoothingTree, AlwaysOneParameterName);
+                BlendTree smoothingTree = CreateParameterSmoothingBlendTree(
+                    parameterAnimation,
+                    parameterAnimation.ParameterName,
+                    LocalSmoothingParameterName,
+                    "Local");
+                AddDirectBlendTreeChild(localRootTree, smoothingTree, AlwaysOneParameterName);
 
                 BlendTree parameterTree = CreateParameterBlendTree(parameterAnimation);
-                AddDirectBlendTreeChild(rootTree, parameterTree, AlwaysOneParameterName);
+                AddDirectBlendTreeChild(localRootTree, parameterTree, AlwaysOneParameterName);
+            }
+
+            foreach (ParameterAnimation parameterAnimation in syncedParameterAnimations)
+            {
+                BlendTree smoothingTree = CreateParameterSmoothingBlendTree(
+                    parameterAnimation,
+                    GetRemoteInputParameterName(parameterAnimation),
+                    RemoteSmoothingParameterName,
+                    "Remote");
+                AddDirectBlendTreeChild(remoteRootTree, smoothingTree, AlwaysOneParameterName);
+
+                BlendTree parameterTree = CreateParameterBlendTree(parameterAnimation);
+                AddDirectBlendTreeChild(remoteRootTree, parameterTree, AlwaysOneParameterName);
             }
         }
 
@@ -437,19 +413,14 @@ namespace USTL.FaceTracking.Editor
             return tree;
         }
 
-        private static BlendTree CreateParameterSmoothingBlendTree(ParameterAnimation parameterAnimation)
-        {
-            return CreateParameterSmoothingBlendTree(parameterAnimation, parameterAnimation.ParameterName);
-        }
-
-        private static BlendTree CreateParameterSmoothingBlendTree(ParameterAnimation parameterAnimation, string inputParameterName)
+        private static BlendTree CreateParameterSmoothingBlendTree(ParameterAnimation parameterAnimation, string inputParameterName, string smoothingParameterName, string perspectiveName)
         {
             BlendTree rootTree = new()
             {
-                name = $"{parameterAnimation.Parameter} Smooth",
+                name = $"{parameterAnimation.Parameter} {perspectiveName} Smooth",
                 hideFlags = HideFlags.HideInHierarchy,
                 blendType = BlendTreeType.Simple1D,
-                blendParameter = SmoothingParameterName,
+                blendParameter = smoothingParameterName,
                 useAutomaticThresholds = false,
                 minThreshold = 0.0f,
                 maxThreshold = 1.0f,
