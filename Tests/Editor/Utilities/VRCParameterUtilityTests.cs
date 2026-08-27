@@ -31,7 +31,8 @@ namespace USTL.FaceTracking.Editor.Tests
             Object.DestroyImmediate(_gameObject);
         }
 
-        [TestCase(FaceTrackingFeature.EyeLid, VRCFTParameterSetId.UnifiedEyeLid, ParameterSyncMode.Float8, 8)]
+        [TestCase(FaceTrackingFeature.EyeLid, VRCFTParameterSetId.UnifiedEyeLid, ParameterSyncMode.Float8, 16)]
+        [TestCase(FaceTrackingFeature.EyeLid, VRCFTParameterSetId.UnifiedEyeLid, ParameterSyncMode.LocalOnly, 0)]
         [TestCase(FaceTrackingFeature.JawOpen, VRCFTParameterSetId.SingleJawOpen, ParameterSyncMode.Binary2Bit, 2)]
         [TestCase(FaceTrackingFeature.TongueArchY, VRCFTParameterSetId.SingleTongueArchY, ParameterSyncMode.Binary2Bit, 3)]
         [TestCase(FaceTrackingFeature.EyeDirection, VRCFTParameterSetId.VRChatNative, ParameterSyncMode.None, 0)]

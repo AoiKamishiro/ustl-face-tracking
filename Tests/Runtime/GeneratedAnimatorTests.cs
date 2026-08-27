@@ -16,11 +16,12 @@ namespace USTL.FaceTracking.Runtime.Tests
     {
         private const float BLENDSHAPE_TOLERANCE = 1.5f;
         private const float EYELID_NEUTRAL_VALUE = 0.75f;
-        private const int LOCAL_WAIT_FRAME_COUNT = 5;
+        private const int LOCAL_WAIT_FRAME_COUNT = 10;
         private const int REMOTE_WAIT_FRAME_COUNT = 32;
         private const string UNIFIED_EXPRESSION_MESH_GUID = "c685687290a384d3aae25b8bf1fb69dc";
         private const string USTL_FACE_TRACKING_PRESET_GUID = "237cbfc24ef164359af96382a4f3e984";
         private static readonly int ParamIsLocal = Animator.StringToHash("IsLocal");
+        private static readonly int ParamEyelidResponse = Animator.StringToHash(AnimatorGenerator.EyelidResponseParameterName);
         private GameObject _localGameObject;
         private Mesh _unifiedExpressionMesh;
         private Preset _ustlFaceTrackingPreset;
@@ -219,9 +220,23 @@ namespace USTL.FaceTracking.Runtime.Tests
 
             // Max-Value Test
             yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 1.0f, 1.0f, 1.0f);
+
+            if (parameterSet.Parameters.Any(parameter => VRCFTParameterDefinition.All[parameter].Range == ParameterRangeKind.EyeLid) &&
+                weightCurveTypes.ContainsValue(WeightCurveType.EyelidClosed))
+            {
+                const float tenPercentClosed = EYELID_NEUTRAL_VALUE * 0.9f;
+                animator.SetFloat(ParamEyelidResponse, 1.0f);
+                yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, 0.0f, tenPercentClosed, 1.0f);
+                yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, 0.0f, 0.0f, 1.0f);
+                yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, 0.0f, 0.875f, 1.0f);
+
+                animator.SetFloat(ParamEyelidResponse, 0.0f);
+                yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, 0.0f, tenPercentClosed, 0.0f);
+                yield return LocalUserTestAssertion(animator, smr, generatedBlendShapeNames, weightCurveTypes, parameterSet, 0.0f, 0.0f, 0.0f, 0.0f);
+            }
         }
 
-        private static IEnumerator LocalUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, float unsigned, float signed, float eyelid)
+        private static IEnumerator LocalUserTestAssertion(Animator animator, SkinnedMeshRenderer smr, Dictionary<UnifiedExpression, string> generatedBlendShapeNames, Dictionary<UnifiedExpression, WeightCurveType> weightCurveTypes, VRCFTParameterSet parameterSet, float unsigned, float signed, float eyelid, float eyelidResponse = AnimatorGenerator.DefaultEyelidResponse)
         {
             foreach (VRCFTParameter param in parameterSet.Parameters)
             {
@@ -252,7 +267,7 @@ namespace USTL.FaceTracking.Runtime.Tests
                 float expected = 0.0f;
                 if (weightCurveTypes.TryGetValue(generatedBlendShape.Key, out WeightCurveType curveType))
                 {
-                    expected = CalculateExpectedWeight(curveType, unsigned, signed, eyelid);
+                    expected = CalculateExpectedWeight(curveType, unsigned, signed, eyelid, eyelidResponse);
                 }
 
                 Assert.That(weight, Is.EqualTo(expected).Within(BLENDSHAPE_TOLERANCE));
@@ -406,14 +421,19 @@ namespace USTL.FaceTracking.Runtime.Tests
             return Mathf.Clamp(Mathf.FloorToInt(value * (1 << bitCount)), 0, maxMagnitude);
         }
 
-        private static float CalculateExpectedWeight(WeightCurveType type, float unsigned, float signed, float eyelid)
+        private static float CalculateExpectedWeight(WeightCurveType type, float unsigned, float signed, float eyelid, float eyelidResponse = AnimatorGenerator.DefaultEyelidResponse)
         {
+            float closed = eyelid < EYELID_NEUTRAL_VALUE ? Mathf.InverseLerp(EYELID_NEUTRAL_VALUE, 0.0f, eyelid) : 0.0f;
+            float correctedClosed = eyelidResponse <= AnimatorGenerator.DefaultEyelidResponse
+                ? Mathf.Lerp(Mathf.Pow(closed, 4.0f), closed, eyelidResponse * 2.0f)
+                : Mathf.Lerp(closed, Mathf.Pow(closed, 0.25f), (eyelidResponse - AnimatorGenerator.DefaultEyelidResponse) * 2.0f);
+
             return type switch
             {
                 WeightCurveType.Linear => Mathf.Clamp01(unsigned) * 100.0f,
                 WeightCurveType.PositiveSigned => Mathf.Clamp01(signed) * 100.0f,
                 WeightCurveType.NegativeSigned => Mathf.Clamp01(-signed) * 100.0f,
-                WeightCurveType.EyelidClosed => eyelid < EYELID_NEUTRAL_VALUE ? Mathf.InverseLerp(EYELID_NEUTRAL_VALUE, 0.0f, eyelid) * 100.0f : 0.0f,
+                WeightCurveType.EyelidClosed => correctedClosed * 100.0f,
                 WeightCurveType.EyelidWide => eyelid > EYELID_NEUTRAL_VALUE ? Mathf.InverseLerp(EYELID_NEUTRAL_VALUE, 1.0f, eyelid) * 100.0f : 0.0f,
                 _ => -1.0f,
             };

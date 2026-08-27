@@ -48,13 +48,25 @@ namespace USTL.FaceTracking.Editor
                 AddParameterConfigs(parameterAnimation, ref parameterConfigs);
             }
 
+            if (AnimatorGenerator.HasEyelidResponse(ftContext.ParameterAnimations))
+            {
+                bool synced = AnimatorGenerator.IsEyelidResponseSynced(ftContext.ParameterAnimations);
+                parameterConfigs.Add(CreateParameterConfig(
+                    AnimatorGenerator.EyelidResponseParameterName,
+                    ParameterSyncType.Float,
+                    !synced,
+                    AnimatorGenerator.DefaultEyelidResponse,
+                    true));
+                HierarchyGenerator.GenerateEyelidResponseMenu(ftContext, synced);
+            }
+
             ftContext.ModularAvatarParameters.parameters = parameterConfigs;
             ftContext.ModularAvatarMergeAnimator.animator = ftContext.AnimatorController;
 
             RegisterGeneratedObject(ftContext);
         }
 
-        private static ParameterConfig CreateParameterConfig(string name, ParameterSyncType syncType, bool localOnly, float defaultValue)
+        private static ParameterConfig CreateParameterConfig(string name, ParameterSyncType syncType, bool localOnly, float defaultValue, bool saved = false)
         {
             return new ParameterConfig
             {
@@ -63,6 +75,7 @@ namespace USTL.FaceTracking.Editor
                 syncType = syncType,
                 localOnly = localOnly,
                 defaultValue = defaultValue,
+                saved = saved,
                 hasExplicitDefaultValue = !Mathf.Approximately(defaultValue, 0.0f),
             };
         }
@@ -273,8 +286,12 @@ namespace USTL.FaceTracking.Editor
 
         private static void RegisterGeneratedObject(BuildContext context, GameObject gameObject)
         {
-            List<Object> allAssets = new() { gameObject, };
-            allAssets.AddRange(gameObject.GetComponents<MonoBehaviour>());
+            List<Object> allAssets = new();
+            foreach (Transform transform in gameObject.GetComponentsInChildren<Transform>(true))
+            {
+                allAssets.Add(transform.gameObject);
+                allAssets.AddRange(transform.GetComponents<MonoBehaviour>());
+            }
 
             using (new ObjectRegistryScope(context.ObjectRegistry))
             {

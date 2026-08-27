@@ -18,7 +18,11 @@ namespace USTL.FaceTracking.Editor
         private const string DecodedParameterPrefix = "USTL_FT_Decoded_";
         private const string BinaryNegativeParameterSuffix = "Negative";
         private const string BlendShapePropertyPrefix = "blendShape.";
+        internal const string EyelidResponseParameterName = "USTL_FT_EyelidResponse";
+        internal const float DefaultEyelidResponse = 0.5f;
         private const float EyelidNeutralValue = 0.75f;
+        private const float ReducedEyelidResponsePower = 4.0f;
+        private const float IncreasedEyelidResponsePower = 0.25f;
         private const float DefaultLocalSmoothing = 0.5f;
         private const float DefaultRemoteSmoothing = 0.7f;
 
@@ -46,6 +50,11 @@ namespace USTL.FaceTracking.Editor
             {
                 CreateEmptyLayer(controller, emptyClip);
                 return controller;
+            }
+
+            if (HasEyelidResponse(parameterAnimations))
+            {
+                AddFloatParameter(controller, EyelidResponseParameterName, DefaultEyelidResponse);
             }
 
             foreach (ParameterAnimation parameterAnimation in parameterAnimations)
@@ -387,16 +396,51 @@ namespace USTL.FaceTracking.Editor
 
         private static BlendTree CreateParameterBlendTree(ParameterAnimation parameterAnimation)
         {
+            if (!HasEyelidClosedTarget(parameterAnimation))
+            {
+                return CreateParameterResponseBlendTree(parameterAnimation, 1.0f, parameterAnimation.Parameter.ToString());
+            }
+
             BlendTree tree = new()
             {
                 name = parameterAnimation.Parameter.ToString(),
+                hideFlags = HideFlags.HideInHierarchy,
+                blendType = BlendTreeType.Simple1D,
+                blendParameter = EyelidResponseParameterName,
+                useAutomaticThresholds = false,
+                minThreshold = 0.0f,
+                maxThreshold = 1.0f,
+            };
+
+            AnimatorControllerUtility.AddBlendTreeChild(
+                tree,
+                CreateParameterResponseBlendTree(parameterAnimation, ReducedEyelidResponsePower, $"{parameterAnimation.Parameter} Reduced Response"),
+                0.0f);
+            AnimatorControllerUtility.AddBlendTreeChild(
+                tree,
+                CreateParameterResponseBlendTree(parameterAnimation, 1.0f, $"{parameterAnimation.Parameter} Linear Response"),
+                DefaultEyelidResponse);
+            AnimatorControllerUtility.AddBlendTreeChild(
+                tree,
+                CreateParameterResponseBlendTree(parameterAnimation, IncreasedEyelidResponsePower, $"{parameterAnimation.Parameter} Increased Response"),
+                1.0f);
+
+            EditorUtility.SetDirty(tree);
+            return tree;
+        }
+
+        private static BlendTree CreateParameterResponseBlendTree(ParameterAnimation parameterAnimation, float eyelidResponsePower, string name)
+        {
+            BlendTree tree = new()
+            {
+                name = name,
                 hideFlags = HideFlags.HideInHierarchy,
                 blendType = BlendTreeType.Simple1D,
                 blendParameter = parameterAnimation.SmoothedParameterName,
                 useAutomaticThresholds = false,
             };
 
-            List<float> thresholds = GetThresholds(parameterAnimation.Targets);
+            List<float> thresholds = GetThresholds(parameterAnimation.Targets, !Mathf.Approximately(eyelidResponsePower, 1.0f));
             if (thresholds.Count > 0)
             {
                 tree.minThreshold = thresholds[0];
@@ -405,7 +449,7 @@ namespace USTL.FaceTracking.Editor
 
             foreach (float threshold in thresholds)
             {
-                AnimationClip clip = CreateThresholdClip(parameterAnimation, threshold);
+                AnimationClip clip = CreateThresholdClip(parameterAnimation, threshold, eyelidResponsePower);
                 AnimatorControllerUtility.AddBlendTreeChild(tree, clip, threshold);
             }
 
@@ -496,7 +540,7 @@ namespace USTL.FaceTracking.Editor
             return clip;
         }
 
-        private static AnimationClip CreateThresholdClip(ParameterAnimation parameterAnimation, float threshold)
+        private static AnimationClip CreateThresholdClip(ParameterAnimation parameterAnimation, float threshold, float eyelidResponsePower)
         {
             AnimationClip clip = new()
             {
@@ -507,7 +551,13 @@ namespace USTL.FaceTracking.Editor
             Dictionary<string, float> valuesByBlendShape = new();
             foreach (TargetAnimation target in parameterAnimation.Targets)
             {
-                float value = EvaluateWeight(target.CurveType, threshold) * target.MaxValue;
+                float normalizedValue = EvaluateWeight(target.CurveType, threshold);
+                if (target.CurveType == WeightCurveType.EyelidClosed)
+                {
+                    normalizedValue = Mathf.Pow(normalizedValue, eyelidResponsePower);
+                }
+
+                float value = normalizedValue * target.MaxValue;
                 if (!valuesByBlendShape.TryGetValue(target.BlendShapeName, out float currentValue) || currentValue < value)
                 {
                     valuesByBlendShape[target.BlendShapeName] = value;
@@ -524,7 +574,7 @@ namespace USTL.FaceTracking.Editor
             return clip;
         }
 
-        private static List<float> GetThresholds(List<TargetAnimation> targets)
+        private static List<float> GetThresholds(List<TargetAnimation> targets, bool sampleEyelidResponse)
         {
             SortedSet<float> thresholds = new();
             foreach (TargetAnimation target in targets)
@@ -542,6 +592,16 @@ namespace USTL.FaceTracking.Editor
                         thresholds.Add(1.0f);
                         break;
                     case WeightCurveType.EyelidClosed:
+                        if (sampleEyelidResponse)
+                        {
+                            AddEyelidResponseThresholds(thresholds);
+                            break;
+                        }
+
+                        thresholds.Add(0.0f);
+                        thresholds.Add(EyelidNeutralValue);
+                        thresholds.Add(1.0f);
+                        break;
                     case WeightCurveType.EyelidWide:
                         thresholds.Add(0.0f);
                         thresholds.Add(EyelidNeutralValue);
@@ -555,6 +615,17 @@ namespace USTL.FaceTracking.Editor
             }
 
             return new List<float>(thresholds);
+        }
+
+        private static void AddEyelidResponseThresholds(SortedSet<float> thresholds)
+        {
+            float[] normalizedClosedValues = { 0.0f, 0.01f, 0.025f, 0.05f, 0.1f, 0.2f, 0.35f, 0.5f, 0.75f, 1.0f, };
+            foreach (float closedValue in normalizedClosedValues)
+            {
+                thresholds.Add(Mathf.Lerp(EyelidNeutralValue, 0.0f, closedValue));
+            }
+
+            thresholds.Add(1.0f);
         }
 
         private static float EvaluateWeight(WeightCurveType curveType, float value)
@@ -719,6 +790,60 @@ namespace USTL.FaceTracking.Editor
         private static bool IsRemoteSyncMode(ParameterSyncMode syncMode)
         {
             return syncMode != ParameterSyncMode.None && syncMode != ParameterSyncMode.LocalOnly;
+        }
+
+        internal static bool HasEyelidResponse(IReadOnlyList<ParameterAnimation> parameterAnimations)
+        {
+            if (parameterAnimations == null)
+            {
+                return false;
+            }
+
+            foreach (ParameterAnimation parameterAnimation in parameterAnimations)
+            {
+                if (HasEyelidClosedTarget(parameterAnimation))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsEyelidResponseSynced(IReadOnlyList<ParameterAnimation> parameterAnimations)
+        {
+            if (parameterAnimations == null)
+            {
+                return false;
+            }
+
+            foreach (ParameterAnimation parameterAnimation in parameterAnimations)
+            {
+                if (HasEyelidClosedTarget(parameterAnimation) && IsRemoteSyncMode(parameterAnimation.SyncMode))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasEyelidClosedTarget(ParameterAnimation parameterAnimation)
+        {
+            if (parameterAnimation == null)
+            {
+                return false;
+            }
+
+            foreach (TargetAnimation target in parameterAnimation.Targets)
+            {
+                if (target.CurveType == WeightCurveType.EyelidClosed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool IsBinarySyncMode(ParameterSyncMode syncMode)

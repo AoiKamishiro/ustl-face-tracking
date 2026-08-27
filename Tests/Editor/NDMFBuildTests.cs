@@ -7,6 +7,8 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 using Object = UnityEngine.Object;
 
 namespace USTL.FaceTracking.Editor.Tests
@@ -100,6 +102,55 @@ namespace USTL.FaceTracking.Editor.Tests
             Assert.That(reloadedController.layers.All(layer => layer.stateMachine), Is.True);
             Assert.That(reloadedController.layers.SelectMany(layer => layer.stateMachine.states).Any(child => child.state && child.state.motion), Is.True,
                 "Generated state Motion references must survive serialization and reimport.");
+        }
+
+        [Test]
+        public void ProcessAvatar_GeneratesSavedRadialEyelidResponseMenu()
+        {
+            _sourceAvatar = CreateAvatar(out _);
+            USTLFaceTracking faceTracking = _sourceAvatar.GetComponentInChildren<USTLFaceTracking>();
+            faceTracking.featureSettings = new[]
+            {
+                new FeatureSetting
+                {
+                    feature = FaceTrackingFeature.EyeLid,
+                    outputFormatId = VRCFTParameterSetId.UnifiedEyeLid,
+                    syncMode = ParameterSyncMode.Float8,
+                },
+            };
+            faceTracking.blendShapeSettings = new[]
+            {
+                new BlendShapeSetting
+                {
+                    expression = UnifiedExpression.EyeClosedLeft,
+                    blendShapeName = "EyeClosed",
+                    maxValue = 100.0f,
+                },
+            };
+            _buildAvatar = Object.Instantiate(_sourceAvatar);
+            _buildAvatar.name = "Build Avatar";
+
+            AvatarProcessor.ProcessAvatar(_buildAvatar);
+
+            VRCAvatarDescriptor descriptor = _buildAvatar.GetComponent<VRCAvatarDescriptor>();
+            Assert.That(descriptor.expressionsMenu, Is.Not.Null);
+            VRCExpressionsMenu.Control faceTrackingMenu = descriptor.expressionsMenu.controls
+                .Single(control => control.name == "Face Tracking");
+            Assert.That(faceTrackingMenu.type, Is.EqualTo(VRCExpressionsMenu.Control.ControlType.SubMenu));
+            Assert.That(faceTrackingMenu.subMenu, Is.Not.Null);
+
+            VRCExpressionsMenu.Control sensitivityControl = faceTrackingMenu.subMenu.controls
+                .Single(control => control.name == "Eyelid Sensitivity");
+            Assert.That(sensitivityControl.type, Is.EqualTo(VRCExpressionsMenu.Control.ControlType.RadialPuppet));
+            Assert.That(sensitivityControl.subParameters, Has.Length.EqualTo(1));
+            Assert.That(sensitivityControl.subParameters[0].name, Is.EqualTo(AnimatorGenerator.EyelidResponseParameterName));
+
+            VRCExpressionParameters.Parameter responseParameter = descriptor.expressionParameters.parameters
+                .Single(parameter => parameter.name == AnimatorGenerator.EyelidResponseParameterName);
+            Assert.That(responseParameter.valueType, Is.EqualTo(VRCExpressionParameters.ValueType.Float));
+            Assert.That(responseParameter.defaultValue, Is.EqualTo(AnimatorGenerator.DefaultEyelidResponse));
+            Assert.That(responseParameter.saved, Is.True);
+            Assert.That(responseParameter.networkSynced, Is.True);
         }
 
         [Test]
@@ -199,7 +250,7 @@ namespace USTL.FaceTracking.Editor.Tests
             {
                 AnimatorControllerParameter localSmoothing = controller.parameters.Single(parameter => parameter.name == "USTL_FT_LocalSmoothing");
                 AnimatorControllerParameter remoteSmoothing = controller.parameters.Single(parameter => parameter.name == "USTL_FT_RemoteSmoothing");
-                Assert.That(localSmoothing.defaultFloat, Is.EqualTo(0.1f));
+                Assert.That(localSmoothing.defaultFloat, Is.EqualTo(0.5f));
                 Assert.That(remoteSmoothing.defaultFloat, Is.EqualTo(0.7f));
 
                 AnimatorStateMachine stateMachine = controller.layers
@@ -297,6 +348,7 @@ namespace USTL.FaceTracking.Editor.Tests
             };
             Vector3[] deltas = { Vector3.right, Vector3.up, Vector3.forward, };
             mesh.AddBlendShapeFrame("JawOpen", 100.0f, deltas, deltas, deltas);
+            mesh.AddBlendShapeFrame("EyeClosed", 100.0f, deltas, deltas, deltas);
             return mesh;
         }
     }

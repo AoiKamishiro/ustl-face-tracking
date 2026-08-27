@@ -54,8 +54,16 @@ namespace USTL.FaceTracking.Editor
             }
 
             int totalUsage = 0;
+            bool syncedEyelidResponse = false;
             foreach (KeyValuePair<VRCFTParameter, ParameterSyncMode> entry in syncModesByParameter)
             {
+                if (entry.Value != ParameterSyncMode.LocalOnly &&
+                    VRCFTParameterDefinition.All.TryGetValue(entry.Key, out VRCFTParameterDefinition parameterDefinition) &&
+                    HasGeneratedTarget(parameterDefinition, generatedExpressions, WeightCurveType.EyelidClosed))
+                {
+                    syncedEyelidResponse = true;
+                }
+
                 if (entry.Value == ParameterSyncMode.Float8)
                 {
                     totalUsage += 8;
@@ -74,6 +82,11 @@ namespace USTL.FaceTracking.Editor
                 {
                     totalUsage++;
                 }
+            }
+
+            if (syncedEyelidResponse)
+            {
+                totalUsage += 8;
             }
 
             return totalUsage;
@@ -104,6 +117,19 @@ namespace USTL.FaceTracking.Editor
             foreach (ExpressionWeightTarget target in definition.ExpressionTargets)
             {
                 if (target.Expression != UnifiedExpression.None && generatedExpressions.Contains(target.Expression))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasGeneratedTarget(VRCFTParameterDefinition definition, HashSet<UnifiedExpression> generatedExpressions, WeightCurveType curveType)
+        {
+            foreach (ExpressionWeightTarget target in definition.ExpressionTargets)
+            {
+                if (target.Type == curveType && target.Expression != UnifiedExpression.None && generatedExpressions.Contains(target.Expression))
                 {
                     return true;
                 }

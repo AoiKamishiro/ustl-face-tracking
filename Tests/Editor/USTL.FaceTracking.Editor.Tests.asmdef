@@ -8,7 +8,8 @@
     "UnityEngine.TestRunner",
     "USTL.Core.Editor",
     "USTL.FaceTracking",
-    "USTL.FaceTracking.Editor"
+    "USTL.FaceTracking.Editor",
+    "VRC.SDK3A"
   ],
   "includePlatforms": [
     "Editor"
@@ -18,7 +19,8 @@
   "overrideReferences": true,
   "precompiledReferences": [
     "Newtonsoft.Json.dll",
-    "nunit.framework.dll"
+    "nunit.framework.dll",
+    "VRCSDK3A.dll"
   ],
   "autoReferenced": false,
   "defineConstraints": [

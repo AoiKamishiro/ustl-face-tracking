@@ -1,6 +1,8 @@
 using nadena.dev.modular_avatar.core;
+using System;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace USTL.FaceTracking.Editor
 {
@@ -24,6 +26,43 @@ namespace USTL.FaceTracking.Editor
             context.GeneratedObject = generatedObject;
             context.ModularAvatarMergeAnimator = mergeAnimator;
             context.ModularAvatarParameters = parameters;
+        }
+
+        internal static void GenerateEyelidResponseMenu(FTBuildContext context, bool synced)
+        {
+            GameObject menuRoot = context.GeneratedObject;
+            menuRoot.AddComponent<ModularAvatarMenuInstaller>();
+
+            ModularAvatarMenuItem subMenuItem = menuRoot.AddComponent<ModularAvatarMenuItem>();
+            subMenuItem.Control = new VRCExpressionsMenu.Control
+            {
+                name = "Face Tracking",
+                type = VRCExpressionsMenu.Control.ControlType.SubMenu,
+                parameter = new VRCExpressionsMenu.Control.Parameter { name = string.Empty, },
+                subParameters = Array.Empty<VRCExpressionsMenu.Control.Parameter>(),
+                labels = Array.Empty<VRCExpressionsMenu.Control.Label>(),
+            };
+            subMenuItem.label = "Face Tracking";
+            subMenuItem.MenuSource = SubmenuSource.Children;
+
+            GameObject radialObject = new("Eyelid Sensitivity");
+            radialObject.transform.SetParent(menuRoot.transform, false);
+
+            ModularAvatarMenuItem radialItem = radialObject.AddComponent<ModularAvatarMenuItem>();
+            radialItem.Control = new VRCExpressionsMenu.Control
+            {
+                name = radialObject.name,
+                type = VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+                parameter = new VRCExpressionsMenu.Control.Parameter { name = string.Empty, },
+                subParameters = new[]
+                {
+                    new VRCExpressionsMenu.Control.Parameter { name = AnimatorGenerator.EyelidResponseParameterName, },
+                },
+                labels = Array.Empty<VRCExpressionsMenu.Control.Label>(),
+            };
+            radialItem.automaticValue = false;
+            radialItem.isSaved = true;
+            radialItem.isSynced = synced;
         }
     }
 }

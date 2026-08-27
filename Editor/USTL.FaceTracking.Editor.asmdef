@@ -7,6 +7,7 @@
     "nadena.dev.modular-avatar.core.editor",
     "USTL.Core.Editor",
     "USTL.FaceTracking",
+    "VRC.SDK3A",
     "VRC.SDKBase"
   ],
   "includePlatforms": [
