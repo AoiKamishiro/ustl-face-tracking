@@ -1,0 +1,21 @@
+{
+  "name": "USTL.Core.Editor",
+  "rootNamespace": "USTL.Core.Editor",
+  "references": [
+    "nadena.dev.ndmf",
+    "nadena.dev.modular-avatar.core",
+    "nadena.dev.modular-avatar.core.editor",
+    "VRC.SDKBase"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

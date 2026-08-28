@@ -34,14 +34,14 @@ env:
   VERSION: ${{ inputs.version }}
 
 jobs:
-  build-docs:
+  run-ci:
     name: Run CI
     uses: ./.github/workflows/ci.yml
 
   create-release:
     name: Create release assets
     needs:
-      - build-docs
+      - run-ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

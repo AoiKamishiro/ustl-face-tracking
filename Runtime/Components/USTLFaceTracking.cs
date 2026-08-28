@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using VRC.SDKBase;
 
@@ -6,9 +7,41 @@ namespace USTL.FaceTracking
     [AddComponentMenu("U-Stella/U-Stella FaceTracking")]
     public class USTLFaceTracking : MonoBehaviour, IEditorOnly
     {
-        [SerializeField] internal int trackingHardwareProfiles;
+        [SerializeField] internal SupportedHardwares trackingHardwareProfiles;
         [SerializeField] internal SkinnedMeshRenderer faceMeshRenderer;
-        [SerializeField] internal BlendShapeAssignment[] blendShapeAssignments;
-        [SerializeField] internal FaceTrackingFeatureSetting[] featureSettings;
+        [SerializeField] internal FeatureSetting[] featureSettings;
+        [SerializeField] internal BlendShapeSetting[] blendShapeSettings;
+
+        private void Reset()
+        {
+            NormalizeSettings();
+        }
+
+        private void OnValidate()
+        {
+            NormalizeSettings();
+        }
+
+        private void NormalizeSettings()
+        {
+            featureSettings = FeatureSettingNormalizer.Normalize(featureSettings);
+            blendShapeSettings = BlendShapeSettingNormalizer.Normalize(blendShapeSettings);
+        }
+    }
+
+    [Serializable]
+    internal sealed class FeatureSetting
+    {
+        [SerializeField] internal FaceTrackingFeature feature;
+        [SerializeField] internal VRCFTParameterSetId outputFormatId;
+        [SerializeField] internal ParameterSyncMode syncMode = ParameterSyncMode.LocalOnly;
+    }
+
+    [Serializable]
+    internal sealed class BlendShapeSetting
+    {
+        [SerializeField] internal UnifiedExpression expression;
+        [SerializeField] internal string blendShapeName;
+        [SerializeField] internal float maxValue;
     }
 }

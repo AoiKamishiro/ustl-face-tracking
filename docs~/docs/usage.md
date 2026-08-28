@@ -24,7 +24,7 @@ Required packages are resolved through VPM.
 
 ## Select tracking devices
 
-Use `Tracking Devices` to select the face-tracking devices you want the avatar to support.
+Use `Tracking Hardware` to select the face-tracking devices you want the avatar to support.
 You can select more than one device.
 
 The support status shows how each facial expression is handled by the selected devices.
@@ -50,13 +50,24 @@ This includes eyes, eyelids, brows, mouth, tongue, and related face-tracking fea
 
 Use the sync cost display at the bottom of the Inspector to check the current parameter usage.
 
+## Upload and refresh the OSC configuration
+
+After adding, removing, renaming, or changing the type of generated face-tracking parameters, upload the avatar and refresh its OSC configuration in VRChat.
+
+1. Publish the updated avatar. `Build & Test` supports OSC, but it does not create the OSC configuration file used for normal VRCFaceTracking parameter detection.
+2. Equip the published avatar in VRChat.
+3. Open the Action Menu and select `Options > OSC > Reset OSC Config`.
+4. Reload the avatar, then verify that VRCFaceTracking detects the expected parameters in Avatar Status.
+
+Repeat these steps whenever an upload changes the avatar parameters. Otherwise, VRCFaceTracking may continue using an older parameter list or type definition.
+
 ## Assign blend shapes
 
 Use `Blend Shape Assignments` to map each face-tracking expression to a blend shape on your face mesh.
 
 1. Set `Face Mesh Renderer`.
 2. Select the matching blend shape for each expression.
-3. Adjust `Maximum Value` when needed. Values are in the `0` to `100` range.
+3. Adjust `Max Value` when needed. Values are in the `0` to `100` range.
 4. Expressions that are not used by the current feature settings are disabled.
 
 If a blend shape has the same name as an expression, it may be filled automatically when the face mesh is assigned.
