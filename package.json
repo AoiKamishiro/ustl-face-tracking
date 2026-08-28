@@ -3,6 +3,10 @@
   "displayName": "U-Stella FaceTracking",
   "version": "0.0.1-alpha1",
   "unity": "2022.3",
+  "author": {
+    "name": "U-Stella Inc.",
+    "url": "https://u-stella.co.jp/"
+  },
   "vpmDependencies": {
     "nadena.dev.ndmf": ">=1.11.0",
     "nadena.dev.modular-avatar": ">=1.16.2",
