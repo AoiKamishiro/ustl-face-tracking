@@ -7,9 +7,9 @@ title: Usage Guide
 
 Add the U-Stella VPM repository to VCC or ALCOM.
 
-```text
-https://ustl-vpm.kamishiro.online/index.json
-```
+<a className="button button--primary" href="https://ustl-vpm.kamishiro.online/">
+  Open the U-Stella VPM repository
+</a>
 
 Then add `U-Stella FaceTracking` to your Unity project from the package list.
 

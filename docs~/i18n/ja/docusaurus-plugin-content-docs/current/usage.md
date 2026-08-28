@@ -7,9 +7,9 @@ title: 利用方法
 
 VCCまたはALCOMに、U-StellaのVPMリポジトリを追加してください。
 
-```text
-https://ustl-vpm.kamishiro.online/index.json
-```
+<a className="button button--primary" href="https://ustl-vpm.kamishiro.online/">
+  U-Stella VPMリポジトリを開く
+</a>
 
 リポジトリ追加後、対象のUnityプロジェクトで `U-Stella FaceTracking` パッケージを追加します。
 
